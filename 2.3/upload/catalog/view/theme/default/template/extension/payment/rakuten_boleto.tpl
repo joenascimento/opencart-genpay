@@ -1,6 +1,6 @@
-{% if warning %}
-<div class="alert alert-danger" id="warning" role="alert">{{ warning }}</div>
-{% else %}
+<?php if ($warning) { ?>
+<div class="alert alert-danger" id="warning" role="alert"><?php echo $warning ?></div>
+<?php } else { ?>
 <div id="warning" class="alert alert-danger" role="alert" style="display:none"></div>
 
 <div id="info" class="alert alert-info" role="alert" style="display:none">Aguarde....</div>
@@ -11,11 +11,10 @@
     <div class="col-sm-3">
         <form action="#" data-rkp="form" id="rakuten-billet">
             <fieldset>
-                {#<legend>Boleto</legend>#}
                 <input type="hidden" data-rkp="method" value="billet">
             </fieldset>
         </form>
-      <input type="text" name="cpf" id="cpf" value="{{ cpf }}" class="form-control" />
+      <input type="text" name="cpf" id="cpf" value="<?php echo $cpf ?>" class="form-control" />
       <span id="error-cpf" class="hide">Campo CPF/CNPJ do cartão inválido.</span>
     </div>
   </div>
@@ -39,7 +38,7 @@
 </style>
 
 <script type="text/javascript" src="catalog/view/javascript/rakuten/colorbox/jquery.colorbox-min.js"></script>
-<script type="text/javascript" src="{{ rpay_js }}"></script>
+<script type="text/javascript" src="<?php echo $rpay_js ?>"></script>
 <link href="catalog/view/javascript/rakuten/colorbox/colorbox.css" rel="stylesheet" media="all" />
 <script type="text/javascript" src="catalog/view/javascript/rakuten/validate.js"></script>
 <script type="text/javascript" src="catalog/view/javascript/rakuten/sweetalert2.js"></script>
@@ -97,7 +96,7 @@
                                     console.log(response);
 
                                     setTimeout(function () {
-                                        location.href = '{{ continue }}';
+                                        location.href = '<?php echo $continue ?>';
                                     }, 1000);
                                 },
                         })
@@ -139,4 +138,4 @@
     });
 
 </script>
-{% endif %}
+<?php } ?>
