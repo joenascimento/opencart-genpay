@@ -1,0 +1,652 @@
+{{ header }} {{ column_left }}
+
+<div id="content">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="container-fluid">
+
+      <div class="pull-right">
+        <button type="submit" form="form-moip" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="#" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>	
+      </div>
+
+      <h1>{{ heading_title }}</h1>
+      
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <!-- Container -->
+  <div class="container-fluid">
+
+    <!-- Error -->
+    {% if warning %}
+    <div class="alert alert-danger">
+      <i class="fa fa-exclamation-circle"></i> {{ warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+
+    <!-- Panel -->
+    <div class="panel panel-default">
+
+      <!-- Title -->
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ heading_title }}</h3>
+      </div>
+
+      <!-- Body -->
+      <div class="panel-body">
+
+        <!-- Nav -->
+        <ul class="nav nav-tabs">
+          <li><a data-toggle="tab" href="#config">{{ tab_config }}</a></li>
+          <li><a data-toggle="tab" href="#payment-status">{{ tab_status_pagamento }}</a></li>
+          <li><a data-toggle="tab" href="#area">{{ tab_geo_zone }}</a></li>
+          <li><a data-toggle="tab" href="#payment-method">{{ tab_formas_de_pagamento }}</a></li>
+          <li><a data-toggle="tab" href="#plots">{{ tab_parcelas }}</a></li>
+        </ul>
+
+        <!-- Form -->
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-moip" class="form-horizontal">
+          <div class="tab-content">
+	
+            <!-- Tab Config -->
+            <div class="tab-pane" id="config">
+
+              <!-- Status -->
+              <div class="form-group required">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="{{ help_status }}">{{ entry_status }}</span></label>
+                <div class="col-sm-10">
+                  <select name="payment_rakuten_status" class="form-control">
+                  {% if payment_rakuten_status %}
+                  <option value="1" selected>{{ text_enabled }}</option>
+                  {% else %}
+                  <option value="1">{{ text_enabled }}</option>
+                  {% endif %}
+                  
+                  {% if not payment_rakuten_status %}
+                  <option value="0" selected>{{ text_disabled }}</option>
+                  {% else %}
+                  <option value="0">{{ text_disabled }}</option>
+                  {% endif %}
+                  </select>
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div class="form-group required">
+               <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="{{ help_email }}">{{ entry_email }}</span></label>
+                <div class="col-sm-10">
+                  <input name="payment_rakuten_email" type="text" class="form-control" value="{{ payment_rakuten_email }}" />
+                  {% if error_email %}
+                  <div class="text-danger">{{ error_email }}</div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Document -->
+              <div class="form-group required">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="{{ help_document }}">{{ entry_document }}</span></label>
+                <div class="col-sm-10">
+                  <input name="payment_rakuten_document" id="payment_rakuten_document" type="text" class="form-control" value="{{ payment_rakuten_document }}" />
+                  {% if error_document %}
+                    <div class="text-danger">{{ error_document }}</div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Api -->
+              <div class="form-group required">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="{{ help_api }}">{{ entry_api }}</span></label>
+                <div class="col-sm-10">
+                  <input name="payment_rakuten_api" id="payment_rakuten_api" type="text" class="form-control" value="{{ payment_rakuten_api }}" />
+                  {% if error_api %}
+                  <div class="text-danger">{{ error_api }}</div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Signature -->
+              <div class="form-group required">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="{{ help_signature }}">{{ entry_signature }}</span></label>
+                <div class="col-sm-10">
+                  <input name="payment_rakuten_signature" id="payment_rakuten_signature" type="text" class="form-control" value="{{ payment_rakuten_signature }}" />
+                  {% if error_signature %}
+                  <div class="text-danger">{{ error_signature }}</div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Environment -->
+              <div class="form-group required">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="{{ help_environment }}">{{ entry_environment }}</span></label>
+                <div class="col-sm-10">
+                  <select name="payment_rakuten_environment" class="form-control" id="payment_rakuten_environment">
+                    {% if payment_rakuten_environment %}
+                    <option value="sandbox" selected>{{ text_sandbox }}</option>
+                    {% else %}
+                    <option value="sandbox">{{ text_sandbox }}</option>
+                    {% endif %}
+                    
+                    
+                    {% if not payment_rakuten_environment %}
+                    <option value="production" selected>{{ text_production }}</option>
+                    {% else %}
+                    <option value="production">{{ text_production }}</option>
+                    {% endif %}
+                  </select>
+                </div>
+              </div>
+
+              <!-- Debug -->
+              <div class="form-group required">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="{{ help_debug }}">{{ entry_debug }}</span></label>
+                <div class="col-sm-10">
+                  <select name="payment_rakuten_debug" class="form-control">
+                    {% if payment_rakuten_debug %}
+                    <option value="1" selected>{{ text_yes }}</option>
+                    {% else %}
+                    <option value="1">{{ text_yes }}</option>
+                    {% endif %}
+                    
+                    
+                    {% if not payment_rakuten_debug %}
+                    <option value="0" selected>{{ text_no }}</option>
+                    {% else %}
+                    <option value="0">{{ text_no }}</option>
+                    {% endif %}
+                  </select>
+                </div>
+              </div>
+
+              <!-- Validar credentiais -->
+              <div class="form-group required">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="{{ help_validate_credentials }}">{{ entry_validate_credentials }}</span></label>
+                <div class="col-sm-10">
+                  <span class="input-group-btn">
+                    <p class="btn btn-primary" id="botao_validar">{{ text_validate_credentials }}</p>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Notificar Cliente -->
+              <div class="form-group required">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="{{ help_notificar_cliente }}">{{ entry_notificar_cliente }}</span></label>
+                <div class="col-sm-10">
+                  <select name="payment_rakuten_notificar_cliente" class="form-control">
+                    {% if payment_rakuten_notificar_cliente %}
+                    <option value="1" selected>{{ text_yes }}</option>
+                    {% else %}
+                    <option value="1">{{ text_yes }}</option>
+                    {% endif %}
+                    
+                    
+                    {% if not payment_rakuten_notificar_cliente %}
+                    <option value="0" selected>{{ text_no }}</option>
+                    {% else %}
+                    <option value="0">{{ text_no }}</option>
+                    {% endif %}
+                  </select>
+                </div>
+              </div>
+
+              <!-- Custom Field Number -->
+              <div class="form-group required">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="{{ help_number }}">{{ entry_number }}</span></label>
+                <div class="col-sm-10">
+                  <span class="input-group">
+                    <select name="payment_rakuten_number" class="form-control">
+                    {% for custom_field in custom_fields %}
+                    {% if custom_field.custom_field_id == payment_rakuten_number %}
+                    <option value="{{ custom_field.custom_field_id }}" selected>{{ custom_field.name }}</option>
+                    {% else %}
+                    <option value="{{ custom_field.custom_field_id }}">{{ custom_field.name }}</option>
+                    {% endif %}
+                    {% endfor %}
+                    </select>
+
+                    <span class="input-group-btn">
+                      <a href="{{ link_custom_field }}" class="btn btn-primary">{{ text_custom_field }}</a>
+                    </span>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Custom Field Complement -->
+              <div class="form-group">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="{{ help_complement }}">{{ entry_complement }}</span></label>
+                <div class="col-sm-10">
+                  <span class="input-group">
+                    <select name="payment_rakuten_complement" class="form-control">
+                    {% for custom_field in custom_fields %}
+                    {% if custom_field.custom_field_id == payment_rakuten_complement %}
+                    <option value="{{ custom_field.custom_field_id }}" selected>{{ custom_field.name }}</option>
+                    {% else %}
+                    <option value="{{ custom_field.custom_field_id }}">{{ custom_field.name }}</option>
+                    {% endif %}
+                    {% endfor %}
+                    </select>
+
+                    <span class="input-group-btn">
+                      <a href="{{ link_custom_field }}" class="btn btn-primary">{{ text_custom_field }}</a>
+                    </span>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Custom Field (CPF) -->
+              <div class="form-group required">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="{{ help_cpf }}">{{ entry_cpf }}</span></label>
+                <div class="col-sm-10">
+                  <span class="input-group">
+                    <select name="payment_rakuten_cpf" class="form-control">
+                    {% for custom_field in custom_fields %}
+                    {% if custom_field.custom_field_id == payment_rakuten_cpf %}
+                    <option value="{{ custom_field.custom_field_id }}" selected>{{ custom_field.name }}</option>
+                    {% else %}
+                    <option value="{{ custom_field.custom_field_id }}">{{ custom_field.name }}</option>
+                    {% endif %}
+                    {% endfor %}
+                    </select>
+
+                    <span class="input-group-btn">
+                      <a href="{{ link_custom_field }}" class="btn btn-primary">{{ text_custom_field }}</a>
+                    </span>
+                  </span>
+                </div>
+              </div>
+			  
+              <!-- URL de Retorno -->
+              <div class="form-group">
+                <label class="col-sm-2 control-label">{{ entry_url_retorno }}</label>
+                <div class="col-sm-10">
+                  <input type="text" disabled value="{{ webhook }}index.php?route=extension/payment/rakuten/callback" class="form-control" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab Status de Pagamento -->
+            <div class="tab-pane" id="payment-status">
+            
+              <!-- Aguardando Pagamento -->
+              <div class="form-group">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="{{ help_aguardando_pagamento }}">{{ entry_aguardando_pagamento }}</span></label>
+                <div class="col-sm-10">
+                  <select name="payment_rakuten_aguardando_pagamento" class="form-control">
+                  {% for status in statuses %}
+                  {% if payment_rakuten_aguardando_pagamento == status.order_status_id %}
+                  <option value="{{ status.order_status_id }}" selected>{{ status.name }}</option>
+                  {% else %}
+                  <option value="{{ status.order_status_id }}">{{ status.name }}</option>
+                  {% endif %}
+                  {% endfor %}
+                  </select>
+                </div>
+              </div>
+
+              <!-- Pago -->
+              <div class="form-group">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="{{ help_pago }}">{{ entry_pago }}</span></label>
+                <div class="col-sm-10">
+                  <select name="payment_rakuten_paga" class="form-control">
+                    {% for status in statuses %}
+                    {% if payment_rakuten_paga == status.order_status_id %}
+                    <option value="{{ status.order_status_id }}" selected>{{ status.name }}</option>
+                    {% else %}
+                    <option value="{{ status.order_status_id }}">{{ status.name }}</option>
+                    {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+
+              <!-- Devolvida -->
+              <div class="form-group">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="{{ help_devolvida }}">{{ entry_devolvido }}</span></label>
+                <div class="col-sm-10">
+                  <select name="payment_rakuten_devolvida" class="form-control">
+                    {% for status in statuses %}
+                    {% if payment_rakuten_devolvida == status.order_status_id %}
+                    <option value="{{ status.order_status_id }}" selected>{{ status.name }}</option>
+                    {% else %}
+                    <option value="{{ status.order_status_id }}">{{ status.name }}</option>
+                    {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+
+              <!-- Falha -->
+              <div class="form-group">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="{{ help_falha }}">{{ entry_falha }}</span></label>
+                <div class="col-sm-10">
+                  <select name="payment_rakuten_falha" class="form-control">
+                    {% for status in statuses %}
+                    {% if payment_rakuten_falha == status.order_status_id %}
+                    <option value="{{ status.order_status_id }}" selected>{{ status.name }}</option>
+                    {% else %}
+                    <option value="{{ status.order_status_id }}">{{ status.name }}</option>
+                    {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+
+              <!-- Cancelada -->
+              <div class="form-group">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="{{ entry_cancelada }}">{{ entry_cancelada }}</span></label>
+                <div class="col-sm-10">
+                  <select name="payment_rakuten_cancelada" class="form-control">
+                   {% for status in statuses %}
+                   {% if payment_rakuten_cancelada == status.order_status_id %}
+                   <option value="{{ status.order_status_id }}" selected>{{ status.name }}</option>
+                   {% else %}
+                   <option value="{{ status.order_status_id }}">{{ status.name }}</option>
+                   {% endif %}
+                   {% endfor %}
+                  </select>
+                </div>
+              </div>
+
+              <!-- Negada -->
+              <div class="form-group">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="{{ entry_negada }}">{{ entry_negada }}</span></label>
+                <div class="col-sm-10">
+                  <select name="payment_rakuten_negada" class="form-control">
+                   {% for status in statuses %}
+                   {% if payment_rakuten_negada == status.order_status_id %}
+                   <option value="{{ status.order_status_id }}" selected>{{ status.name }}</option>
+                   {% else %}
+                   <option value="{{ status.order_status_id }}">{{ status.name }}</option>
+                   {% endif %}
+                   {% endfor %}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab Área Geográfica e Ordem -->
+            <div class="tab-pane" id="area">
+            
+              <!-- Zona Geográfica -->
+              <div class="form-group">
+                <label class="col-sm-2 control-label">{{ entry_geo_zone }}</label>
+                <div class="col-sm-10">
+                  <select name="payment_rakuten_geo_zone" class="form-control">
+                    <option value="0">{{ text_all_zones }}</option>
+                    {% for zone in zones %}
+                    {% if payment_rakuten_geo_zone == zone.geo_zone_id %}
+                    <option value="{{ status.geo_zone_id }}" selected>{{ zone.name }}</option>
+                    {% else %}
+                    <option value="{{ status.geo_zone_id }}">{{ zone.name }}</option>
+                    {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+            
+              <!-- Sort Order -->
+              <div class="form-group">
+                <label class="col-sm-2 control-label">{{ entry_sort_order }}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_rakuten_sort_order" value="{{ payment_rakuten_sort_order }}" class="form-control" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab Parcelas -->
+            <div class="tab-pane" id="plots">
+
+              <!-- Juros comprador -->
+              <div class="form-group required">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="{{ help_juros }}">{{ entry_juros }}</span></label>
+                <div class="col-sm-10">
+                  <select name="payment_rakuten_juros" class="form-control">
+                    {% if payment_rakuten_juros %}
+                      <option value="1" selected>{{ text_yes }}</option>
+                    {% else %}
+                      <option value="1">{{ text_yes }}</option>
+                    {% endif %}
+
+
+                    {% if not payment_rakuten_juros %}
+                      <option value="0" selected>{{ text_no }}</option>
+                    {% else %}
+                      <option value="0">{{ text_no }}</option>
+                    {% endif %}
+                  </select>
+                </div>
+              </div>
+
+              <!-- Quantidade de Parcelas sem Juros -->
+              <div class="form-group required" id="sem_juros">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="{{ help_parcela_sem_juros }}">{{ entry_parcelas_sem_juros }}</span></label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_rakuten_parcelas_sem_juros" value="{{ payment_rakuten_parcelas_sem_juros }}" class="form-control" />
+                  {% if error_parcelas_sem_juros %}
+                    <div class="text-danger">{{ error_parcelas_sem_juros }}</div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Valor mínimo de parcela -->
+              <div class="form-group required" id="payment_rakuten_minimo_parcelas">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="{{ help_exemplo_parcela }}">{{ entry_minimo_parcelas }}</span></label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_rakuten_minimo_parcelas" value="{{ payment_rakuten_minimo_parcelas }}" class="form-control" />
+                  {% if error_qnt_parcela %}
+                    <div class="text-danger">{{ error_qnt_parcela }}</div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Quantidade Máxima de Parcelas -->
+              <div class="form-group required" id="payment_rakuten_qnt_parcelas">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="{{ help_exemplo_parcela }}">{{ entry_qnt_parcelas }}</span></label>
+                <div class="col-sm-10">
+                  <input type="text" name="payment_rakuten_qnt_parcelas" value="{{ payment_rakuten_qnt_parcelas }}" class="form-control" />
+                  {% if error_qnt_parcela %}
+                  <div class="text-danger">{{ error_qnt_parcela }}</div>
+                  {% endif %}
+                </div>
+              </div>
+
+
+            </div>
+
+            <!-- Tab Métodos de Pagamento -->
+            <div class="tab-pane" id="payment-method">
+            
+              <!-- Boleto -->
+              <fieldset>
+                <legend>{{ text_boleto }}</legend>
+                
+                
+                <!-- Status Boleto -->
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">{{ entry_status }}</label>
+                  <div class="col-sm-10">
+                    <select name="payment_rakuten_boleto_status" class="form-control">
+                      {% if payment_rakuten_boleto_status %}
+                      <option value="1" selected>{{ text_enabled }}</option>
+                      {% else %}
+                      <option value="1">{{ text_enabled }}</option>
+                      {% endif %}
+                      
+                      
+                      {% if not payment_rakuten_boleto_status %}
+                      <option value="0" selected>{{ text_disabled }}</option>
+                      {% else %}
+                      <option value="0">{{ text_disabled }}</option>
+                      {% endif %}
+                    </select>
+                  </div>
+                </div>
+                
+                <!-- Valor Mínimo para Boleto -->
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">{{ entry_valor_minimo }}</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="payment_rakuten_valor_minimo_boleto" value="{{ payment_rakuten_valor_minimo_boleto }}" class="form-control" />
+                  </div>
+                </div>
+              </fieldset>
+            
+              <!-- Cartão de Crédito -->
+              <fieldset>
+                <legend>{{ text_cartao }}</legend>
+
+                <!-- Status Cartão de Crédito -->
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">{{ entry_status }}</label>
+                  <div class="col-sm-10">
+                    <select name="payment_rakuten_cartao_status" class="form-control">
+                      {% if payment_rakuten_cartao_status %}
+                      <option value="1" selected>{{ text_enabled }}</option>
+                      {% else %}
+                      <option value="1">{{ text_enabled }}</option>
+                      {% endif %}
+                      
+                      
+                      {% if not payment_rakuten_cartao_status %}
+                      <option value="0" selected>{{ text_disabled }}</option>
+                      {% else %}
+                      <option value="0">{{ text_disabled }}</option>
+                      {% endif %}
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Valor mínimo para cartão de crédito -->
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">{{ entry_valor_minimo }}</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="payment_rakuten_valor_minimo_cartao" value="{{ payment_rakuten_valor_minimo_cartao }}" class="form-control" />
+                  </div>
+                </div>
+              </fieldset>
+
+            </div> <!-- /#payment-method -->
+          </div>
+        </form> <!-- /Form -->
+      </div><!-- /.panel-body -->
+    </div><!-- /.panel.panel-default -->
+  </div><!-- /.container-fluid -->
+</div><!-- /#content -->
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+
+<script type="text/javascript">
+  $('fieldset legend').css('cursor', 'pointer');
+  $('fieldset').css('margin-bottom', 30);
+
+  $('.nav-tabs li:first').addClass('active');
+  $('.tab-content div:first').addClass('active');
+
+  $('fieldset legend').click(function(){
+      $(this).parent().find('div').slideToggle('slow');
+  });
+
+  var buyer = document.querySelector("[name='payment_rakuten_juros']");
+  var no_instalments = document.getElementById('sem_juros');
+  var min_installment = document.getElementById('payment_rakuten_minimo_parcelas');
+  var max_installment = document.getElementById('payment_rakuten_qnt_parcelas');
+  var button = document.getElementById('botao_validar');
+
+  if (buyer.value === "0") {
+    no_instalments.style.display = "none";
+    min_installment.style.display = "block";
+    max_installment.style.display = "block";
+  } else {
+    no_instalments.style.display = "block";
+    min_installment.style.display = "none";
+    max_installment.style.display = "none";
+  }
+
+  buyer.addEventListener('change', function() {
+    if (buyer.value === "0") {
+      no_instalments.style.display = "none";
+      min_installment.style.display = "block";
+      max_installment.style.display = "block";
+    } else {
+      no_instalments.style.display = "block";
+      min_installment.style.display = "none";
+      max_installment.style.display = "none";
+    }
+  });
+
+  button.addEventListener('click', function() {
+
+    var rakuten_environment = document.getElementById('payment_rakuten_environment').value;
+    var cnpj = document.getElementById('payment_rakuten_document').value;
+    var api = document.getElementById('payment_rakuten_api').value;
+
+    console.log('Validate Credentials start');
+    $.ajax({
+      url: 'index.php?route=extension/payment/rakuten/credentials&user_token={{ user_token }}',
+      type: 'POST',
+      data: {
+        cnpj: function () {
+          return cnpj;
+        },
+        apiKey: function () {
+          return api;
+        },
+        environment: function () {
+          return rakuten_environment;
+        },
+      },
+      beforeSend: function() {
+        $('#botao_validar').button('loading');
+      },
+      success: function (response) {
+
+        if (response == 200) {
+
+          Swal.fire({
+            title: response + ' OK: Parabéns',
+            html: '<p>Suas credenciais estão corretas.' + '</p>' +
+                  '<p>Ambiente: ' + '<strong>' + rakuten_environment + '</strong></p>',
+            type: 'success',
+            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Fechar'
+          });
+
+        } else {
+
+          Swal.fire({
+            title: response + ' Erro',
+            html: '<p>Verifique suas credenciais com o atendimento Rakuten Pay</p>' +
+                  '<p>Ambiente: ' + '<strong>' + rakuten_environment + '</strong></p>',
+            type: 'error',
+            cancelButtonText: '<i class="fa fa-thumbs-down"></i> Fechar'
+
+          });
+        }
+
+      },
+      error: function(response) {
+        console.log(response);
+        Swal.fire({
+          title: response + ' Erro',
+          html: '<p>Ocorreu problema na integração</p>' +
+                '<p>Ambiente: ' + '<strong>' + rakuten_environment + '</strong></p>',
+          type: 'error',
+          cancelButtonText: '<i class="fa fa-thumbs-down"></i> Fechar'
+
+        });
+        return false;
+      },
+      complete: function(){
+        $('#botao_validar').button('reset');
+      }
+    })
+  })
+</script>
+
+{{ footer }}
