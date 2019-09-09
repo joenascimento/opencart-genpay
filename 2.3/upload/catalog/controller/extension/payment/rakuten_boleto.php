@@ -13,11 +13,11 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
         $rakuten = $this->model_extension_payment_rakuten;
 
         /* CPF */
-        if (isset($order_info['custom_field'][$this->config->get('payment_rakuten_cpf')])) {
+        if (isset($order_info['custom_field'][$this->config->get('rakuten_cpf')])) {
             if (!preg_match('/(\.|-)/', $order_info['telephone'])) {
-                $data['cpf'] = preg_replace('/([\d]{3})([\d]{3})([\d]{3})([\d]{2})/', '$1.$2.$3-$4', $order_info['custom_field'][$this->config->get('payment_rakuten_cpf')]);
+                $data['cpf'] = preg_replace('/([\d]{3})([\d]{3})([\d]{3})([\d]{2})/', '$1.$2.$3-$4', $order_info['custom_field'][$this->config->get('rakuten_cpf')]);
             } else {
-                $data['cpf'] = $order_info['custom_field'][$this->config->get('payment_rakuten_cpf')];
+                $data['cpf'] = $order_info['custom_field'][$this->config->get('rakuten_cpf')];
             }
         } else {
             $data['cpf'] = '';
@@ -232,11 +232,11 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
 
 		switch ($result_status) {
 			case 'pending':
-				$status = $this->config->get('payment_rakuten_aguardando_pagamento');
+				$status = $this->config->get('rakuten_aguardando_pagamento');
                 $paymentStatus = 'pending';
 				break;
 			default: 
-				$status = $this->config->get('payment_rakuten_aguardando_pagamento');
+				$status = $this->config->get('rakuten_aguardando_pagamento');
                 $paymentStatus = 'pending';
 				break;
 		}

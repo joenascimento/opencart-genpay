@@ -148,6 +148,7 @@
       return false;
     }
 
+    $('#button-confirm').button('loading');
     console.log('Credit Card Event');
 
     // Execute a extração da bandeira do cartão.

@@ -32,7 +32,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     private function getApiUrl() {
 
-        $this->environment = $this->config->get('payment_rakuten_environment');
+        $this->environment = $this->config->get('rakuten_environment');
 
         if ( 'production' === $this->environment ) {
 
@@ -52,7 +52,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     private function getJsUrl() {
 
-        $this->environment = $this->config->get('payment_rakuten_environment');
+        $this->environment = $this->config->get('rakuten_environment');
 
         if ( 'production' === $this->environment ) {
 
@@ -105,7 +105,7 @@ class ModelExtensionPaymentRakuten extends Controller {
         $api = $this->getApiUrl();
         $js = $this->getJsUrl();
 
-        $this->environment = $this->config->get('payment_rakuten_environment');
+        $this->environment = $this->config->get('rakuten_environment');
         $this->api = $api;
         $this->rpay_js = $js;
 
@@ -148,8 +148,8 @@ class ModelExtensionPaymentRakuten extends Controller {
 //        $this->load->model('extension/payment/rakuten_cartao');
 //        $this->load->model('extension/payment/rakuten_boleto');
 //
-//        $creditCard = $this->model_extension_payment_rakuten_cartao->getMethod();
-//        $billet = $this->model_extension_payment_rakuten_boleto->getMethod();
+//        $creditCard = $this->model_extension_rakuten_cartao->getMethod();
+//        $billet = $this->model_extension_rakuten_boleto->getMethod();
 //
 //        if ($creditCard['code'] == 'rakuten_cartao') {
 //
@@ -180,7 +180,7 @@ class ModelExtensionPaymentRakuten extends Controller {
     public function getDocument($order)
     {
 
-        return $order['custom_field'][$this->config->get('payment_rakuten_cpf')];
+        return $order['custom_field'][$this->config->get('rakuten_cpf')];
 
     }
 
@@ -272,7 +272,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getAddressNumber($custom_field)
     {
-        $key = $this->config->get('payment_rakuten_number');
+        $key = $this->config->get('rakuten_number');
         if (array_key_exists($key, $custom_field)) {
             return $custom_field[$key];
         } else {
@@ -287,7 +287,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      * @return int
      */
     public function getAddressComplement($custom_field) {
-        $key = $this->config->get('payment_rakuten_complement');
+        $key = $this->config->get('rakuten_complement');
         if (array_key_exists($key , $custom_field)) {
             return $custom_field[$key];
         } else {
@@ -302,7 +302,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      * @return string
      */
     public function getAddressDistrict($custom_field) {
-        $key = $this->config->get('payment_rakuten_district');
+        $key = $this->config->get('rakuten_district');
         if (array_key_exists($key , $custom_field)) {
             return $custom_field[$key];
         } else {
@@ -453,7 +453,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      * @return int
      */
     public function getShippingAddressNumber($custom_field) {
-        $key = $this->config->get('payment_rakuten_number');
+        $key = $this->config->get('rakuten_number');
         if (array_key_exists($key , $custom_field)) {
             return $custom_field[$key];
         } else {
@@ -468,7 +468,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      * @return int
      */
     public function getShippingAddressComplement($custom_field) {
-        $key = $this->config->get('payment_rakuten_complement');
+        $key = $this->config->get('rakuten_complement');
         if (array_key_exists($key , $custom_field)) {
             return $custom_field[$key];
         } else {
@@ -482,7 +482,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      * @return string
      */
     public function getShippingAddressDistrict($custom_field) {
-        $key = $this->config->get('payment_rakuten_complement');
+        $key = $this->config->get('rakuten_complement');
         if (array_key_exists($key , $custom_field)) {
             return $custom_field[$key];
         } else {
@@ -740,7 +740,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getWebhook()
     {
-        return $this->config->get('payment_rakuten_webhook');
+        return $this->config->get('rakuten_webhook');
     }
 
     /**
@@ -753,7 +753,7 @@ class ModelExtensionPaymentRakuten extends Controller {
         $signature = hash_hmac(
             'sha256',
             $data,
-            $this->config->get('payment_rakuten_signature'),
+            $this->config->get('rakuten_signature'),
             true
         );
 
@@ -766,8 +766,8 @@ class ModelExtensionPaymentRakuten extends Controller {
      * @return string
      */
     private function setAuthorizationHeader() {
-        $document = $this->config->get('payment_rakuten_document');
-        $api_key = $this->config->get('payment_rakuten_api');
+        $document = $this->config->get('rakuten_document');
+        $api_key = $this->config->get('rakuten_api');
 
         $user_pass = $document . ':' . $api_key;
         return 'Basic ' . base64_encode( $user_pass );
@@ -780,7 +780,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getConfDocument()
     {
-        $document = $this->config->get('payment_rakuten_document');
+        $document = $this->config->get('rakuten_document');
 
         return $document;
     }
@@ -792,7 +792,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getConfSignature() {
 
-        $signature = $this->config->get('payment_rakuten_signature');
+        $signature = $this->config->get('rakuten_signature');
 
         return $signature;
     }
@@ -862,11 +862,11 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getInstallments($amount)
     {
-        $buyerInterest = $this->config->get('payment_rakuten_juros'); //Get buyer interest at the database
+        $buyerInterest = $this->config->get('rakuten_juros'); //Get buyer interest at the database
         $installments = [];
 
         if ($buyerInterest == "1") {
-            $freeInstallment = (int) $this->config->get('payment_rakuten_parcelas_sem_juros');
+            $freeInstallment = (int) $this->config->get('rakuten_parcelas_sem_juros');
 
             $customerInterestInstallments = $this->getInterestInstallments($amount);
             foreach($customerInterestInstallments as $installment) {
@@ -898,8 +898,8 @@ class ModelExtensionPaymentRakuten extends Controller {
                 }
             }
         } else {
-            $maxNoInstallments = (int) $this->config->get('payment_rakuten_qnt_parcelas');
-            $minimumInstallment = (int) $this->config->get('payment_rakuten_minimo_parcelas');
+            $maxNoInstallments = (int) $this->config->get('rakuten_qnt_parcelas');
+            $minimumInstallment = (int) $this->config->get('rakuten_minimo_parcelas');
 
             for ($quantity = 1; $quantity <= $maxNoInstallments; $quantity++) {
                 $value = $amount / $quantity;

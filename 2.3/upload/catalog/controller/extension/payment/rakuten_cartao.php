@@ -27,7 +27,7 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
         $data['cliente'] = $order_info['firstname'] . ' ' . $order_info['lastname'];
 
 		/** Quantidade de Parcelas */
-		$data['qntParcelas'] = (int)$this->config->get('payment_rakuten_qnt_parcelas');
+		$data['qntParcelas'] = (int)$this->config->get('rakuten_qnt_parcelas');
 
         /** Telefone do titular */
         if (!preg_match('/(\(|\)|-| )/', $order_info['telephone'])) {
@@ -37,14 +37,14 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
         }
 
         /** CPF */
-        if (isset($order_info['custom_field'][$this->config->get('payment_rakuten_cpf')])) {
-            $data['cpf'] = $order_info['custom_field'][$this->config->get('payment_rakuten_cpf')];
+        if (isset($order_info['custom_field'][$this->config->get('rakuten_cpf')])) {
+            $data['cpf'] = $order_info['custom_field'][$this->config->get('rakuten_cpf')];
         } else {
             $data['cpf'] = false;
         }
 
 		/** Quantidade parcelas sem juros */
-		$data['max_parcelas_sem_juros'] = (int)$this->config->get('payment_rakuten_parcelas_sem_juros');
+		$data['max_parcelas_sem_juros'] = (int)$this->config->get('rakuten_parcelas_sem_juros');
 
         $environment = $rakuten->getEnvironment();
 
@@ -261,37 +261,37 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
 
 		switch ($resultStatus) {
             case 'pending':
-                $status = $this->config->get('payment_rakuten_aguardando_pagamento');
+                $status = $this->config->get('rakuten_aguardando_pagamento');
                 $paymentStatus = 'pending';
                 $this->log->write('Status: ' . $status);
                 break;
             case 'success':
-                $status = $this->config->get('payment_rakuten_aguardando_pagamento');
+                $status = $this->config->get('rakuten_aguardando_pagamento');
                 $paymentStatus = 'pending';
                 $this->log->write('Status: ' . $status);
                 break;
             case 'declined':
-                $status = $this->config->get('payment_rakuten_negada');
+                $status = $this->config->get('rakuten_negada');
                 $paymentStatus = 'declined';
                 $this->log->write('Status: ' . $status);
                 break;
             case 'failure':
-                $status = $this->config->get('payment_rakuten_falha');
+                $status = $this->config->get('rakuten_falha');
                 $paymentStatus = 'failure';
                 $this->log->write('Status: ' . $status);
                 break;
             case 'refunded':
-                $status = $this->config->get('payment_rakuten_devolvida');
+                $status = $this->config->get('rakuten_devolvida');
                 $paymentStatus = 'refunded';
                 $this->log->write('Status: ' . $status);
                 break;
             case 'cancelled':
-                $status = $this->config->get('payment_rakuten_cancelada');
+                $status = $this->config->get('rakuten_cancelada');
                 $paymentStatus = 'cancelled';
                 $this->log->write('Status: ' . $status);
                 break;
             default:
-                $status = $this->config->get('payment_rakuten_aguardando_pagamento');
+                $status = $this->config->get('rakuten_aguardando_pagamento');
                 $paymentStatus = 'pending';
                 $this->log->write('Status: ' . $status);
                 break;
