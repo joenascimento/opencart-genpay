@@ -57,7 +57,7 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
             'reference'   => $rakuten->getOrderId($order_info),
             'amount'      => $totalamount,
             'currency'    => $rakuten->getCurrency($order_info),
-            'webhook_url' => 'http://localhost/opencart23/upload/index.php?route=extension/payment/rakuten/callback',
+            'webhook_url' => $rakuten->getWebhook() . 'index.php?route=extension/payment/rakuten/callback',
             'fingerprint' => $posted['fingerprint'],
             'payments'    => array(),
             'customer'    => [

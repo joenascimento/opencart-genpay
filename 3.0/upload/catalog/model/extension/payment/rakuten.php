@@ -739,7 +739,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getWebhook()
     {
-        return $this->config->get('payment_rakuten_webhook');
+        return $this->config->get('config_ssl');
     }
 
     /**

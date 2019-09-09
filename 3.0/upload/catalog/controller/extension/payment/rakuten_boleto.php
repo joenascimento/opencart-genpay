@@ -10,7 +10,7 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
         $this->load->model('catalog/category');
 
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-        $order = $this->model_extension_payment_rakuten;
+        $rakuten = $this->model_extension_payment_rakuten;
 
         /* CPF */
         if (isset($order_info['custom_field'][$this->config->get('payment_rakuten_cpf')])) {
@@ -23,7 +23,7 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
             $data['cpf'] = '';
         }
 
-        $environment = $order->getEnvironment();
+        $environment = $rakuten->getEnvironment();
 
         $data['environment'] = $environment['place']; //Sandbox/Production
         $data['rpay_js'] = $environment['rpay_js']; //Sandbox/Production
@@ -44,29 +44,29 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
 
         /** Variables */
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-        $order = $this->model_extension_payment_rakuten;
+        $rakuten = $this->model_extension_payment_rakuten;
         $custom_field = $order_info['shipping_custom_field'];
-        $shipping_method = $order->getShippingMethod();
-        $payment_method = $order->getPaymentMethod();
+        $shipping_method = $rakuten->getShippingMethod();
+        $payment_method = $rakuten->getPaymentMethod();
         $posted = $_POST;
 
-        $totalamount = $order->getTotalAmount() + $order->getShippingAmount();
+        $totalamount = $rakuten->getTotalAmount() + $rakuten->getShippingAmount();
 
         /** Payload */
         $data = array(
-            'reference'   => $order->getOrderId($order_info),
+            'reference'   => $rakuten->getOrderId($order_info),
             'amount'      => $totalamount,
-            'currency'    => $order->getCurrency($order_info),
-            'webhook_url' => 'http://localhost/opencart/upload/admin/index.php?route=extension/payment/rakuten/callback',
+            'currency'    => $rakuten->getCurrency($order_info),
+            'webhook_url' => $rakuten->getWebhook() . 'index.php?route=extension/payment/rakuten/callback',
             'fingerprint' => $posted['fingerprint'],
             'payments'    => array(),
             'customer'    => [
-                'document'      => $order->getDocument($order_info),
-                'name'          => $order->getName($order_info),
-                'business_name' => $order->getName($order_info),
-                'email'         => $order->getEmail($order_info),
+                'document'      => $rakuten->getDocument($order_info),
+                'name'          => $rakuten->getName($order_info),
+                'business_name' => $rakuten->getName($order_info),
+                'email'         => $rakuten->getEmail($order_info),
                 'birth_date'    => '1999-01-01',
-                'kind'          => $order->getKind($order_info),
+                'kind'          => $rakuten->getKind($order_info),
                 'addresses'     => array(),
                 'phones'        => array(
                     array(
@@ -77,12 +77,12 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
                             'area_code'    => preg_replace(
                                 '/\((\d{2})\)\s(\d{4,5})-(\d{4})/',
                                 '${1}',
-                                $order->getPhone($order_info)
+                                $rakuten->getPhone($order_info)
                             ),
                             'number' => preg_replace(
                                 '/\((\d{2})\)\s(\d{4,5})-(\d{4})/',
                                 '${2}${3}',
-                                $order->getPhone($order_info)
+                                $rakuten->getPhone($order_info)
                             )
                         )
                     ),
@@ -94,25 +94,25 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
                             'area_code'    => preg_replace(
                                 '/\((\d{2})\)\s(\d{4,5})-(\d{4})/',
                                 '${1}',
-                                $order->getPhone($order_info)
+                                $rakuten->getPhone($order_info)
                             ),
                             'number' => preg_replace(
                                 '/\((\d{2})\)\s(\d{4,5})-(\d{4})/',
                                 '${2}${3}',
-                                $order->getPhone($order_info)
+                                $rakuten->getPhone($order_info)
                             )
                         )
                     )
                 )
             ],
             'order' => array(
-                'reference'       => $order->getOrderId($order_info),
-                'payer_ip'        => $order->getIp($order_info),
-                'items_amount'    => $order->getTotalAmount(),
-                'shipping_amount' => (float) $order->getShippingAmount(),
-                'taxes_amount'    => (float) $order->getTaxAmount(),
-                'discount_amount' => (float) $order->discount($order->getTotalAmount()),
-                'items' => $order->getItems($order_info),
+                'reference'       => $rakuten->getOrderId($order_info),
+                'payer_ip'        => $rakuten->getIp($order_info),
+                'items_amount'    => $rakuten->getTotalAmount(),
+                'shipping_amount' => (float) $rakuten->getShippingAmount(),
+                'taxes_amount'    => (float) $rakuten->getTaxAmount(),
+                'discount_amount' => (float) $rakuten->discount($rakuten->getTotalAmount()),
+                'items' => $rakuten->getItems($order_info),
             ),
         );
 
@@ -120,10 +120,10 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
         if ( $shipping_method == 'rakuten-log' ) {
             $commissionings = array(
 
-                'reference'                 => (string) $order->getOrderId($order_info),
+                'reference'                 => (string) $rakuten->getOrderId($order_info),
                 'kind'                      => 'rakuten_logistics',
-                'amount'                    => (float) $order->getShipipngAmount(),
-                'calculation_code'          => $order->getCalculationCode(),
+                'amount'                    => (float) $rakuten->getShipipngAmount(),
+                'calculation_code'          => $rakuten->getCalculationCode(),
                 'postage_service_code'      => $shipping_data->get_meta('postage_service_code'),
 
             );
@@ -132,18 +132,18 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
         }
 
         //Billing Address.
-        if ( ! empty( $order->getStreetAddress($order_info) ) ) {
+        if ( ! empty( $rakuten->getStreetAddress($order_info) ) ) {
             $billing_address = [
                 'kind' => 'billing',
-                'contact' => $order->getName($order_info),
-                'street' => $order->getStreetAddress($order_info),
-                'number' => $order->getAddressNumber($custom_field),
-                'complement' => $order->getAddressComplement($custom_field),
-                'city' => $order->getCity($order_info),
-                'district' => $order->getAddressDistrict($custom_field),
-                'state' => $order->getState($order_info),
-                'country' => $order->getCountry($order_info),
-                'zipcode' => $order->getPostalCode($order_info),
+                'contact' => $rakuten->getName($order_info),
+                'street' => $rakuten->getStreetAddress($order_info),
+                'number' => $rakuten->getAddressNumber($custom_field),
+                'complement' => $rakuten->getAddressComplement($custom_field),
+                'city' => $rakuten->getCity($order_info),
+                'district' => $rakuten->getAddressDistrict($custom_field),
+                'state' => $rakuten->getState($order_info),
+                'country' => $rakuten->getCountry($order_info),
+                'zipcode' => $rakuten->getPostalCode($order_info),
             ];
 
             $data['customer']['addresses'][] = $billing_address;
@@ -151,7 +151,7 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
 
         if ( $payment_method == 'rakuten_credit_card' ) {
             $payment = [
-                'reference'                => $order->getOrderId($order_info),
+                'reference'                => $rakuten->getOrderId($order_info),
                 'method'                   => $payment_method,
                 'amount'                   => $totalamount,
                 'installments_quantity'    => (integer) $posted['rakuten_pay_installments'],
@@ -171,7 +171,7 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
             }
         } else {
             $payment = [
-                'reference' => $order->getOrderId($order_info),
+                'reference' => $rakuten->getOrderId($order_info),
                 'method' => 'billet',
                 'amount' => (float) $totalamount,
             ];
@@ -183,15 +183,15 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
         if ( ! empty( $_POST['ship_to_different_address'] ) ) {
             $shipping_address = [
                 'kind' => 'shipping',
-                'contact' => $order->getName($order_info),
-                'street' => $order->getShippingStreetAddress($order_info),
-                'number' => $order->getShippingAddressNumber($custom_field),
-                'complement' => $order->getShippingAddressComplement($custom_field),
-                'city' => $order->getShippingCity($order_info),
-                'district' => $order->getShippingDistrict($custom_field),
-                'state' => $order->getShippingState($order_info),
-                'country' => $order->getShippingCountry($order_info),
-                'zipcode' => $order->getShippingPostalCode($order_info),
+                'contact' => $rakuten->getName($order_info),
+                'street' => $rakuten->getShippingStreetAddress($order_info),
+                'number' => $rakuten->getShippingAddressNumber($custom_field),
+                'complement' => $rakuten->getShippingAddressComplement($custom_field),
+                'city' => $rakuten->getShippingCity($order_info),
+                'district' => $rakuten->getShippingDistrict($custom_field),
+                'state' => $rakuten->getShippingState($order_info),
+                'country' => $rakuten->getShippingCountry($order_info),
+                'zipcode' => $rakuten->getShippingPostalCode($order_info),
             ];
 
             // Non-WooCommerce default address fields.
@@ -210,7 +210,7 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
         }
 
 
-        $result = $order->chargeTransaction( $data );
+        $result = $rakuten->chargeTransaction( $data );
 
         return $result;
 
