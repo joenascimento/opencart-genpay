@@ -12,12 +12,12 @@ class ModelExtensionPaymentRakutenBoleto extends Model {
             }
         }
         
-		if ($sub_total >= $this->config->get('payment_rakuten_valor_minimo_debito')) {
+		if ($sub_total >= $this->config->get('rakuten_valor_minimo_debito')) {
 			$this->load->language('extension/payment/rakuten');
 
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('payment_rakuten_geo_zone') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('rakuten_geo_zone') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
 
-			if (!$this->config->get('payment_rakuten_geo_zone_id')) {
+			if (!$this->config->get('rakuten_geo_zone_id')) {
 				$status = true;
 			} elseif ($query->num_rows) {
 				$status = true;
@@ -32,7 +32,7 @@ class ModelExtensionPaymentRakutenBoleto extends Model {
 					'code'       => 'rakuten_boleto',
 					'title'      => $this->language->get('text_boleto'),
 					'terms'      => '',
-					'sort_order' => $this->config->get('payment_rakuten_sort_order')
+					'sort_order' => $this->config->get('rakuten_sort_order')
 				);
 			}
 

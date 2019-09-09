@@ -93,7 +93,6 @@
                             data: { body: response },
                                 success: function () {
                                     console.log('success confirm: ');
-                                    console.log(response);
 
                                     setTimeout(function () {
                                         location.href = '<?php echo $continue ?>';
