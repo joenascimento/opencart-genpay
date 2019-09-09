@@ -66,37 +66,37 @@ class ControllerExtensionPaymentRakuten extends Controller {
 
 		switch ($status) {
 			case 'pending':
-				$status = $this->config->get('payment_rakuten_aguardando_pagamento');
+				$status = $this->config->get('rakuten_aguardando_pagamento');
 				$paymentStatus = 'pending';
 				$this->log->write('Status: ' . $status);
 				break;
 			case 'approved':
-				$status = $this->config->get('payment_rakuten_paga');
+				$status = $this->config->get('rakuten_paga');
 				$paymentStatus = 'approved';
 				$this->log->write('Status: ' . $status);
 				break;
 			case 'declined':
-				$status = $this->config->get('payment_rakuten_negada');
+				$status = $this->config->get('rakuten_negada');
 				$paymentStatus = 'declined';
 				$this->log->write('Status: ' . $status);
 				break;
 			case 'failure':
-				$status = $this->config->get('payment_rakuten_falha');
+				$status = $this->config->get('rakuten_falha');
 				$paymentStatus = 'failure';
 				$this->log->write('Status: ' . $status);
 				break;
 			case 'refunded':
-				$status = $this->config->get('payment_rakuten_devolvida');
+				$status = $this->config->get('rakuten_devolvida');
 				$paymentStatus = 'refunded';
 				$this->log->write('Status: ' . $status);
 				break;
 			case 'cancelled':
-				$status = $this->config->get('payment_rakuten_cancelada');
+				$status = $this->config->get('rakuten_cancelada');
 				$paymentStatus = 'cancelled';
 				$this->log->write('Status: ' . $status);
 				break;
 			default: 
-				$status = $this->config->get('payment_rakuten_aguardando_pagamento');
+				$status = $this->config->get('rakuten_aguardando_pagamento');
 				$paymentStatus = 'pending';
 				$this->log->write('Status: ' . $status);
 				break;
