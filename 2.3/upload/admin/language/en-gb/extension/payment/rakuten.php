@@ -86,6 +86,11 @@ $_['help_parcela_sem_juros']    = 'MÍNIMO DE PARCELAS PARA JUROS COMPRADOR';
 $_['help_falha']                = 'Falha na validação';
 $_['help_negada']               = 'Transação negada';
 $_['help_validate_credentials'] = 'Checar validação de credenciais';
+$_['help_document'] 			= 'Documento CNPJ';
+$_['help_api'] = 				'Chave de API';
+$_['help_debug'] 				= 'Debug';
+$_['help_environment'] 			= 'Ambiente Sandbox ou Produção';
+$_['help_signature'] 			= 'Chave de Assinatura';
 
 //Error
 $_['warning']                           = 'Você não tem permissão para modificar esse módulo';
