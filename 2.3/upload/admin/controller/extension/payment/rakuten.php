@@ -11,19 +11,13 @@ class ControllerExtensionPaymentRakuten extends Controller {
 		$this->document->setTitle($this->language->get('heading_title'));
         
         $token = $this->session->data['token'];
-        $rakuten = $this->model_extension_payment_rakuten;
         $data['token'] = $token;
 		
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 			$this->load->model('setting/setting');
 			
-			$this->model_setting_setting->editSetting('payment_rakuten', $this->request->post);
+			$this->model_setting_setting->editSetting('rakuten', $this->request->post);
                         
-			$this->model_setting_setting->editSetting('total_rakuten', [
-                'total_rakuten_acrescimo_status' => $this->request->post['payment_rakuten_status'],
-                'total_rakuten_desconto_status'  => $this->request->post['payment_rakuten_status'],
-            ]);
-            
 			$this->session->data['success'] = $this->language->get('text_success');
 			
 			$this->response->redirect($this->url->link('extension/extension', 'token=' . $token, true));
@@ -101,200 +95,200 @@ class ControllerExtensionPaymentRakuten extends Controller {
 		);
 		
 		/* Status */
-		if (isset($this->request->post['payment_rakuten_status'])) {
-			$data['payment_rakuten_status'] = $this->request->post['payment_rakuten_status'];
+		if (isset($this->request->post['rakuten_status'])) {
+			$data['rakuten_status'] = $this->request->post['rakuten_status'];
 		} else {
-			$data['payment_rakuten_status'] = $this->config->get('payment_rakuten_status');
+			$data['rakuten_status'] = $this->config->get('rakuten_status');
 		}
 		
 		/* Email */
-		if (isset($this->request->post['payment_rakuten_email'])) {
-			$data['payment_rakuten_email'] = $this->request->post['payment_rakuten_email'];
+		if (isset($this->request->post['rakuten_email'])) {
+			$data['rakuten_email'] = $this->request->post['rakuten_email'];
 		} else {
-			$data['payment_rakuten_email'] = $this->config->get('payment_rakuten_email');
+			$data['rakuten_email'] = $this->config->get('rakuten_email');
 		}
 
         /* Document */
-        if (isset($this->request->post['payment_rakuten_document'])) {
-            $data['payment_rakuten_document'] = $this->request->post['payment_rakuten_document'];
+        if (isset($this->request->post['rakuten_document'])) {
+            $data['rakuten_document'] = $this->request->post['rakuten_document'];
         } else {
-            $data['payment_rakuten_document'] = $this->config->get('payment_rakuten_document');
+            $data['rakuten_document'] = $this->config->get('rakuten_document');
         }
 
 		/* Api */
-		if (isset($this->request->post['payment_rakuten_api'])) {
-			$data['payment_rakuten_api'] = $this->request->post['payment_rakuten_api'];
+		if (isset($this->request->post['rakuten_api'])) {
+			$data['rakuten_api'] = $this->request->post['rakuten_api'];
 		} else {
-			$data['payment_rakuten_api'] = $this->config->get('payment_rakuten_api');
+			$data['rakuten_api'] = $this->config->get('rakuten_api');
 		}
 
 		/* Signature */
-		if (isset($this->request->post['payment_rakuten_signature'])) {
-			$data['payment_rakuten_signature'] = $this->request->post['payment_rakuten_signature'];
+		if (isset($this->request->post['rakuten_signature'])) {
+			$data['rakuten_signature'] = $this->request->post['rakuten_signature'];
 		} else {
-			$data['payment_rakuten_signature'] = $this->config->get('payment_rakuten_signature');
+			$data['rakuten_signature'] = $this->config->get('rakuten_signature');
 		}
 		
 		/* Environment */
-		if (isset($this->request->post['payment_rakuten_environment'])) {
-			$data['payment_rakuten_environment'] = $this->request->post['payment_rakuten_environment'];
+		if (isset($this->request->post['rakuten_environment'])) {
+			$data['rakuten_environment'] = $this->request->post['rakuten_environment'];
 		} else {
-			$data['payment_rakuten_environment'] = $this->config->get('payment_rakuten_environment');
+			$data['rakuten_environment'] = $this->config->get('rakuten_environment');
 		}
 		
 		/* Debug */
-		if (isset($this->request->post['payment_rakuten_debug'])) {
-			$data['payment_rakuten_debug'] = $this->request->post['payment_rakuten_debug'];
+		if (isset($this->request->post['rakuten_debug'])) {
+			$data['rakuten_debug'] = $this->request->post['rakuten_debug'];
 		} else {
-			$data['payment_rakuten_debug'] = $this->config->get('payment_rakuten_debug');
+			$data['rakuten_debug'] = $this->config->get('rakuten_debug');
 		}
 		
 		/* Notificar Cliente */
-		if (isset($this->request->post['payment_rakuten_notificar_cliente'])) {
-			$data['payment_rakuten_notificar_cliente'] = $this->request->post['payment_rakuten_notificar_cliente'];
+		if (isset($this->request->post['rakuten_notificar_cliente'])) {
+			$data['rakuten_notificar_cliente'] = $this->request->post['rakuten_notificar_cliente'];
 		} else {
-			$data['payment_rakuten_notificar_cliente'] = $this->config->get('payment_rakuten_notificar_cliente');
+			$data['rakuten_notificar_cliente'] = $this->config->get('rakuten_notificar_cliente');
 		}
 
 		/* Custom Field Número */
-		if (isset($this->request->post['payment_rakuten_number'])) {
-			$data['payment_rakuten_number'] = $this->request->post['payment_rakuten_number'];
+		if (isset($this->request->post['rakuten_number'])) {
+			$data['rakuten_number'] = $this->request->post['rakuten_number'];
 		} else {
-			$data['payment_rakuten_number'] = $this->config->get('payment_rakuten_number');
+			$data['rakuten_number'] = $this->config->get('rakuten_number');
 		}
 
 		/* Custom Field Data de Nascimento */
-		if (isset($this->request->post['payment_rakuten_complement'])) {
-			$data['payment_rakuten_complement'] = $this->request->post['payment_rakuten_complement'];
+		if (isset($this->request->post['rakuten_complement'])) {
+			$data['rakuten_complement'] = $this->request->post['rakuten_complement'];
 		} else {
-			$data['payment_rakuten_complement'] = $this->config->get('payment_rakuten_complement');
+			$data['rakuten_complement'] = $this->config->get('rakuten_complement');
 		}
 
 		/* Custom Field CPF */
-		if (isset($this->request->post['payment_rakuten_cpf'])) {
-			$data['payment_rakuten_cpf'] = $this->request->post['payment_rakuten_cpf'];
+		if (isset($this->request->post['rakuten_cpf'])) {
+			$data['rakuten_cpf'] = $this->request->post['rakuten_cpf'];
 		} else {
-			$data['payment_rakuten_cpf'] = $this->config->get('payment_rakuten_cpf');
+			$data['rakuten_cpf'] = $this->config->get('rakuten_cpf');
 		}
 
 		
 		/* Aguardando Pagamento */
-		if (isset($this->request->post['payment_rakuten_aguardando_pagamento'])) {
-			$data['payment_rakuten_aguardando_pagamento'] = $this->request->post['payment_rakuten_aguardando_pagamento'];
+		if (isset($this->request->post['rakuten_aguardando_pagamento'])) {
+			$data['rakuten_aguardando_pagamento'] = $this->request->post['rakuten_aguardando_pagamento'];
 		} else {
-			$data['payment_rakuten_aguardando_pagamento'] = $this->config->get('payment_rakuten_aguardando_pagamento');
+			$data['rakuten_aguardando_pagamento'] = $this->config->get('rakuten_aguardando_pagamento');
 		}
 
 		/* Paga (Pago|Completo) */
-		if (isset($this->request->post['payment_rakuten_paga'])) {
-			$data['payment_rakuten_paga'] = $this->request->post['payment_rakuten_paga'];
+		if (isset($this->request->post['rakuten_paga'])) {
+			$data['rakuten_paga'] = $this->request->post['rakuten_paga'];
 		} else {
-			$data['payment_rakuten_paga'] = $this->config->get('payment_rakuten_paga');
+			$data['rakuten_paga'] = $this->config->get('rakuten_paga');
 		}
 
 		/* Falha */
-		if (isset($this->request->post['payment_rakuten_devolvida'])) {
-			$data['payment_rakuten_falha'] = $this->request->post['payment_rakuten_falha'];
+		if (isset($this->request->post['rakuten_devolvida'])) {
+			$data['rakuten_falha'] = $this->request->post['rakuten_falha'];
 		} else {
-			$data['payment_rakuten_falha'] = $this->config->get('payment_rakuten_falha');
+			$data['rakuten_falha'] = $this->config->get('rakuten_falha');
 		}
 
 		/* Negada */
-		if (isset($this->request->post['payment_rakuten_negada'])) {
-			$data['payment_rakuten_negada'] = $this->request->post['payment_rakuten_negada'];
+		if (isset($this->request->post['rakuten_negada'])) {
+			$data['rakuten_negada'] = $this->request->post['rakuten_negada'];
 		} else {
-			$data['payment_rakuten_negada'] = $this->config->get('payment_rakuten_negada');
+			$data['rakuten_negada'] = $this->config->get('rakuten_negada');
 		}
 
 		/* Devolvido (Reembolsado) */
-		if (isset($this->request->post['payment_rakuten_devolvida'])) {
-			$data['payment_rakuten_devolvida'] = $this->request->post['payment_rakuten_devolvida'];
+		if (isset($this->request->post['rakuten_devolvida'])) {
+			$data['rakuten_devolvida'] = $this->request->post['rakuten_devolvida'];
 		} else {
-			$data['payment_rakuten_devolvida'] = $this->config->get('payment_rakuten_devolvida');
+			$data['rakuten_devolvida'] = $this->config->get('rakuten_devolvida');
 		}
 
 		/* Cancelado */
-		if (isset($this->request->post['payment_rakuten_cancelada'])) {
-			$data['payment_rakuten_cancelada'] = $this->request->post['payment_rakuten_cancelada'];
+		if (isset($this->request->post['rakuten_cancelada'])) {
+			$data['rakuten_cancelada'] = $this->request->post['rakuten_cancelada'];
 		} else {
-			$data['payment_rakuten_cancelada'] = $this->config->get('payment_rakuten_cancelada');
+			$data['rakuten_cancelada'] = $this->config->get('rakuten_cancelada');
 		}
 
 		/* Zona Geográfica */
-		if (isset($this->request->post['payment_rakuten_geo_zone'])) {
-			$data['payment_rakuten_geo_zone'] = $this->request->post['payment_rakuten_geo_zone'];
+		if (isset($this->request->post['rakuten_geo_zone'])) {
+			$data['rakuten_geo_zone'] = $this->request->post['rakuten_geo_zone'];
 		} else {
-			$data['payment_rakuten_geo_zone'] = $this->config->get('payment_rakuten_geo_zone');
+			$data['rakuten_geo_zone'] = $this->config->get('rakuten_geo_zone');
 		}
 		
 		/* Ordem */
-		if (isset($this->request->post['payment_rakuten_sort_order'])) {
-			$data['payment_rakuten_sort_order'] = $this->request->post['payment_rakuten_sort_order'];
+		if (isset($this->request->post['rakuten_sort_order'])) {
+			$data['rakuten_sort_order'] = $this->request->post['rakuten_sort_order'];
 		} else {
-			$data['payment_rakuten_sort_order'] = $this->config->get('payment_rakuten_sort_order');
+			$data['rakuten_sort_order'] = $this->config->get('rakuten_sort_order');
 		}
 
         /* Juros comprador */
-        if (isset($this->request->post['payment_rakuten_juros'])) {
-            $data['payment_rakuten_juros'] = $this->request->post['payment_rakuten_juros'];
+        if (isset($this->request->post['rakuten_juros'])) {
+            $data['rakuten_juros'] = $this->request->post['rakuten_juros'];
         } else {
-            $data['payment_rakuten_juros'] = $this->config->get('payment_rakuten_juros');
+            $data['rakuten_juros'] = $this->config->get('rakuten_juros');
         }
 
         /* Valor mínimo de parcelas */
-        if (isset($this->request->post['payment_rakuten_minimo_parcelas'])) {
-            $data['payment_rakuten_minimo_parcelas'] = $this->request->post['payment_rakuten_minimo_parcelas'];
+        if (isset($this->request->post['rakuten_minimo_parcelas'])) {
+            $data['rakuten_minimo_parcelas'] = $this->request->post['rakuten_minimo_parcelas'];
         } else {
-            $data['payment_rakuten_minimo_parcelas'] = $this->config->get('payment_rakuten_minimo_parcelas');
+            $data['rakuten_minimo_parcelas'] = $this->config->get('rakuten_minimo_parcelas');
         }
 
         /* Quantidade máxima de parcela */
-        if (isset($this->request->post['payment_rakuten_max_parcelas'])) {
-            $data['payment_rakuten_max_parcelas'] = $this->request->post['payment_rakuten_max_parcelas'];
+        if (isset($this->request->post['rakuten_max_parcelas'])) {
+            $data['rakuten_max_parcelas'] = $this->request->post['rakuten_max_parcelas'];
         } else {
-            $data['payment_rakuten_max_parcelas'] = $this->config->get('payment_rakuten_max_parcelas');
+            $data['rakuten_max_parcelas'] = $this->config->get('rakuten_max_parcelas');
         }
 
 		/* Quantidade de parcelas */
-		if (isset($this->request->post['payment_rakuten_qnt_parcelas'])) {
-			$data['payment_rakuten_qnt_parcelas'] = $this->request->post['payment_rakuten_qnt_parcelas'];
+		if (isset($this->request->post['rakuten_qnt_parcelas'])) {
+			$data['rakuten_qnt_parcelas'] = $this->request->post['rakuten_qnt_parcelas'];
 		} else {
-			$data['payment_rakuten_qnt_parcelas'] = $this->config->get('payment_rakuten_qnt_parcelas');
+			$data['rakuten_qnt_parcelas'] = $this->config->get('rakuten_qnt_parcelas');
 		}
 
 		/* Parcelas sem juros */
-		if (isset($this->request->post['payment_rakuten_parcelas_sem_juros'])) {
-			$data['payment_rakuten_parcelas_sem_juros'] = $this->request->post['payment_rakuten_parcelas_sem_juros'];
+		if (isset($this->request->post['rakuten_parcelas_sem_juros'])) {
+			$data['rakuten_parcelas_sem_juros'] = $this->request->post['rakuten_parcelas_sem_juros'];
 		} else {
-			$data['payment_rakuten_parcelas_sem_juros'] = $this->config->get('payment_rakuten_parcelas_sem_juros');
+			$data['rakuten_parcelas_sem_juros'] = $this->config->get('rakuten_parcelas_sem_juros');
 		}
 
 		/* Boleto */
-		if (isset($this->request->post['payment_rakuten_boleto_status'])) {
-			$data['payment_rakuten_boleto_status'] = $this->request->post['payment_rakuten_boleto_status'];
+		if (isset($this->request->post['rakuten_boleto_status'])) {
+			$data['rakuten_boleto_status'] = $this->request->post['rakuten_boleto_status'];
 		} else {
-			$data['payment_rakuten_boleto_status'] = $this->config->get('payment_rakuten_boleto_status');
+			$data['rakuten_boleto_status'] = $this->config->get('rakuten_boleto_status');
 		}
 
 		/* Valor minimo boleto */
-		if (isset($this->request->post['payment_rakuten_valor_minimo_boleto'])) {
-			$data['payment_rakuten_valor_minimo_boleto'] = $this->request->post['payment_rakuten_valor_minimo_boleto'];
+		if (isset($this->request->post['rakuten_valor_minimo_boleto'])) {
+			$data['rakuten_valor_minimo_boleto'] = $this->request->post['rakuten_valor_minimo_boleto'];
 		} else {
-			$data['payment_rakuten_valor_minimo_boleto'] = $this->config->get('payment_rakuten_valor_minimo_boleto');
+			$data['rakuten_valor_minimo_boleto'] = $this->config->get('rakuten_valor_minimo_boleto');
 		}
 
 		/* Cartão de Crédito */
-		if (isset($this->request->post['payment_rakuten_cartao_status'])) {
-			$data['payment_rakuten_cartao_status'] = $this->request->post['payment_rakuten_cartao_status'];
+		if (isset($this->request->post['rakuten_cartao_status'])) {
+			$data['rakuten_cartao_status'] = $this->request->post['rakuten_cartao_status'];
 		} else {
-			$data['payment_rakuten_cartao_status'] = $this->config->get('payment_rakuten_cartao_status');
+			$data['rakuten_cartao_status'] = $this->config->get('rakuten_cartao_status');
 		}
 
 		/* Valor minimo cartão */
-		if (isset($this->request->post['payment_rakuten_valor_minimo_cartao'])) {
-			$data['payment_rakuten_valor_minimo_cartao'] = $this->request->post['payment_rakuten_valor_minimo_cartao'];
+		if (isset($this->request->post['rakuten_valor_minimo_cartao'])) {
+			$data['rakuten_valor_minimo_cartao'] = $this->request->post['rakuten_valor_minimo_cartao'];
 		} else {
-			$data['payment_rakuten_valor_minimo_cartao'] = $this->config->get('payment_rakuten_valor_minimo_cartao');
+			$data['rakuten_valor_minimo_cartao'] = $this->config->get('rakuten_valor_minimo_cartao');
 		}
 
 		/* Status de Pagamento */
@@ -308,9 +302,9 @@ class ControllerExtensionPaymentRakuten extends Controller {
 
 		/* Debug */
 		if (file_exists(DIR_LOGS . 'rakuten.log')) {
-			if ((isset($this->request->post['payment_rakuten_debug']) && $this->request->post['payment_rakuten_debug'])) {
+			if ((isset($this->request->post['rakuten_debug']) && $this->request->post['rakuten_debug'])) {
 				$data['debug'] = file(DIR_LOGS . 'rakuten.log');
-			} elseif ($this->config->get('payment_rakuten_debug')) {
+			} elseif ($this->config->get('rakuten_debug')) {
 				$data['debug'] = file(DIR_LOGS . 'rakuten.log');
 			} else {
 				$data['debug'] = array();
@@ -350,50 +344,50 @@ class ControllerExtensionPaymentRakuten extends Controller {
 		}
 		
 		/* Error Email */
-		if (!filter_var($this->request->post['payment_rakuten_email'], FILTER_VALIDATE_EMAIL)) {
+		if (!filter_var($this->request->post['rakuten_email'], FILTER_VALIDATE_EMAIL)) {
 			$this->error['email'] = $this->language->get('error_email');
 		}
 
         /* Error Document */
-        if ((int)($this->request->post['payment_rakuten_document']) < 12) {
+        if ((int)($this->request->post['rakuten_document']) < 12) {
             $this->error['document'] = $this->language->get('error_document');
         }
 
 		/* Error Api */
-		if (strlen($this->request->post['payment_rakuten_api']) < 32) {
+		if (strlen($this->request->post['rakuten_api']) < 32) {
 			$this->error['api'] = $this->language->get('error_api');
 		}
 
         /* Error Signature */
-        if (strlen($this->request->post['payment_rakuten_signature']) < 32) {
+        if (strlen($this->request->post['rakuten_signature']) < 32) {
             $this->error['signature'] = $this->language->get('error_signature');
         }
 
 		/* Error Quantidade de Parcelas */
-		if (!filter_var($this->request->post['payment_rakuten_qnt_parcelas'], FILTER_VALIDATE_INT)) {
+		if (!filter_var($this->request->post['rakuten_qnt_parcelas'], FILTER_VALIDATE_INT)) {
 			$this->error['qnt_parcelas'] = $this->language->get('error_qnt_parcela');
-		} elseif ($this->request->post['payment_rakuten_qnt_parcelas'] > 18) {
+		} elseif ($this->request->post['rakuten_qnt_parcelas'] > 18) {
 			$this->error['qnt_parcelas'] = $this->language->get('error_qnt_parcela_invalido');
 		}
 		
 		/* Error Quantidade Parcelas sem Juros */
-		if (!filter_var($this->request->post['payment_rakuten_parcelas_sem_juros'], FILTER_VALIDATE_INT)) {
+		if (!filter_var($this->request->post['rakuten_parcelas_sem_juros'], FILTER_VALIDATE_INT)) {
 			$this->error['parcelas_sem_juros'] = $this->language->get('error_parcelas_sem_juros');
-		} elseif ($this->request->post['payment_rakuten_parcelas_sem_juros'] > 18) {
+		} elseif ($this->request->post['rakuten_parcelas_sem_juros'] > 18) {
 			$this->error['parcelas_sem_juros'] = $this->language->get('error_parcelas_sem_juros_invalido');
 		}
 		
 		/* Error Boleto */
-		if ($this->request->post['payment_rakuten_boleto_status']) {
-			if (!filter_var($this->request->post['payment_rakuten_valor_minimo_boleto'], FILTER_VALIDATE_FLOAT)) {
-				$this->request->post['payment_rakuten_valor_minimo_boleto'] = 1.00;
+		if ($this->request->post['rakuten_boleto_status']) {
+			if (!filter_var($this->request->post['rakuten_valor_minimo_boleto'], FILTER_VALIDATE_FLOAT)) {
+				$this->request->post['rakuten_valor_minimo_boleto'] = 1.00;
 			}
 		}
 
 		/* Error Cartão de Crédito */
-		if ($this->request->post['payment_rakuten_cartao_status']) {
-			if (!filter_var($this->request->post['payment_rakuten_valor_minimo_cartao'], FILTER_VALIDATE_FLOAT)) {
-				$this->request->post['payment_rakuten_valor_minimo_cartao'] = 1.00;
+		if ($this->request->post['rakuten_cartao_status']) {
+			if (!filter_var($this->request->post['rakuten_valor_minimo_cartao'], FILTER_VALIDATE_FLOAT)) {
+				$this->request->post['rakuten_valor_minimo_cartao'] = 1.00;
 			}
 		}
 
