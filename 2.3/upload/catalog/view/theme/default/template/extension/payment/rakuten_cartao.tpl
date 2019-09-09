@@ -66,7 +66,7 @@
                   <option value="" disabled selected>Ano</option>
                   <?php foreach ($years as $year): ?>
                     <option value="<?php echo $year['year'] ?>"><?php echo $year['year'] ?></option>
-                  <?php endforeach. ?>
+                  <?php endforeach; ?>
                 </select>
                 <span id="card-year-error" class="hide">Campo número do cartão está em branco ou contém letras.</span>
               </div>
@@ -78,9 +78,9 @@
                 <select class="form-control" id="parcelas" name="parcelas">
                   <option value="" disabled selected>Escolha a quantidade de parcelas</option>
 
-                  <?php foreach ($installment as $installment): ?>
+                  <?php foreach ($installments as $installment): ?>
                     <option value="<?php echo $installment['quantity'] ?>"><?php echo $installment['text'] ?></option>
-                  <?php endforeach. ?>
+                  <?php endforeach; ?>
 
                 </select>
                 <span id="card-installment" class="hide">Escolha a quantidade de parcelas.</span>

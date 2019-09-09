@@ -1,6 +1,3 @@
-<?php if ($warning) { ?>
-<div class="alert alert-danger" id="warning" role="alert"><?php echo $warning ?></div>
-<?php } else { ?>
 <div id="warning" class="alert alert-danger" role="alert" style="display:none"></div>
 
 <div id="info" class="alert alert-info" role="alert" style="display:none">Aguarde....</div>
@@ -137,4 +134,3 @@
     });
 
 </script>
-<?php } ?>

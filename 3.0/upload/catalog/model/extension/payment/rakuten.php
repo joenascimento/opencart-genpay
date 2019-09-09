@@ -408,9 +408,15 @@ class ModelExtensionPaymentRakuten extends Controller {
     public function getShippingAmount()
     {
 
-        $shipping_amount = number_format($this->session->data['shipping_method']['cost'], 2, '.', '.');
-        return (float) $shipping_amount;
+        if (isset($this->session->data['shipping_method'])) {
 
+            $shipping_amount = number_format($this->session->data['shipping_method']['cost'], 2, '.', '.');
+
+            return (float) $shipping_amount;
+        } else {
+
+            return (float) 0;
+        }
     }
 
     /**

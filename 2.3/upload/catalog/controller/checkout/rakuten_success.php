@@ -2,10 +2,6 @@
 class ControllerCheckoutRakutenSuccess extends Controller {
     public function index() {
 
-        if (empty($this->session->data['success_order_id'])) {
-            return $this->response->redirect($this->url->link('account/login'));
-        }
-
         $this->load->language('checkout/success');
         $this->load->language('extension/payment/rakuten');
         $this->load->model('extension/payment/rakuten');
@@ -69,6 +65,7 @@ class ControllerCheckoutRakutenSuccess extends Controller {
         }
 
         $data['continue'] = $this->url->link('common/home');
+        $data['button_continue'] = $this->language->get('button_continue');
 
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['column_right'] = $this->load->controller('common/column_right');
