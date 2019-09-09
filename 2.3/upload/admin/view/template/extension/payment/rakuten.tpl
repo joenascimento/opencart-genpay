@@ -63,14 +63,14 @@
               <div class="form-group required">
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_status ?>"><?php echo $entry_status ?></span></label>
                 <div class="col-sm-10">
-                  <select name="payment_rakuten_status" class="form-control">
-                  <?php if ($payment_rakuten_status == '1') { ?>
+                  <select name="rakuten_status" class="form-control">
+                  <?php if ($rakuten_status == '1') { ?>
                   <option value="1" selected><?php echo $text_enabled ?></option>
                   <?php } else { ?>
                   <option value="1"><?php echo $text_enabled ?></option>
                   <?php } ?>
 
-                  <?php if ($payment_rakuten_status == '0') { ?>
+                  <?php if ($rakuten_status == '0') { ?>
                   <option value="0" selected><?php echo $text_disabled ?></option>
                   <?php } else { ?>
                   <option value="0"><?php echo $text_disabled ?></option>
@@ -83,7 +83,7 @@
               <div class="form-group required">
                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_email ?>"><?php echo $entry_email ?></span></label>
                 <div class="col-sm-10">
-                  <input name="payment_rakuten_email" type="text" class="form-control" value="<?php echo $payment_rakuten_email ?>" />
+                  <input name="rakuten_email" type="text" class="form-control" value="<?php echo $rakuten_email ?>" />
                   <?php if ($error_email) { ?>
                   <div class="text-danger"><?php echo $error_email ?></div>
                   <?php } ?>
@@ -94,7 +94,7 @@
               <div class="form-group required">
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_document ?>"><?php echo $entry_document ?></span></label>
                 <div class="col-sm-10">
-                  <input name="payment_rakuten_document" id="payment_rakuten_document" type="text" class="form-control" value="<?php echo $payment_rakuten_document ?>" />
+                  <input name="rakuten_document" id="rakuten_document" type="text" class="form-control" value="<?php echo $rakuten_document ?>" />
                   <?php if ($error_document) { ?>
                     <div class="text-danger"><?php echo $error_document ?></div>
                   <?php } ?>
@@ -105,7 +105,7 @@
               <div class="form-group required">
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_api ?>"><?php echo $entry_api ?></span></label>
                 <div class="col-sm-10">
-                  <input name="payment_rakuten_api" id="payment_rakuten_api" type="text" class="form-control" value="<?php echo $payment_rakuten_api ?>" />
+                  <input name="rakuten_api" id="rakuten_api" type="text" class="form-control" value="<?php echo $rakuten_api ?>" />
                    <?php if ($error_api) { ?>
                   <div class="text-danger"><?php echo $error_api ?></div>
                   <?php } ?>
@@ -116,7 +116,7 @@
               <div class="form-group required">
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_signature ?>"><?php echo $entry_signature ?></span></label>
                 <div class="col-sm-10">
-                  <input name="payment_rakuten_signature" id="payment_rakuten_signature" type="text" class="form-control" value="<?php echo $payment_rakuten_signature ?>" />
+                  <input name="rakuten_signature" id="rakuten_signature" type="text" class="form-control" value="<?php echo $rakuten_signature ?>" />
                    <?php if ($error_signature) { ?>
                   <div class="text-danger"><?php echo $error_signature ?></div>
                   <?php } ?>
@@ -127,15 +127,15 @@
               <div class="form-group required">
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_environment ?>"><?php echo $entry_environment ?></span></label>
                 <div class="col-sm-10">
-                  <select name="payment_rakuten_environment" class="form-control" id="payment_rakuten_environment">
-                     <?php if ($payment_rakuten_environment == 'sandbox') { ?>
+                  <select name="rakuten_environment" class="form-control" id="rakuten_environment">
+                     <?php if ($rakuten_environment == 'sandbox') { ?>
                     <option value="sandbox" selected><?php echo $text_sandbox ?></option>
                     <?php } else { ?>
                     <option value="sandbox"><?php echo $text_sandbox ?></option>
                     <?php } ?>
 
 
-                    <?php if ($payment_rakuten_environment == 'production') { ?>
+                    <?php if ($rakuten_environment == 'production') { ?>
                     <option value="production" selected><?php echo $text_production ?></option>
                     <?php } else { ?>
                     <option value="production"><?php echo $text_production ?></option>
@@ -148,15 +148,15 @@
               <div class="form-group required">
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_debug ?>"><?php echo $entry_debug ?></span></label>
                 <div class="col-sm-10">
-                  <select name="payment_rakuten_debug" class="form-control">
-                     <?php if ($payment_rakuten_debug == '1') { ?>
+                  <select name="rakuten_debug" class="form-control">
+                     <?php if ($rakuten_debug == '1') { ?>
                     <option value="1" selected><?php echo $text_yes ?></option>
                     <?php } else { ?>
                     <option value="1"><?php echo $text_yes ?></option>
                     <?php } ?>
 
 
-                    <?php if ($payment_rakuten_debug == '0') { ?>
+                    <?php if ($rakuten_debug == '0') { ?>
                     <option value="0" selected><?php echo $text_no ?></option>
                     <?php } else { ?>
                     <option value="0"><?php echo $text_no ?></option>
@@ -179,15 +179,15 @@
               <div class="form-group required">
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_notificar_cliente ?>"><?php echo $entry_notificar_cliente ?></span></label>
                 <div class="col-sm-10">
-                  <select name="payment_rakuten_notificar_cliente" class="form-control">
-                     <?php if ($payment_rakuten_notificar_cliente == '1') { ?>
+                  <select name="rakuten_notificar_cliente" class="form-control">
+                     <?php if ($rakuten_notificar_cliente == '1') { ?>
                     <option value="1" selected><?php echo $text_yes ?></option>
                     <?php } else { ?>
                     <option value="1"><?php echo $text_yes ?></option>
                     <?php } ?>
 
 
-                    <?php if ($payment_rakuten_notificar_cliente == '0') { ?>
+                    <?php if ($rakuten_notificar_cliente == '0') { ?>
                     <option value="0" selected><?php echo $text_no ?></option>
                     <?php } else { ?>
                     <option value="0"><?php echo $text_no ?></option>
@@ -201,9 +201,9 @@
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_number ?>"><?php echo $entry_number ?></span></label>
                 <div class="col-sm-10">
                   <span class="input-group">
-                    <select name="payment_rakuten_number" class="form-control">
+                    <select name="rakuten_number" class="form-control">
                     <?php foreach ($custom_fields as $custom_field): ?>
-                     <?php if ($custom_field['custom_field_id'] == $payment_rakuten_number) { ?>
+                     <?php if ($custom_field['custom_field_id'] == $rakuten_number) { ?>
                     <option value="<?php echo $custom_field['custom_field_id'] ?>" selected><?php echo $custom_field['name'] ?></option>
                     <?php } else { ?>
                     <option value="<?php echo $custom_field['custom_field_id'] ?>"><?php echo $custom_field['name'] ?></option>
@@ -223,9 +223,9 @@
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_complement ?>"><?php echo $entry_complement ?></span></label>
                 <div class="col-sm-10">
                   <span class="input-group">
-                    <select name="payment_rakuten_complement" class="form-control">
+                    <select name="rakuten_complement" class="form-control">
                     <?php foreach ($custom_fields as $custom_field): ?>
-                     <?php if ($custom_field['custom_field_id'] == $payment_rakuten_complement) { ?>
+                     <?php if ($custom_field['custom_field_id'] == $rakuten_complement) { ?>
                     <option value="<?php echo $custom_field['custom_field_id'] ?>" selected><?php echo $custom_field['name'] ?></option>
                     <?php } else { ?>
                     <option value="<?php echo $custom_field['custom_field_id'] ?>"><?php echo $custom_field['name'] ?></option>
@@ -245,9 +245,9 @@
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_cpf ?>"><?php echo $entry_cpf ?></span></label>
                 <div class="col-sm-10">
                   <span class="input-group">
-                    <select name="payment_rakuten_cpf" class="form-control">
+                    <select name="rakuten_cpf" class="form-control">
                       <?php foreach ($custom_fields as $custom_field): ?>
-                         <?php if ($custom_field['custom_field_id'] == $payment_rakuten_cpf) { ?>
+                         <?php if ($custom_field['custom_field_id'] == $rakuten_cpf) { ?>
                           <option value="<?php echo $custom_field['custom_field_id'] ?>" selected><?php echo $custom_field['name'] ?></option>
                         <?php } else { ?>
                           <option value="<?php echo $custom_field['custom_field_id'] ?>"><?php echo $custom_field['name'] ?></option>
@@ -278,9 +278,9 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_aguardando_pagamento ?>"><?php echo $entry_aguardando_pagamento ?></span></label>
                 <div class="col-sm-10">
-                  <select name="payment_rakuten_aguardando_pagamento" class="form-control">
+                  <select name="rakuten_aguardando_pagamento" class="form-control">
                   <?php foreach ($statuses as $status): ?>
-                   <?php if ($payment_rakuten_aguardando_pagamento == $status['order_status_id']) { ?>
+                   <?php if ($rakuten_aguardando_pagamento == $status['order_status_id']) { ?>
                   <option value="<?php echo $status['order_status_id'] ?>" selected><?php echo $status['name'] ?></option>
                   <?php } else { ?>
                   <option value="<?php echo $status['order_status_id'] ?>"><?php echo $status['name'] ?></option>
@@ -294,9 +294,9 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_pago ?>"><?php echo $entry_pago ?></span></label>
                 <div class="col-sm-10">
-                  <select name="payment_rakuten_paga" class="form-control">
+                  <select name="rakuten_paga" class="form-control">
                     <?php foreach ($statuses as $status): ?>
-                     <?php if ($payment_rakuten_paga == $status['order_status_id']) { ?>
+                     <?php if ($rakuten_paga == $status['order_status_id']) { ?>
                     <option value="<?php echo $status['order_status_id'] ?>" selected><?php echo $status['name'] ?></option>
                     <?php } else { ?>
                     <option value="<?php echo $status['order_status_id'] ?>"><?php echo $status['name'] ?></option>
@@ -310,9 +310,9 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_devolvida ?>"><?php echo $entry_devolvido ?></span></label>
                 <div class="col-sm-10">
-                  <select name="payment_rakuten_devolvida" class="form-control">
+                  <select name="rakuten_devolvida" class="form-control">
                     <?php foreach ($statuses as $status): ?>
-                     <?php if ($payment_rakuten_devolvida == $status['order_status_id']) { ?>
+                     <?php if ($rakuten_devolvida == $status['order_status_id']) { ?>
                     <option value="<?php echo $status['order_status_id'] ?>" selected><?php echo $status['name'] ?></option>
                     <?php } else { ?>
                     <option value="<?php echo $status['order_status_id'] ?>"><?php echo $status['name'] ?></option>
@@ -326,9 +326,9 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_falha ?>"><?php echo $entry_falha ?></span></label>
                 <div class="col-sm-10">
-                  <select name="payment_rakuten_falha" class="form-control">
+                  <select name="rakuten_falha" class="form-control">
                     <?php foreach ($statuses as $status): ?>
-                     <?php if ($payment_rakuten_falha == $status['order_status_id']) { ?>
+                     <?php if ($rakuten_falha == $status['order_status_id']) { ?>
                     <option value="<?php echo $status['order_status_id'] ?>" selected><?php echo $status['name'] ?></option>
                     <?php } else { ?>
                     <option value="<?php echo $status['order_status_id'] ?>"><?php echo $status['name'] ?></option>
@@ -342,9 +342,9 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $entry_cancelada ?>"><?php echo $entry_cancelada ?></span></label>
                 <div class="col-sm-10">
-                  <select name="payment_rakuten_cancelada" class="form-control">
+                  <select name="rakuten_cancelada" class="form-control">
                    <?php foreach ($statuses as $status): ?>
-                    <?php if ($payment_rakuten_cancelada == $status['order_status_id']) { ?>
+                    <?php if ($rakuten_cancelada == $status['order_status_id']) { ?>
                    <option value="<?php echo $status['order_status_id'] ?>" selected><?php echo $status['name'] ?></option>
                    <?php } else { ?>
                    <option value="<?php echo $status['order_status_id'] ?>"><?php echo $status['name'] ?></option>
@@ -358,9 +358,9 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $entry_negada ?>"><?php echo $entry_negada ?></span></label>
                 <div class="col-sm-10">
-                  <select name="payment_rakuten_negada" class="form-control">
+                  <select name="rakuten_negada" class="form-control">
                    <?php foreach ($statuses as $status): ?>
-                    <?php if ($payment_rakuten_negada == $status['order_status_id']) { ?>
+                    <?php if ($rakuten_negada == $status['order_status_id']) { ?>
                    <option value="<?php echo $status['order_status_id'] ?>" selected><?php echo $status['name'] ?></option>
                    <?php } else { ?>
                    <option value="<?php echo $status['order_status_id'] ?>"><?php echo $status['name'] ?></option>
@@ -378,10 +378,10 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label"><?php echo $entry_geo_zone ?></label>
                 <div class="col-sm-10">
-                  <select name="payment_rakuten_geo_zone" class="form-control">
+                  <select name="rakuten_geo_zone" class="form-control">
                     <option value="0"><?php echo $text_all_zones ?></option>
                     <?php foreach ($zones as $zone): ?>
-                     <?php if ($payment_rakuten_geo_zone == $zone['geo_zone_id']) { ?>
+                     <?php if ($rakuten_geo_zone == $zone['geo_zone_id']) { ?>
                     <option value="<?php echo $zone['geo_zone_id'] ?>" selected><?php echo $zone['name'] ?></option>
                     <?php } else { ?>
                     <option value="<?php echo $zone['geo_zone_id'] ?>"><?php echo $zone['name'] ?></option>
@@ -395,7 +395,7 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label"><?php echo $entry_sort_order ?></label>
                 <div class="col-sm-10">
-                  <input type="text" name="payment_rakuten_sort_order" value="<?php echo $payment_rakuten_sort_order ?>" class="form-control" />
+                  <input type="text" name="rakuten_sort_order" value="<?php echo $rakuten_sort_order ?>" class="form-control" />
                 </div>
               </div>
             </div>
@@ -407,14 +407,14 @@
               <div class="form-group required">
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_juros ?>"><?php echo $entry_juros ?></span></label>
                 <div class="col-sm-10">
-                  <select name="payment_rakuten_juros" class="form-control">
-                     <?php if ($payment_rakuten_juros == '1') { ?>
+                  <select name="rakuten_juros" class="form-control">
+                     <?php if ($rakuten_juros == '1') { ?>
                       <option value="1" selected><?php echo $text_yes ?></option>
                     <?php } else { ?>
                       <option value="1"><?php echo $text_yes ?></option>
                     <?php } ?>
 
-                    <?php if ($payment_rakuten_juros == '0') { ?>
+                    <?php if ($rakuten_juros == '0') { ?>
                       <option value="0" selected><?php echo $text_no ?></option>
                     <?php } else { ?>
                       <option value="0"><?php echo $text_no ?></option>
@@ -427,7 +427,7 @@
               <div class="form-group required" id="sem_juros">
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_parcela_sem_juros ?>"><?php echo $entry_parcelas_sem_juros ?></span></label>
                 <div class="col-sm-10">
-                  <input type="text" name="payment_rakuten_parcelas_sem_juros" value="<?php echo $payment_rakuten_parcelas_sem_juros ?>" class="form-control" />
+                  <input type="text" name="rakuten_parcelas_sem_juros" value="<?php echo $rakuten_parcelas_sem_juros ?>" class="form-control" />
                    <?php if ($error_parcelas_sem_juros) { ?>
                     <div class="text-danger"><?php echo $error_parcelas_sem_juros ?></div>
                   <?php } ?>
@@ -435,10 +435,10 @@
               </div>
 
               <!-- Valor mínimo de parcela -->
-              <div class="form-group required" id="payment_rakuten_minimo_parcelas">
+              <div class="form-group required" id="rakuten_minimo_parcelas">
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_exemplo_parcela ?>"><?php echo $entry_minimo_parcelas ?></span></label>
                 <div class="col-sm-10">
-                  <input type="text" name="payment_rakuten_minimo_parcelas" value="<?php echo $payment_rakuten_minimo_parcelas ?>" class="form-control" />
+                  <input type="text" name="rakuten_minimo_parcelas" value="<?php echo $rakuten_minimo_parcelas ?>" class="form-control" />
                    <?php if ($error_qnt_parcela) { ?>
                     <div class="text-danger"><?php echo $error_qnt_parcela ?></div>
                   <?php } ?>
@@ -446,10 +446,10 @@
               </div>
 
               <!-- Quantidade Máxima de Parcelas -->
-              <div class="form-group required" id="payment_rakuten_qnt_parcelas">
+              <div class="form-group required" id="rakuten_qnt_parcelas">
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_exemplo_parcela ?>"><?php echo $entry_qnt_parcelas ?></span></label>
                 <div class="col-sm-10">
-                  <input type="text" name="payment_rakuten_qnt_parcelas" value="<?php echo $payment_rakuten_qnt_parcelas ?>" class="form-control" />
+                  <input type="text" name="rakuten_qnt_parcelas" value="<?php echo $rakuten_qnt_parcelas ?>" class="form-control" />
                    <?php if ($error_qnt_parcela) { ?>
                   <div class="text-danger"><?php echo $error_qnt_parcela ?></div>
                   <?php } ?>
@@ -471,15 +471,15 @@
                 <div class="form-group">
                   <label class="col-sm-2 control-label"><?php echo $entry_status ?></label>
                   <div class="col-sm-10">
-                    <select name="payment_rakuten_boleto_status" class="form-control">
-                       <?php if ($payment_rakuten_boleto_status == '1') { ?>
+                    <select name="rakuten_boleto_status" class="form-control">
+                       <?php if ($rakuten_boleto_status == '1') { ?>
                       <option value="1" selected><?php echo $text_enabled ?></option>
                       <?php } else { ?>
                       <option value="1"><?php echo $text_enabled ?></option>
                       <?php } ?>
 
 
-                      <?php if ($payment_rakuten_boleto_status == '0') { ?>
+                      <?php if ($rakuten_boleto_status == '0') { ?>
                       <option value="0" selected><?php echo $text_disabled ?></option>
                       <?php } else { ?>
                       <option value="0"><?php echo $text_disabled ?></option>
@@ -492,7 +492,7 @@
                 <div class="form-group">
                   <label class="col-sm-2 control-label"><?php echo $entry_valor_minimo ?></label>
                   <div class="col-sm-10">
-                    <input type="text" name="payment_rakuten_valor_minimo_boleto" value="<?php echo $payment_rakuten_valor_minimo_boleto ?>" class="form-control" />
+                    <input type="text" name="rakuten_valor_minimo_boleto" value="<?php echo $rakuten_valor_minimo_boleto ?>" class="form-control" />
                   </div>
                 </div>
               </fieldset>
@@ -505,15 +505,15 @@
                 <div class="form-group">
                   <label class="col-sm-2 control-label"><?php echo $entry_status ?></label>
                   <div class="col-sm-10">
-                    <select name="payment_rakuten_cartao_status" class="form-control">
-                       <?php if ($payment_rakuten_cartao_status == '1') { ?>
+                    <select name="rakuten_cartao_status" class="form-control">
+                       <?php if ($rakuten_cartao_status == '1') { ?>
                       <option value="1" selected><?php echo $text_enabled ?></option>
                       <?php } else { ?>
                       <option value="1"><?php echo $text_enabled ?></option>
                       <?php } ?>
 
 
-                      <?php if ($payment_rakuten_cartao_status == '0') { ?>
+                      <?php if ($rakuten_cartao_status == '0') { ?>
                       <option value="0" selected><?php echo $text_disabled ?></option>
                       <?php } else { ?>
                       <option value="0"><?php echo $text_disabled ?></option>
@@ -526,7 +526,7 @@
                 <div class="form-group">
                   <label class="col-sm-2 control-label"><?php echo $entry_valor_minimo ?></label>
                   <div class="col-sm-10">
-                    <input type="text" name="payment_rakuten_valor_minimo_cartao" value="<?php echo $payment_rakuten_valor_minimo_cartao ?>" class="form-control" />
+                    <input type="text" name="rakuten_valor_minimo_cartao" value="<?php echo $rakuten_valor_minimo_cartao ?>" class="form-control" />
                   </div>
                 </div>
               </fieldset>
@@ -552,10 +552,10 @@
       $(this).parent().find('div').slideToggle('slow');
   });
 
-  var buyer = document.querySelector("[name='payment_rakuten_juros']");
+  var buyer = document.querySelector("[name='rakuten_juros']");
   var no_instalments = document.getElementById('sem_juros');
-  var min_installment = document.getElementById('payment_rakuten_minimo_parcelas');
-  var max_installment = document.getElementById('payment_rakuten_qnt_parcelas');
+  var min_installment = document.getElementById('rakuten_minimo_parcelas');
+  var max_installment = document.getElementById('rakuten_qnt_parcelas');
   var button = document.getElementById('botao_validar');
 
   if (buyer.value === "0") {
@@ -582,9 +582,9 @@
 
   button.addEventListener('click', function() {
 
-    var rakuten_environment = document.getElementById('payment_rakuten_environment').value;
-    var cnpj = document.getElementById('payment_rakuten_document').value;
-    var api = document.getElementById('payment_rakuten_api').value;
+    var rakuten_environment = document.getElementById('rakuten_environment').value;
+    var cnpj = document.getElementById('rakuten_document').value;
+    var api = document.getElementById('rakuten_api').value;
 
     console.log('Validate Credentials start');
     $.ajax({
