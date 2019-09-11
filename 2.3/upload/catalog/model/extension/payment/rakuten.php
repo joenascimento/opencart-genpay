@@ -179,9 +179,17 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getDocument($order)
     {
+        $document = $this->getOnlyNumbers($order['custom_field'][$this->config->get('rakuten_cpf')]);
+        return $document;
 
-        return $order['custom_field'][$this->config->get('rakuten_cpf')];
+    }
 
+    /**
+     * Helper Only Numbers
+     */
+    private function getOnlyNumbers($value)
+    {
+        return preg_replace('/\D/', '', $value);
     }
 
     /**
@@ -1069,5 +1077,43 @@ class ModelExtensionPaymentRakuten extends Controller {
         }
         file_put_contents('rakuten.log', var_export('Exception: getCreatedAt() Verifique se a tabela rakutenpay_orders existe no banco de dados ou se o parâmetro está correto.' . PHP_EOL, true), FILE_APPEND);
         return false;
+    }
+
+    /**
+     * Get the Log and create/append messages at the file rakuten.log
+     *
+     * @param $message
+     * @param $method
+     *
+     * @return true
+     */
+    public function setLog($message, $method = null)
+    {
+        if ($this->config->get('rakuten_debug') == '1') {
+
+            $prefix = date(DATE_RFC822);
+            $function = $method;
+            file_put_contents('rakuten.log', '[ ' . $prefix . '][ ' . $function . ' ]' . '[info] ' . print_r($message . PHP_EOL, true), FILE_APPEND);
+
+        }
+        return true;
+    }
+
+    /**
+     * Get the Log and create/append messages at the file rakuten.log
+     *
+     * @param $message
+     * @param $method
+     *
+     * @return true
+     */
+    public function setException($message, $method = null)
+    {
+
+        $prefix = date(DATE_RFC822);
+        $function = $method;
+        file_put_contents('rakuten.log', '[ ' . $prefix . '][ ' . $function . ' ]' . '[erro] ' . print_r($message . PHP_EOL, true), FILE_APPEND);
+
+        return true;
     }
 }

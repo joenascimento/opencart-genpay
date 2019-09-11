@@ -230,6 +230,20 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
         $chargeUuid = $result['charge_uuid'];
         $environment = $rakuten->getEnvironment()['place'];
 
+        if (isset($this->session->data['order_id'])) {
+            $order_id = $this->session->data['order_id'];
+        } else {
+            $order_id = $this->request->post["order_id"];
+        }
+
+        if ($result['result'] !== 'success') {
+
+            $status = $this->config->get('rakuten_falha');
+            $this->model_checkout_order->addOrderHistory($order_id, $status, $result['result_messages'][0], '0' );
+
+            return false;
+        }
+
 		switch ($result_status) {
 			case 'pending':
 				$status = $this->config->get('rakuten_aguardando_pagamento');
@@ -240,12 +254,7 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
                 $paymentStatus = 'pending';
 				break;
 		}
-		
-        if (isset($this->session->data['order_id'])) {
-            $order_id = $this->session->data['order_id'];
-        } else {
-            $order_id = $this->request->post["order_id"];
-        }
+
         
 		$this->model_checkout_order->addOrderHistory($order_id, $status, $billet_url, '1');
         $this->db->query("INSERT INTO `rakutenpay_orders` (`order_id`, `charge_uuid`, `status`, `environment`, `created_at`, `updated_at`) VALUES ('$order_id', '$chargeUuid', '$paymentStatus', '$environment', CURRENT_TIME, CURRENT_TIME)");

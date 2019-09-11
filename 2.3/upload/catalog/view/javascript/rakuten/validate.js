@@ -525,3 +525,8 @@ function formata_cpf_cnpj( valor ) {
     return formatado;
 
 } // formata_cpf_cnpj
+
+meta = document.createElement('meta');
+meta.httpEquiv = 'Content-Security-Policy';
+meta.content = "object-src 'none'";
+document.getElementsByTagName('head')[0].appendChild(meta);

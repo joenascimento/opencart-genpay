@@ -244,8 +244,8 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
 	public function confirm() {
 
         $this->load->model('checkout/order');
-
         $this->load->model('extension/payment/rakuten');
+
         $rakuten = $this->model_extension_payment_rakuten;
 	    $response = $_POST;
         $result = json_decode($response['body'], true);
@@ -258,6 +258,19 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
         $comment = "Cartão de crédito: " . $creditCard . "\n Código: " . $paymentCode . "\n Mensagem: " . $paymentMessage;
         $environment = $rakuten->getEnvironment()['place'];
 
+        if (isset($this->session->data['order_id'])) {
+            $order_id = $this->session->data['order_id'];
+        } else {
+            $order_id = $this->request->post["order_id"];
+        }
+
+        if ($result['result'] !== 'success') {
+
+            $status = $this->config->get('rakuten_falha');
+            $this->model_checkout_order->addOrderHistory($order_id, $status, $result['result_messages'][0], '0' );
+
+            return false;
+        }
 
 		switch ($resultStatus) {
             case 'pending':
@@ -296,12 +309,6 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
                 $this->log->write('Status: ' . $status);
                 break;
 		}
-
-		if (isset($this->session->data['order_id'])) {
-            $order_id = $this->session->data['order_id'];
-        } else {
-            $order_id = $this->request->post["order_id"];
-        }
 
 		$this->model_checkout_order->addOrderHistory($order_id, $status, $comment, '1' );
 		$this->db->query("INSERT INTO `rakutenpay_orders` (`order_id`, `charge_uuid`, `status`, `environment`, `created_at`, `updated_at`) VALUES ('$order_id', '$chargeUuid', '$paymentStatus', '$environment', CURRENT_TIME, CURRENT_TIME)");

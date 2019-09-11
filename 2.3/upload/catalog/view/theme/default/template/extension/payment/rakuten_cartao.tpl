@@ -238,8 +238,7 @@
             type: 'POST',
             data: { body: response },
             success: function () {
-              console.log('success confirm: ');
-              console.log(response);
+              console.log('success');
               // return false;
               setTimeout(function () {
                 location.href = '<?php echo $continue ?>';

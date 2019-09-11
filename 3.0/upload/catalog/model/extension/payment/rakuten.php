@@ -179,9 +179,17 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getDocument($order)
     {
+        $document = $this->getOnlyNumbers($order['custom_field'][$this->config->get('rakuten_cpf')]);
+        return $document;
 
-        return $order['custom_field'][$this->config->get('payment_rakuten_cpf')];
+    }
 
+    /**
+     * Helper Only Numbers
+     */
+    private function getOnlyNumbers($value)
+    {
+        return preg_replace('/\D/', '', $value);
     }
 
     /**
