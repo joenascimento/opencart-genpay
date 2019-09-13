@@ -75,7 +75,7 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
         $shipping_method = $rakuten->getShippingMethod(); //shipping method withoud Rakuten Log
         $payment_method = $rakuten->getPaymentMethod(); //Payment Method of Rakuten (billet/credit_card)
         $posted = $_POST; // _POST received from the checkout form
-        $totalamount = $rakuten->getTotalAmount() + $rakuten->getShippingAmount(); //Sum of cart total amount and the shipping amount
+        $totalamount = $rakuten->getTotalAmount() + $rakuten->getShippingAmount() +; //Sum of cart total amount and the shipping amount
 
         /** Payload */
         $data = array(
