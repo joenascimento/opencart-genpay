@@ -32,17 +32,18 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     private function getApiUrl() {
 
-        $this->environment = $this->config->get('rakuten_environment');
+            $this->environment = $this->config->get('rakuten_environment');
 
-        if ( 'production' === $this->environment ) {
+            if ( 'production' === $this->environment ) {
 
-            return self::PRODUCTION_API_URL;
+                $this->setLog('start ' . self::PRODUCTION_API_URL, 'getApiUrl()');
+                return self::PRODUCTION_API_URL;
 
-        } else {
+            } else {
+                $this->setLog('start ' . self::SANDBOX_API_URL, 'getApiUrl()');
+                return self::SANDBOX_API_URL;
+            }
 
-            return self::SANDBOX_API_URL;
-
-        }
     }
 
     /**
@@ -145,18 +146,8 @@ class ModelExtensionPaymentRakuten extends Controller {
      * @return array
      */
     public function getMethod() {
-//        $this->load->model('extension/payment/rakuten_cartao');
-//        $this->load->model('extension/payment/rakuten_boleto');
-//
-//        $creditCard = $this->model_extension_rakuten_cartao->getMethod();
-//        $billet = $this->model_extension_rakuten_boleto->getMethod();
-//
-//        if ($creditCard['code'] == 'rakuten_cartao') {
-//
-//            return $creditCard;
-//        }
-//
-//        return $billet;
+
+        return [];
     }
 
     /**
@@ -201,9 +192,20 @@ class ModelExtensionPaymentRakuten extends Controller {
     public function getName($order)
     {
 
-        $name = $order['firstname'] . ' ' . $order['lastname'];
+        try {
+            $name = $order['firstname'] . ' ' . $order['lastname'];
+            if (empty($name)) {
+                throw new Exception('Nome ou Sobrenome está vazio');
+            }
 
-        return $name;
+            $this->setLog('start ' . $name, 'getName()');
+            return $name;
+
+        } catch (Exception $e) {
+            $this->setException($e->getMessage(), 'getName()');
+
+            return false;
+        }
 
     }
 
@@ -215,8 +217,21 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getEmail($order)
     {
+        $email = $order['email'];
 
-        return $order['email'];
+        try {
+            if (empty($email)) {
+                throw new Exception('Email está vazio');
+            }
+
+            $this->setLog('start ' . $email, 'getEmail()');
+            return $email;
+
+        } catch (Exception $e) {
+            $this->setException($e->getMessage(), 'getEmail()');
+
+            return false;
+        }
 
     }
 
@@ -404,7 +419,21 @@ class ModelExtensionPaymentRakuten extends Controller {
     public function getShippingMethod()
     {
 
-        return $this->session->data['shipping_method']['code'];
+        try {
+            if (isset($this->session->data['shipping_method'])) {
+
+                return $this->session->data['shipping_method']['code'];
+            } else {
+                return '';
+            }
+
+//            throw new Exception('Produto não contém shipping method');
+
+        } catch (Exception $e) {
+            $this->setException($e->getMessage(), 'getShippingMethod()');
+
+            return $e->getMessage();
+        }
 
     }
 
@@ -1045,8 +1074,6 @@ class ModelExtensionPaymentRakuten extends Controller {
             return false;
 
         }
-        file_put_contents('rakuten.log', var_export('Exception: getOrderStatus() Verifique se a tabela rakutenpay_orders existe no banco de dados ou se o parâmetro está correto' . PHP_EOL, true), FILE_APPEND);
-        return false;
 
     }
 
@@ -1068,15 +1095,15 @@ class ModelExtensionPaymentRakuten extends Controller {
 
                     return $order['created_at'];
                 }
+
+                throw new Exception('Verifique se a tabela rakutenpay_orders existe no banco de dados ou se o parâmetro está correto.');
             }
         } catch (\Exception $e) {
 
-            file_put_contents('rakuten.log', var_export($e->getMessage() . PHP_EOL, true), FILE_APPEND);
+            $this->setException($e->getMessage(), 'getCreatedAt()');
             return false;
 
         }
-        file_put_contents('rakuten.log', var_export('Exception: getCreatedAt() Verifique se a tabela rakutenpay_orders existe no banco de dados ou se o parâmetro está correto.' . PHP_EOL, true), FILE_APPEND);
-        return false;
     }
 
     /**
