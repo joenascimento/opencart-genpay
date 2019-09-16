@@ -50,15 +50,37 @@ class ControllerCheckoutRakutenSuccess extends Controller {
             'href' => $this->url->link('checkout/rakuten_success')
         );
 
-        $data['order_status'] = $rakuten->getOrderStatus($this->session->data['success_order_id']);
+        $data['title_rakuten_message'] = '';
+        $data['text_rakuten_message'] = '';
+
 
         if ($this->customer->isLogged()) {
-            if ($data['order_status'] == 'pending') {
-                $data['title_rakuten_message'] = $this->language->get('rakuten_title_success');
-                $data['text_rakuten_message'] = sprintf($this->language->get('rakuten_success'), $this->session->data['success_order_id'], 'Pending', $this->url->link('account/order', '', true));
-            } else {
-                $data['title_rakuten_message'] = $this->language->get('rakuten_title_failure');
-                $data['text_rakuten_message'] = sprintf($this->language->get('rakuten_failure'), $this->session->data['success_order_id'], $data['order_status'], $this->url->link('account/order', '', true));
+            $status = $rakuten->getOrderStatus($this->session->data['success_order_id']);
+            switch ($status) {
+                case 'pending':
+                    $data['title_rakuten_message'] = $this->language->get('rakuten_title_success');
+                    $data['text_rakuten_message'] = sprintf($this->language->get('rakuten_success'), $this->session->data['success_order_id'], 'Aguardando pagamento', $this->url->link('account/order', '', true));
+                    break;
+                case 'success':
+                    $data['title_rakuten_message'] = $this->language->get('rakuten_title_success');
+                    $data['text_rakuten_message'] = sprintf($this->language->get('rakuten_success'), $this->session->data['success_order_id'], 'Aguardando pagamento', $this->url->link('account/order', '', true));
+                    break;
+                case 'declined':
+                    $data['title_rakuten_message'] = $this->language->get('rakuten_title_failure');
+                    $data['text_rakuten_message'] = sprintf($this->language->get('rakuten_failure'), $this->session->data['success_order_id'], 'Negado', $this->url->link('account/order', '', true));
+                    break;
+                case 'failure':
+                    $data['title_rakuten_message'] = $this->language->get('rakuten_title_failure');
+                    $data['text_rakuten_message'] = sprintf($this->language->get('rakuten_failure'), $this->session->data['success_order_id'], 'Falha na transação', $this->url->link('account/order', '', true));
+                    break;
+                case 'cancelled':
+                    $data['title_rakuten_message'] = $this->language->get('rakuten_title_failure');
+                    $data['text_rakuten_message'] = sprintf($this->language->get('rakuten_failure'), $this->session->data['success_order_id'], 'Cancelado', $this->url->link('account/order', '', true));
+                    break;
+                case 'refunded':
+                    $data['title_rakuten_message'] = $this->language->get('rakuten_title_success');
+                    $data['text_rakuten_message'] = sprintf($this->language->get('rakuten_success'), $this->session->data['success_order_id'], 'Devolvido', $this->url->link('account/order', '', true));
+                    break;
             }
         } else {
             $data['text_message'] = sprintf($this->language->get('text_guest'), $this->url->link('information/contact'));
@@ -66,7 +88,6 @@ class ControllerCheckoutRakutenSuccess extends Controller {
 
         $data['continue'] = $this->url->link('common/home');
         $data['button_continue'] = $this->language->get('button_continue');
-
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['column_right'] = $this->load->controller('common/column_right');
         $data['content_top'] = $this->load->controller('common/content_top');
