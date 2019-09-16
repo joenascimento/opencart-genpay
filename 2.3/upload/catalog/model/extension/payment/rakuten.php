@@ -287,6 +287,11 @@ class ModelExtensionPaymentRakuten extends Controller {
 
     }
 
+    public function getSubTotalAmount()
+    {
+        return (float) $this->cart->getSubTotal();
+    }
+
     /**
      * Get custom field number address
      *
@@ -721,11 +726,12 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getTaxAmount()
     {
-        $taxes = $this->cart->getTaxes();
-
-        foreach ($taxes as $tax) {
-            return $tax;
-        }
+//        $taxes = $this->cart->getTaxes();
+//
+//        foreach ($taxes as $tax) {
+//            return array_sum($tax);
+//        }
+        return array_sum($this->cart->getTaxes());
     }
 
     /**
@@ -890,6 +896,15 @@ class ModelExtensionPaymentRakuten extends Controller {
         return $jsonData;
     }
 
+    /**
+     * Get buyer interest configuration
+     *
+     * @return mixed
+     */
+    public function getBuyerInterest()
+    {
+        return $this->config->get('rakuten_juros');
+    }
 
     /**
      * Get Installments

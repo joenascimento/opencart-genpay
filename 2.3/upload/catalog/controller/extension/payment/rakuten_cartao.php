@@ -72,10 +72,11 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']); //Order informations on the client session
         $rakuten = $this->model_extension_payment_rakuten; //Rakuten Model to get all the methods
         $custom_field = $order_info['shipping_custom_field']; //District, complement and address number
-        $shipping_method = $rakuten->getShippingMethod(); //shipping method withoud Rakuten Log
+        $shipping_method = $rakuten->getShippingMethod(); //shipping method without Rakuten Log
         $payment_method = $rakuten->getPaymentMethod(); //Payment Method of Rakuten (billet/credit_card)
         $posted = $_POST; // _POST received from the checkout form
-        $totalamount = $rakuten->getTotalAmount() + $rakuten->getShippingAmount() +; //Sum of cart total amount and the shipping amount
+        $buyerInterest = $rakuten->getBuyerInterest();
+        $totalamount = $rakuten->getTotalAmount() + $rakuten->getShippingAmount() + $posted['amount'] ; //Sum of cart total amount, shipping amount and rakuten interest amount.
 
         /** Payload */
         $data = array(
@@ -133,9 +134,9 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
             'order' => array(
                 'reference'       => $rakuten->getOrderId($order_info),
                 'payer_ip'        => $rakuten->getIp($order_info),
-                'items_amount'    => $rakuten->getTotalAmount(),
+                'items_amount'    => $rakuten->getSubTotalAmount(),
                 'shipping_amount' => (float) $rakuten->getShippingAmount(),
-                'taxes_amount'    => (float) $rakuten->getTaxAmount(),
+                'taxes_amount'    => (float) $rakuten->getTaxAmount() + $posted['amount'],
                 'discount_amount' => (float) $rakuten->discount($rakuten->getTotalAmount()),
                 'items' => $rakuten->getItems($order_info),
             ),
@@ -188,11 +189,18 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
                 'options'                  => [
                     'save_card'   => false,
                     'new_card'    => false,
-                    'recurrency'  => false
+                    'recurrency'  => false,
                 ]
             ];
-            if ( isset( $installments ) ) {
-                $payment['installments'] = $installments;
+
+            if ($buyerInterest == '1') {
+                $payment['installments'] = [
+                    'quantity' => (int) $posted['quantity'],
+                    'interest_percent' => (float) $posted['percent'],
+                    'interest_amount' => (float) $posted['amount'],
+                    'installment_amount' => (float) $posted['installment'],
+                    'total' => (float) $posted['total'],
+                ];
             }
         } else {
             $payment = [
@@ -244,8 +252,8 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
 	public function confirm() {
 
         $this->load->model('checkout/order');
-        $this->load->model('extension/payment/rakuten');
 
+        $this->load->model('extension/payment/rakuten');
         $rakuten = $this->model_extension_payment_rakuten;
 	    $response = $_POST;
         $result = json_decode($response['body'], true);
