@@ -32,17 +32,17 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     private function getApiUrl() {
 
-            $this->environment = $this->config->get('rakuten_environment');
+        $this->environment = $this->config->get('rakuten_environment');
 
-            if ( 'production' === $this->environment ) {
+        if ( 'production' === $this->environment ) {
 
-                $this->setLog('start ' . self::PRODUCTION_API_URL, 'getApiUrl()');
-                return self::PRODUCTION_API_URL;
+            $this->setLog(self::PRODUCTION_API_URL);
+            return self::PRODUCTION_API_URL;
 
-            } else {
-                $this->setLog('start ' . self::SANDBOX_API_URL, 'getApiUrl()');
-                return self::SANDBOX_API_URL;
-            }
+        } else {
+            $this->setLog(self::SANDBOX_API_URL);
+            return self::SANDBOX_API_URL;
+        }
 
     }
 
@@ -56,11 +56,11 @@ class ModelExtensionPaymentRakuten extends Controller {
         $this->environment = $this->config->get('rakuten_environment');
 
         if ( 'production' === $this->environment ) {
-
+            $this->setLog(self::PRODUCTION_API_URL);
             return self::PRODUCTION_JS_URL;
 
         } else {
-
+            $this->setLog(self::SANDBOX_API_URL);
             return self::SANDBOX_JS_URL;
 
         }
@@ -72,10 +72,8 @@ class ModelExtensionPaymentRakuten extends Controller {
      * @return string
      */
     public function getValidateJs() {
-
-
+        $this->setLog(self::SANDBOX_JS_URL);
         return self::SANDBOX_JS_URL;
-
     }
 
     /**
@@ -111,7 +109,9 @@ class ModelExtensionPaymentRakuten extends Controller {
         $this->rpay_js = $js;
 
         if ( 'production' === $this->environment ) {
-
+            $this->setLog($this->environment);
+            $this->setLog($this->api);
+            $this->setLog($this->rpay_js);
             return [
                 'place' => $this->environment,
                 'api' => $this->api,
@@ -119,13 +119,14 @@ class ModelExtensionPaymentRakuten extends Controller {
             ];
 
         }
-
+        $this->setLog($this->environment);
+        $this->setLog($this->api);
+        $this->setLog($this->rpay_js);
         return [
             'place' => $this->environment,
             'api' => $this->api,
             'rpay_js' => $this->rpay_js,
         ];
-
     }
 
     /**
@@ -146,7 +147,6 @@ class ModelExtensionPaymentRakuten extends Controller {
      * @return array
      */
     public function getMethod() {
-
         return [];
     }
 
@@ -157,9 +157,8 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getPaymentMethod()
     {
-
+        $this->setLog($this->session->data['payment_method']['code']);
         return $this->session->data['payment_method']['code'];
-
     }
 
     /**
@@ -171,6 +170,7 @@ class ModelExtensionPaymentRakuten extends Controller {
     public function getDocument($order)
     {
         $document = $this->getOnlyNumbers($order['custom_field'][$this->config->get('rakuten_cpf')]);
+        $this->setLog($document);
         return $document;
 
     }
@@ -180,6 +180,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     private function getOnlyNumbers($value)
     {
+        $this->setLog(preg_replace('/\D/', '', $value));
         return preg_replace('/\D/', '', $value);
     }
 
@@ -198,11 +199,11 @@ class ModelExtensionPaymentRakuten extends Controller {
                 throw new Exception('Nome ou Sobrenome está vazio');
             }
 
-            $this->setLog('start ' . $name, 'getName()');
+            $this->setLog($name);
             return $name;
 
         } catch (Exception $e) {
-            $this->setException($e->getMessage(), 'getName()');
+            $this->setException($e->getMessage());
 
             return false;
         }
@@ -224,11 +225,11 @@ class ModelExtensionPaymentRakuten extends Controller {
                 throw new Exception('Email está vazio');
             }
 
-            $this->setLog('start ' . $email, 'getEmail()');
+            $this->setLog($email);
             return $email;
 
         } catch (Exception $e) {
-            $this->setException($e->getMessage(), 'getEmail()');
+            $this->setException($e->getMessage());
 
             return false;
         }
@@ -243,7 +244,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getKind($order)
     {
-
+        $this->setLog('personal');
         return 'personal';
 
     }
@@ -256,7 +257,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getOrderId($order)
     {
-
+        $this->setLog($order['order_id']);
         return (string) $order['order_id'];
 
     }
@@ -282,13 +283,14 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getTotalAmount()
     {
-
+        $this->setLog((float) $this->cart->getTotal());
         return (float) $this->cart->getTotal();
 
     }
 
     public function getSubTotalAmount()
     {
+        $this->setLog((float) $this->cart->getSubTotal());
         return (float) $this->cart->getSubTotal();
     }
 
@@ -302,8 +304,10 @@ class ModelExtensionPaymentRakuten extends Controller {
     {
         $key = $this->config->get('rakuten_number');
         if (array_key_exists($key, $custom_field)) {
+            $this->setLog($custom_field[$key]);
             return $custom_field[$key];
         } else {
+            $this->setLog('0');
             return '0';
         }
     }
@@ -317,8 +321,10 @@ class ModelExtensionPaymentRakuten extends Controller {
     public function getAddressComplement($custom_field) {
         $key = $this->config->get('rakuten_complement');
         if (array_key_exists($key , $custom_field)) {
+            $this->setLog($custom_field[$key]);
             return $custom_field[$key];
         } else {
+            $this->setLog('_');
             return '_';
         }
     }
@@ -332,8 +338,10 @@ class ModelExtensionPaymentRakuten extends Controller {
     public function getAddressDistrict($custom_field) {
         $key = $this->config->get('rakuten_district');
         if (array_key_exists($key , $custom_field)) {
+            $this->setLog($custom_field[$key]);
             return $custom_field[$key];
         } else {
+            $this->setLog('_');
             return '_';
         }
     }
@@ -346,7 +354,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getCity($order)
     {
-
+        $this->setLog($order['payment_city']);
         return $order['payment_city'];
 
     }
@@ -359,7 +367,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getPostalCode($order)
     {
-
+        $this->setLog($this->only_numbers(preg_replace('/[^\d]/', '', $order['payment_postcode'])));
         return $this->only_numbers(preg_replace('/[^\d]/', '', $order['payment_postcode']));
 
     }
@@ -372,9 +380,8 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getState($order)
     {
-
+        $this->setLog($order['payment_zone_code']);
         return $order['payment_zone_code'];
-
     }
 
     /**
@@ -385,9 +392,8 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getCountry($order)
     {
-
+        $this->setLog($order['payment_iso_code_2']);
         return $order['payment_iso_code_2'];
-
     }
 
     /**
@@ -398,9 +404,8 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getPhone($order)
     {
-
+        $this->setLog($order['telephone']);
         return $order['telephone'];
-
     }
 
     /**
@@ -411,9 +416,8 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getIp($order)
     {
-
+        $this->setLog($order['ip']);
         return $order['ip'];
-
     }
 
     /**
@@ -426,13 +430,12 @@ class ModelExtensionPaymentRakuten extends Controller {
 
         try {
             if (isset($this->session->data['shipping_method'])) {
-
+                $this->setLog($this->session->data['shipping_method']['code']);
                 return $this->session->data['shipping_method']['code'];
             } else {
+                $this->setLog('');
                 return '';
             }
-
-//            throw new Exception('Produto não contém shipping method');
 
         } catch (Exception $e) {
             $this->setException($e->getMessage(), 'getShippingMethod()');
@@ -454,9 +457,10 @@ class ModelExtensionPaymentRakuten extends Controller {
 
             $shipping_amount = number_format($this->session->data['shipping_method']['cost'], 2, '.', '.');
 
+            $this->setLog((float) $shipping_amount);
             return (float) $shipping_amount;
         } else {
-
+            $this->setLog((float) 0);
             return (float) 0;
         }
 
@@ -470,9 +474,8 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getStreetAddress($order)
     {
-
+        $this->setLog(utf8_decode($order['payment_address_1']));
         return utf8_decode($order['payment_address_1']);
-
     }
 
     /**
@@ -483,9 +486,8 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getShippingStreetAddress($order)
     {
-
+        $this->setLog(utf8_decode($order['payment_address_1']));
         return utf8_decode($order['payment_address_1']);
-
     }
 
     /**
@@ -497,8 +499,10 @@ class ModelExtensionPaymentRakuten extends Controller {
     public function getShippingAddressNumber($custom_field) {
         $key = $this->config->get('rakuten_number');
         if (array_key_exists($key , $custom_field)) {
+            $this->setLog($custom_field[$key]);
             return $custom_field[$key];
         } else {
+            $this->setLog(0);
             return 0;
         }
     }
@@ -512,8 +516,10 @@ class ModelExtensionPaymentRakuten extends Controller {
     public function getShippingAddressComplement($custom_field) {
         $key = $this->config->get('rakuten_complement');
         if (array_key_exists($key , $custom_field)) {
+            $this->setLog($custom_field[$key]);
             return $custom_field[$key];
         } else {
+            $this->setLog('_');
             return '_';
         }
     }
@@ -526,8 +532,10 @@ class ModelExtensionPaymentRakuten extends Controller {
     public function getShippingAddressDistrict($custom_field) {
         $key = $this->config->get('rakuten_complement');
         if (array_key_exists($key , $custom_field)) {
+            $this->setLog($custom_field[$key]);
             return $custom_field[$key];
         } else {
+            $this->setLog('_');
             return '_';
         }
     }
@@ -540,7 +548,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getShippingPostalCode($order)
     {
-
+        $this->setLog($this->only_numbers(preg_replace('/[^\d]/', '', $order['shipping_postcode'])));
         return $this->only_numbers(preg_replace('/[^\d]/', '', $order['shipping_postcode']));
 
     }
@@ -553,7 +561,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getShippingCity($order)
     {
-
+        $this->setLog($order['shipping_city']);
         return $order['shipping_city'];
 
     }
@@ -566,7 +574,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getShippingState($order)
     {
-
+        $this->setLog($order['shipping_zone_code']);
         return $order['shipping_zone_code'];
 
     }
@@ -579,9 +587,8 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getShippingCountry($order)
     {
-
+        $this->setLog($order['shipping_iso_code_2']);
         return $order['shipping_iso_code_2'];
-
     }
 
     /**
@@ -1079,13 +1086,14 @@ class ModelExtensionPaymentRakuten extends Controller {
 
                 if ($order_id == $order['order_id']) {
 
+                    $this->setLog($order['status']);
                     return $order['status'];
                 }
 
             }
         } catch (\Exception $e) {
 
-            file_put_contents('rakuten.log', var_export($e->getMessage() . PHP_EOL, true), FILE_APPEND);
+            $this->setException($e->getMessage());
             return false;
 
         }
@@ -1113,9 +1121,9 @@ class ModelExtensionPaymentRakuten extends Controller {
 
                 throw new Exception('Verifique se a tabela rakutenpay_orders existe no banco de dados ou se o parâmetro está correto.');
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
-            $this->setException($e->getMessage(), 'getCreatedAt()');
+            $this->setException($e->getMessage());
             return false;
 
         }
@@ -1129,13 +1137,14 @@ class ModelExtensionPaymentRakuten extends Controller {
      *
      * @return true
      */
-    public function setLog($message, $method = null)
+    public function setLog($message)
     {
         if ($this->config->get('rakuten_debug') == '1') {
 
             $prefix = date(DATE_RFC822);
+            $method = debug_backtrace();
             $function = $method;
-            file_put_contents('rakuten.log', '[ ' . $prefix . '][ ' . $function . ' ]' . '[info] ' . print_r($message . PHP_EOL, true), FILE_APPEND);
+            file_put_contents('rakuten.log', '[ ' . $prefix . '][ ' . $function[1]['function'] . ' ]' . '[info] ' . print_r($message . PHP_EOL, true), FILE_APPEND);
 
         }
         return true;
@@ -1149,12 +1158,13 @@ class ModelExtensionPaymentRakuten extends Controller {
      *
      * @return true
      */
-    public function setException($message, $method = null)
+    public function setException($message)
     {
 
         $prefix = date(DATE_RFC822);
+        $method = debug_backtrace();
         $function = $method;
-        file_put_contents('rakuten.log', '[ ' . $prefix . '][ ' . $function . ' ]' . '[erro] ' . print_r($message . PHP_EOL, true), FILE_APPEND);
+        file_put_contents('rakuten.log', '[ ' . $prefix . '][ ' . $function[1]['function'] . ' ]' . '[erro] ' . print_r($message . PHP_EOL, true), FILE_APPEND);
 
         return true;
     }

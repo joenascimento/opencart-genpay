@@ -206,8 +206,18 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
             $data['customer']['addresses'][] = $shipping_address;
         }
 
+        /** Captura o retorno da requisição */
+        $rakuten->setLog(print_r($data, true));
+        try {
 
-        $result = $rakuten->chargeTransaction( $data );
+            $result = $rakuten->chargeTransaction( $data );
+            $rakuten->setLog($result);
+
+        } catch (Exception $e) {
+
+            $rakuten->setException($e->getMessage());
+
+        }   
 
         return $result;
 
@@ -245,7 +255,16 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
         }
         
 		$this->model_checkout_order->addOrderHistory($order_id, $status, $billet_url, '1');
-        $this->db->query("INSERT INTO `rakutenpay_orders` (`order_id`, `charge_uuid`, `status`, `environment`, `created_at`, `updated_at`) VALUES ('$order_id', '$chargeUuid', '$paymentStatus', '$environment', CURRENT_TIME, CURRENT_TIME)");
+        $rakuten->setLog('Adicionando Order History: ' . $order_id . ' ' . $chargeUuid . ' ' . $paymentStatus . ' ' . $environment);
+
+        try {
+
+            $this->db->query("INSERT INTO `rakutenpay_orders` (`order_id`, `charge_uuid`, `status`, `environment`, `created_at`, `updated_at`) VALUES ('$order_id', '$chargeUuid', '$paymentStatus', '$environment', CURRENT_TIME, CURRENT_TIME)");
+
+        } catch (Exception $e) {
+
+            $rakuten->setException($e->getMessage());
+        }
 
 		if (isset($this->session->data['order_id'])) {
 			$this->cart->clear();
