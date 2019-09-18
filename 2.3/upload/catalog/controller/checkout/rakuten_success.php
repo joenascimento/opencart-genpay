@@ -59,7 +59,7 @@ class ControllerCheckoutRakutenSuccess extends Controller {
             switch ($status) {
                 case 'pending':
                     $data['title_rakuten_message'] = $this->language->get('rakuten_title_success');
-                    $data['text_rakuten_message'] = sprintf($this->language->get('rakuten_success'), $this->session->data['success_order_id'], 'Aguardando pagamento', $this->url->link('account/order', '', true));
+                    $data['text_rakuten_message'] = sprintf($this->language->get('rakuten_success'), $this->session->data['success_order_id'], 'Aguardando confirmação', $this->url->link('account/order', '', true));
                     break;
                 case 'success':
                     $data['title_rakuten_message'] = $this->language->get('rakuten_title_success');

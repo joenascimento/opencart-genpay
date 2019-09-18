@@ -286,7 +286,7 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
             case 'pending':
                 $status = $this->config->get('rakuten_aguardando_pagamento');
                 $paymentStatus = 'pending';
-                $rakuten->setLog($status . ' _ ' . $paymentStatus);
+                $rakuten->setLog($status . ' - ' . $paymentStatus);
                 break;
             case 'success':
                 $status = $this->config->get('rakuten_aguardando_pagamento');
