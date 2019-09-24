@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+  <name>Rakuten Connector</name>
+  <code>Rakuten Pay</code>
+  <version>0.0.1</version>
+  <author>Rakuten Connector</author>
+  <link>http://www.rakuten.com.br</link>
+  <file path="catalog/controller/checkout/checkout.php">
+    <operation>
+      <search trim="true"><![CDATA[$this->load->language('checkout/checkout');]]></search>
+    </operation>
+  </file>
+  <file path="catalog/view/theme/*/template/common/footer.tpl">
+    <operation error="skip">
+      <search><![CDATA[<p><?php echo $powered; ?></p>]]></search>
+      <add position="after"><![CDATA[
+        <div style="position:absolute;left:-9999px;top:-9999px;"><h1><a href="//www.rakuten.com.br">Rakuten Connector / Pay</a></h1></div>
+      ]]></add>
+    </operation>
+  </file>
+</modification>
