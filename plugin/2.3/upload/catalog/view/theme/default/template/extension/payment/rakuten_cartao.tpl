@@ -5,6 +5,11 @@
 
           <form action="#" class="col-sm-offset-3 col-sm-6" id="rakuten-credit-card">
             <input type="hidden" data-rkp="method" value="credit_card">
+            <input type="hidden" value="" name="payment[credit_card_quantity]" />
+            <input type="hidden" value="" name="payment[credit_card_installment_value]" />
+            <input type="hidden" value="" name="payment[credit_card_interest_percent]" />
+            <input type="hidden" value="" name="payment[credit_card_interest_amount]" />
+            <input type="hidden" value="" name="payment[credit_card_installment_total_value]" />
 
             <div class="form-group col-sm-12">
               <div class="col-sm-12" id="card-name">
@@ -147,7 +152,6 @@
       });
       return false;
     }
-
     $('#button-confirm').button('loading');
     console.log('Credit Card Event');
 
@@ -175,6 +179,7 @@
           type: 'error',
           confirmButtonText: 'Fechar'
         });
+        $('#button-confirm').button('reset');
       }
     };
     // Previna a execução da submissão do formulário
@@ -205,6 +210,42 @@
             var installment_quantity = document.getElementById('parcelas').value;
 
             return installment_quantity;
+          },
+          installment: function () {
+              var installments = JSON.parse('<?php echo json_encode($installments); ?>');
+
+              var installment_quantity = document.getElementById('parcelas').value;
+              var installment_amount = document.getElementsByName('payment[credit_card_installment_value]')[0];
+              installment_amount.setAttribute('value', installments[installment_quantity].amount);
+
+              return installment_amount.value;
+          },
+          percent: function () {
+              var installments = JSON.parse('<?php echo json_encode($installments); ?>');
+
+              var installment_quantity = document.getElementById('parcelas').value;
+              var interest_percent = document.getElementsByName('payment[credit_card_interest_percent]')[0];
+              interest_percent.setAttribute('value', installments[installment_quantity].interest_percent);
+
+              return interest_percent.value;
+          },
+          amount: function () {
+              var installments = JSON.parse('<?php echo json_encode($installments); ?>');
+
+              var installment_quantity = document.getElementById('parcelas').value;
+              var interest_amount = document.getElementsByName('payment[credit_card_interest_amount]')[0];
+              interest_amount.setAttribute('value', installments[installment_quantity].interest_amount);
+
+              return interest_amount.value;
+          },
+          total: function () {
+              var installments = JSON.parse('<?php echo json_encode($installments); ?>');
+
+              var installment_quantity = document.getElementById('parcelas').value;
+              var total_amount = document.getElementsByName('payment[credit_card_installment_total_value]')[0];
+              total_amount.setAttribute('value', installments[installment_quantity].total_amount);
+
+              return total_amount.value;
           },
           brand: function () {
             var cardBrandField = document.querySelector("[data-rkp='card-brand']").value;
@@ -238,12 +279,11 @@
             type: 'POST',
             data: { body: response },
             success: function () {
-              console.log('success');
-              // return false;
+              console.log('success confirm: ');
               setTimeout(function () {
                 location.href = '<?php echo $continue ?>';
               }, 1000);
-            },
+            }
           })
         },
         complete: function(){

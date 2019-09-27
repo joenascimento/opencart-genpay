@@ -55,9 +55,7 @@ class ControllerExtensionPaymentRakuten extends Controller {
 			echo "<h3>ERRO:</h3>";
 			echo "<h4>pedido: ". print_r($payments['reference'], true) . "</h4>";
 			echo "<h4>As chaves de assinatura são diferentes</h4>";
-			print_r('SignatureHeader: ' . $signatureHeader);
-			echo "<br>";
-			print_r('SignatureBase64: ' . $signatureBase64);
+			$rakuten->setLog('As chaves não batem: ' . $signatureHeader . ' x ' . $signatureBase64);
 
 			return $signatureHeader;
 		}

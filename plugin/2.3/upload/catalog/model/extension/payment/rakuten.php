@@ -438,7 +438,7 @@ class ModelExtensionPaymentRakuten extends Controller {
             }
 
         } catch (Exception $e) {
-            $this->setException($e->getMessage(), 'getShippingMethod()');
+            $this->setException($e->getMessage());
 
             return $e->getMessage();
         }
@@ -670,30 +670,34 @@ class ModelExtensionPaymentRakuten extends Controller {
         $count = 0;
         $items = [];
 
-        foreach($this->cart->getProducts() as $product) {
+        try {
+            foreach($this->cart->getProducts() as $product) {
 
-            if ($product['price'] > 0) {
+                if ($product['price'] > 0) {
 
-                $data['itemId' . $count] = $product['product_id'];
-                $data['itemDescription' . $count] = $product['name'] . ' | ' . $product['model'];
-                $data['itemAmount' . $count] = number_format($this->currency->format($product['price'], $order['currency_code'], $order['currency_value'], false), 2, '.', '');
-                $data['itemQuantity' . $count] = $product['quantity'];
-                $data['itemTotalAmount' . $count] = $data['itemAmount' . $count] * $data['itemQuantity' . $count] ;
+                    $data['itemId' . $count] = $product['product_id'];
+                    $data['itemDescription' . $count] = $product['name'] . ' | ' . $product['model'];
+                    $data['itemAmount' . $count] = number_format($this->currency->format($product['price'], $order['currency_code'], $order['currency_value'], false), 2, '.', '');
+                    $data['itemQuantity' . $count] = $product['quantity'];
+                    $data['itemTotalAmount' . $count] = $data['itemAmount' . $count] * $data['itemQuantity' . $count] ;
+                }
+
+                $items[] = [
+                    'reference' => $data['itemId' . $count],
+                    'description' => $data['itemDescription' . $count],
+                    'amount' => (float) $data['itemAmount' . $count],
+                    'quantity' => (integer) $data['itemQuantity' . $count],
+                    'total_amount' => (float) $data['itemTotalAmount' . $count],
+                    'categories' => $this->getCategories($data['itemId' . $count]),
+                ];
+
+                $count++;
             }
 
-            $items[] = [
-                'reference' => $data['itemId' . $count],
-                'description' => $data['itemDescription' . $count],
-                'amount' => (float) $data['itemAmount' . $count],
-                'quantity' => (integer) $data['itemQuantity' . $count],
-                'total_amount' => (float) $data['itemTotalAmount' . $count],
-                'categories' => $this->getCategories($data['itemId' . $count]),
-            ];
-
-            $count++;
+            return $items;
+        } catch (Exception $e) {
+            $this->setException($e->getMessage());
         }
-
-        return $items;
     }
 
     /**
@@ -713,17 +717,20 @@ class ModelExtensionPaymentRakuten extends Controller {
 
         $category_id = [];
 
-        foreach ($categories as $category) {
-            $product = $this->model_catalog_category->getCategory($category['category_id']);
+        try {
+            foreach ($categories as $category) {
+                $product = $this->model_catalog_category->getCategory($category['category_id']);
 
-            $category_id[] = [
-                'name' => (string) $product['name'],
-                'id' => (string) $category['category_id']
-            ];
+                $category_id[] = [
+                    'name' => (string) $product['name'],
+                    'id' => (string) $category['category_id']
+                ];
+            }
+
+            return $category_id;
+        } catch (Exception $e) {
+            $this->setException($e->getMessage());
         }
-
-        return $category_id;
-
     }
 
     /**
@@ -733,11 +740,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getTaxAmount()
     {
-//        $taxes = $this->cart->getTaxes();
-//
-//        foreach ($taxes as $tax) {
-//            return array_sum($tax);
-//        }
+        $this->setLog(array_sum($this->cart->getTaxes()));
         return array_sum($this->cart->getTaxes());
     }
 
@@ -790,6 +793,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getWebhook()
     {
+        $this->setLog($this->config->get('config_ssl'));
         return $this->config->get('config_ssl');
     }
 
@@ -800,14 +804,20 @@ class ModelExtensionPaymentRakuten extends Controller {
      * @return  string  base64 signature.
      */
     private function getSignature( $data ) {
-        $signature = hash_hmac(
-            'sha256',
-            $data,
-            $this->config->get('rakuten_signature'),
-            true
-        );
+        try {
+            $signature = hash_hmac(
+                'sha256',
+                $data,
+                $this->config->get('rakuten_signature'),
+                true
+            );
 
-        return base64_encode( $signature );
+            $this->setLog(base64_encode( $signature ));
+            return base64_encode( $signature );
+        } catch (Exception $e) {
+            $this->setException($e->getMessage());
+            return false;
+        }
     }
 
     /**
@@ -816,11 +826,16 @@ class ModelExtensionPaymentRakuten extends Controller {
      * @return string
      */
     private function setAuthorizationHeader() {
-        $document = $this->config->get('rakuten_document');
-        $api_key = $this->config->get('rakuten_api');
+        try {
+            $document = $this->config->get('rakuten_document');
+            $api_key = $this->config->get('rakuten_api');
 
-        $user_pass = $document . ':' . $api_key;
-        return 'Basic ' . base64_encode( $user_pass );
+            $user_pass = $document . ':' . $api_key;
+            return 'Basic ' . base64_encode( $user_pass );
+        } catch (Exception $e) {
+            $this->setException($e->getMessage());
+            return false;
+        }
     }
 
     /**
@@ -830,9 +845,14 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getConfDocument()
     {
-        $document = $this->config->get('rakuten_document');
+        try {
+            $document = $this->config->get('rakuten_document');
 
-        return $document;
+            return $document;
+        } catch (Exception $e) {
+            $this->setException($e->getMessage());
+            return false;
+        }
     }
 
     /**
@@ -910,7 +930,14 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getBuyerInterest()
     {
-        return $this->config->get('rakuten_juros');
+        try {
+            if (!empty($this->config->get('rakuten_juros'))) {
+                $this->setLog($this->config->get('rakuten_juros'));
+                return $this->config->get('rakuten_juros');
+            }
+        } catch (Exception $e) {
+            $this->setException($e->getMessage());
+        }
     }
 
     /**

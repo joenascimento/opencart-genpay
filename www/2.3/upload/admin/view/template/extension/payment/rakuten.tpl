@@ -1,0 +1,1 @@
+/var/www/html/plugin/2.3/upload/admin/view/template/extension/payment/rakuten.tpl

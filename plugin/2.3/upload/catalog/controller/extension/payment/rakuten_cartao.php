@@ -247,7 +247,6 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
         try {
 
             $result = $rakuten->chargeTransaction( $data );
-            $rakuten->setLog($result);
 
         } catch (Exception $e) {
 
@@ -285,47 +284,49 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
 		switch ($resultStatus) {
             case 'pending':
                 $status = $this->config->get('rakuten_aguardando_pagamento');
-                $paymentStatus = 'pending';
-                $rakuten->setLog($status . ' - ' . $paymentStatus);
+                $rakuten->setLog($status . ' - ' . $resultStatus);
                 break;
             case 'success':
                 $status = $this->config->get('rakuten_aguardando_pagamento');
-                $paymentStatus = 'pending';
-                $rakuten->setLog($status . ' - ' . $paymentStatus);
+                $rakuten->setLog($status . ' - ' . $resultStatus);
                 break;
             case 'declined':
                 $status = $this->config->get('rakuten_negada');
-                $paymentStatus = 'declined';
-                $rakuten->setLog($status . ' - ' . $paymentStatus);
+                $rakuten->setLog($status . ' - ' . $resultStatus);
                 break;
             case 'failure':
                 $status = $this->config->get('rakuten_falha');
-                $paymentStatus = 'failure';
-                $rakuten->setLog($status . ' - ' . $paymentStatus);
+                $rakuten->setLog($status . ' - ' . $resultStatus);
                 break;
             case 'refunded':
                 $status = $this->config->get('rakuten_devolvida');
-                $paymentStatus = 'refunded';
-                $rakuten->setLog($status . ' - ' . $paymentStatus);
+                $rakuten->setLog($status . ' - ' . $resultStatus);
                 break;
             case 'cancelled':
                 $status = $this->config->get('rakuten_cancelada');
-                $paymentStatus = 'cancelled';
-                $rakuten->setLog($status . ' - ' . $paymentStatus);
+                $rakuten->setLog($status . ' - ' . $resultStatus);
                 break;
             default:
                 $status = $this->config->get('rakuten_aguardando_pagamento');
-                $paymentStatus = 'pending';
-                $rakuten->setLog($status . ' - ' . $paymentStatus);
+                $rakuten->setLog($status . ' - ' . $resultStatus);
                 break;
 		}
 
 		$this->model_checkout_order->addOrderHistory($order_id, $status, $comment, '1' );
-        $rakuten->setLog('Adicionando Order History: ' . $order_id . ' ' . $chargeUuid . ' ' . $paymentStatus . ' ' . $environment);
+        $rakuten->setLog('Adicionando Order History: ' . $order_id . ' ' . $chargeUuid . ' ' . $environment);
+
+        try {
+            if (empty($comment)) {
+                throw new Exception('Comentário vazio');
+            }
+            $rakuten->setLog('Comentario: ' . $comment);
+        } catch (Exception $e) {
+            $rakuten->setException($e->getMessage());
+        }
 
         try {
 
-            $this->db->query("INSERT INTO `rakutenpay_orders` (`order_id`, `charge_uuid`, `status`, `environment`, `created_at`, `updated_at`) VALUES ('$order_id', '$chargeUuid', '$paymentStatus', '$environment', CURRENT_TIME, CURRENT_TIME)");
+            $this->db->query("INSERT INTO `rakutenpay_orders` (`order_id`, `charge_uuid`, `status`, `environment`, `created_at`, `updated_at`) VALUES ('$order_id', '$chargeUuid', '$resultStatus', '$environment', CURRENT_TIME, CURRENT_TIME)");
 
         } catch (Exception $e) {
 
@@ -342,7 +343,7 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
 			unset($this->session->data['coupon']);
 		}
 
-		$rakuten->setLog('Fim do transaction sem falhas');
+		$rakuten->setLog('Fim do transaction sem falhas ' . $resultStatus);
 		return $resultStatus;
 	}
 }

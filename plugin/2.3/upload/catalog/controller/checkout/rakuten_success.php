@@ -28,31 +28,30 @@ class ControllerCheckoutRakutenSuccess extends Controller {
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = [];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
             'href' => $this->url->link('common/home')
-        );
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_basket'),
             'href' => $this->url->link('checkout/cart')
-        );
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_checkout'),
             'href' => $this->url->link('checkout/checkout', '', true)
-        );
+        ];
 
-        $data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_success'),
             'href' => $this->url->link('checkout/rakuten_success')
-        );
+        ];
 
         $data['title_rakuten_message'] = '';
         $data['text_rakuten_message'] = '';
-
 
         if ($this->customer->isLogged()) {
             $status = $rakuten->getOrderStatus($this->session->data['success_order_id']);

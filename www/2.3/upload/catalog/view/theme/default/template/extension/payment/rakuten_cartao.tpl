@@ -1,0 +1,1 @@
+/var/www/html/plugin/2.3/upload/catalog/view/theme/default/template/extension/payment/rakuten_cartao.tpl
