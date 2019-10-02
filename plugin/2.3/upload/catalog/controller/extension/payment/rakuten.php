@@ -1,6 +1,6 @@
 <?php
 class ControllerExtensionPaymentRakuten extends Controller {
-	
+
 	public function callback() {
 		@ob_clean();
 
@@ -21,6 +21,9 @@ class ControllerExtensionPaymentRakuten extends Controller {
 		$signatureKey = $rakuten->getConfSignature();
 		$signature = hash_hmac('sha256', $rawResponse, $signatureKey, true);
 		$signatureBase64 = base64_encode($signature);
+
+        $rakuten->setLog('Começando webhook');
+        $rakuten->setLog(print_r($response, true));
 
 		if (!function_exists('apache_request_headers')) {
 
@@ -67,39 +70,53 @@ class ControllerExtensionPaymentRakuten extends Controller {
 				$status = $this->config->get('rakuten_aguardando_pagamento');
 				$paymentStatus = 'pending';
 				$this->log->write('Status: ' . $status);
+                $rakuten->setLog($paymentStatus);
 				break;
 			case 'approved':
 				$status = $this->config->get('rakuten_paga');
 				$paymentStatus = 'approved';
 				$this->log->write('Status: ' . $status);
+                $rakuten->setLog($paymentStatus);
 				break;
 			case 'declined':
 				$status = $this->config->get('rakuten_negada');
 				$paymentStatus = 'declined';
 				$this->log->write('Status: ' . $status);
+                $rakuten->setLog($paymentStatus);
 				break;
 			case 'failure':
 				$status = $this->config->get('rakuten_falha');
 				$paymentStatus = 'failure';
 				$this->log->write('Status: ' . $status);
+                $rakuten->setLog($paymentStatus);
 				break;
 			case 'refunded':
 				$status = $this->config->get('rakuten_devolvida');
 				$paymentStatus = 'refunded';
 				$this->log->write('Status: ' . $status);
+                $rakuten->setLog($paymentStatus);
+                break;
+            case 'partial_refunded':
+				$status = $this->config->get('rakuten_devolvida_parcial');
+				$paymentStatus = 'partial_refunded';
+				$this->log->write('Status: ' . $status);
+                $rakuten->setLog($paymentStatus);
 				break;
 			case 'cancelled':
 				$status = $this->config->get('rakuten_cancelada');
 				$paymentStatus = 'cancelled';
 				$this->log->write('Status: ' . $status);
+                $rakuten->setLog($paymentStatus);
 				break;
-			default: 
+			default:
 				$status = $this->config->get('rakuten_aguardando_pagamento');
 				$paymentStatus = 'pending';
 				$this->log->write('Status: ' . $status);
+                $rakuten->setLog($paymentStatus);
 				break;
 		}
 
+        $rakuten->setLog($paymentStatus);
 		if ($payment_method == 'billet') {
 
 			$this->model_checkout_order->addOrderHistory($orderId, $status, '', '1');

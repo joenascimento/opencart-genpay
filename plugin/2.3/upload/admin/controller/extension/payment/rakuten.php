@@ -1,28 +1,28 @@
 <?php
 class ControllerExtensionPaymentRakuten extends Controller {
-	
+
 	private $error = array();
-	
+
 	public function index() {
 
 		/* Carrega linguagem */
 		$data = $this->load->language('extension/payment/rakuten');
 
 		$this->document->setTitle($this->language->get('heading_title'));
-        
+
         $token = $this->session->data['token'];
         $data['token'] = $token;
-		
+
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 			$this->load->model('setting/setting');
-			
+
 			$this->model_setting_setting->editSetting('rakuten', $this->request->post);
-                        
+
 			$this->session->data['success'] = $this->language->get('text_success');
-			
+
 			$this->response->redirect($this->url->link('extension/extension', 'token=' . $token, true));
 		}
-		
+
 		/* Load Models */
 		$this->load->model('localisation/order_status');
 		$this->load->model('localisation/geo_zone');
@@ -34,7 +34,7 @@ class ControllerExtensionPaymentRakuten extends Controller {
 		} else {
 			$data['warning'] = false;
 		}
-		
+
 		/* Error Email */
 		if (isset($this->error['email'])) {
 			$data['error_email'] = $this->error['email'];
@@ -78,7 +78,7 @@ class ControllerExtensionPaymentRakuten extends Controller {
 		}
 
 		$data['breadcrumbs'] = array();
-		
+
 		$data['breadcrumbs'][] = array(
 			'href' => $this->url->link('common/home', 'token=' . $token, true),
 			'name' => $this->language->get('text_home')
@@ -88,19 +88,19 @@ class ControllerExtensionPaymentRakuten extends Controller {
 			'href' => $this->url->link('extension/extension', 'token=' . $token, true),
 			'name' => $this->language->get('text_payment')
 		);
-		
+
 		$data['breadcrumbs'][] = array(
 			'href' => $this->url->link('extension/payment/rakuten', 'token=' . $token, true),
 			'name' => $this->language->get('heading_title')
 		);
-		
+
 		/* Status */
 		if (isset($this->request->post['rakuten_status'])) {
 			$data['rakuten_status'] = $this->request->post['rakuten_status'];
 		} else {
 			$data['rakuten_status'] = $this->config->get('rakuten_status');
 		}
-		
+
 		/* Email */
 		if (isset($this->request->post['rakuten_email'])) {
 			$data['rakuten_email'] = $this->request->post['rakuten_email'];
@@ -128,21 +128,21 @@ class ControllerExtensionPaymentRakuten extends Controller {
 		} else {
 			$data['rakuten_signature'] = $this->config->get('rakuten_signature');
 		}
-		
+
 		/* Environment */
 		if (isset($this->request->post['rakuten_environment'])) {
 			$data['rakuten_environment'] = $this->request->post['rakuten_environment'];
 		} else {
 			$data['rakuten_environment'] = $this->config->get('rakuten_environment');
 		}
-		
+
 		/* Debug */
 		if (isset($this->request->post['rakuten_debug'])) {
 			$data['rakuten_debug'] = $this->request->post['rakuten_debug'];
 		} else {
 			$data['rakuten_debug'] = $this->config->get('rakuten_debug');
 		}
-		
+
 		/* Notificar Cliente */
 		if (isset($this->request->post['rakuten_notificar_cliente'])) {
 			$data['rakuten_notificar_cliente'] = $this->request->post['rakuten_notificar_cliente'];
@@ -171,7 +171,7 @@ class ControllerExtensionPaymentRakuten extends Controller {
 			$data['rakuten_cpf'] = $this->config->get('rakuten_cpf');
 		}
 
-		
+
 		/* Aguardando Pagamento */
 		if (isset($this->request->post['rakuten_aguardando_pagamento'])) {
 			$data['rakuten_aguardando_pagamento'] = $this->request->post['rakuten_aguardando_pagamento'];
@@ -187,7 +187,7 @@ class ControllerExtensionPaymentRakuten extends Controller {
 		}
 
 		/* Falha */
-		if (isset($this->request->post['rakuten_devolvida'])) {
+		if (isset($this->request->post['rakuten_falha'])) {
 			$data['rakuten_falha'] = $this->request->post['rakuten_falha'];
 		} else {
 			$data['rakuten_falha'] = $this->config->get('rakuten_falha');
@@ -207,7 +207,14 @@ class ControllerExtensionPaymentRakuten extends Controller {
 			$data['rakuten_devolvida'] = $this->config->get('rakuten_devolvida');
 		}
 
-		/* Cancelado */
+        /* Devolvido (Reembolsado) */
+		if (isset($this->request->post['rakuten_devolvida_parcial'])) {
+			$data['rakuten_devolvida_parcial'] = $this->request->post['rakuten_devolvida_parcial'];
+		} else {
+			$data['rakuten_devolvida_parcial'] = $this->config->get('rakuten_devolvida_parcial');
+		}
+
+        /* Cancelado */
 		if (isset($this->request->post['rakuten_cancelada'])) {
 			$data['rakuten_cancelada'] = $this->request->post['rakuten_cancelada'];
 		} else {
@@ -220,7 +227,7 @@ class ControllerExtensionPaymentRakuten extends Controller {
 		} else {
 			$data['rakuten_geo_zone'] = $this->config->get('rakuten_geo_zone');
 		}
-		
+
 		/* Ordem */
 		if (isset($this->request->post['rakuten_sort_order'])) {
 			$data['rakuten_sort_order'] = $this->request->post['rakuten_sort_order'];
@@ -293,7 +300,7 @@ class ControllerExtensionPaymentRakuten extends Controller {
 
 		/* Status de Pagamento */
 		$data['statuses'] = $this->model_localisation_order_status->getOrderStatuses();
-		
+
 		/* Zonas Geográficas */
 		$data['zones'] = $this->model_localisation_geo_zone->getGeoZones();
 
@@ -312,18 +319,18 @@ class ControllerExtensionPaymentRakuten extends Controller {
 		} else {
 			$data['debug'] = array();
 		}
-		
+
 		/* Links */
 		$data['action'] = $this->url->link('extension/payment/rakuten', 'token=' . $token, true);
 		$data['cancel'] = $this->url->link('extension/extension', 'token=' . $token, true);
-		
+
         $data['link_custom_field'] = $this->url->link('customer/custom_field', 'token=' . $token, true);
 
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['webhook'] = HTTPS_SERVER;
-		
+
 		$this->response->setOutput($this->load->view('extension/payment/rakuten', $data));
 	}
 
@@ -342,7 +349,7 @@ class ControllerExtensionPaymentRakuten extends Controller {
 		if (!$this->user->hasPermission('modify', 'extension/payment/rakuten')) {
 			$this->error['warning'] = $this->language->get('warning');
 		}
-		
+
 		/* Error Email */
 		if (!filter_var($this->request->post['rakuten_email'], FILTER_VALIDATE_EMAIL)) {
 			$this->error['email'] = $this->language->get('error_email');
@@ -369,14 +376,14 @@ class ControllerExtensionPaymentRakuten extends Controller {
 		} elseif ($this->request->post['rakuten_qnt_parcelas'] > 18) {
 			$this->error['qnt_parcelas'] = $this->language->get('error_qnt_parcela_invalido');
 		}
-		
+
 		/* Error Quantidade Parcelas sem Juros */
 		if (!filter_var($this->request->post['rakuten_parcelas_sem_juros'], FILTER_VALIDATE_INT)) {
 			$this->error['parcelas_sem_juros'] = $this->language->get('error_parcelas_sem_juros');
 		} elseif ($this->request->post['rakuten_parcelas_sem_juros'] > 18) {
 			$this->error['parcelas_sem_juros'] = $this->language->get('error_parcelas_sem_juros_invalido');
 		}
-		
+
 		/* Error Boleto */
 		if ($this->request->post['rakuten_boleto_status']) {
 			if (!filter_var($this->request->post['rakuten_valor_minimo_boleto'], FILTER_VALIDATE_FLOAT)) {
@@ -398,7 +405,7 @@ class ControllerExtensionPaymentRakuten extends Controller {
         $this->load->model('extension/payment/rakuten');
         $this->model_extension_payment_rakuten->install();
 	}
-	
+
     public function uninstall() {
         $this->load->model('extension/payment/rakuten');
         $this->model_extension_payment_rakuten->uninstall();

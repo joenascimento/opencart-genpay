@@ -8,11 +8,11 @@
 
       <div class="pull-right">
         <button type="submit" form="form-moip" data-toggle="tooltip" title="<?php echo $button_save ?>" class="btn btn-primary"><i class="fa fa-save"></i></button>
-        <a href="#" data-toggle="tooltip" title="<?php echo $button_cancel ?>" class="btn btn-default"><i class="fa fa-reply"></i></a>	
+        <a href="#" data-toggle="tooltip" title="<?php echo $button_cancel ?>" class="btn btn-default"><i class="fa fa-reply"></i></a>
       </div>
 
       <h1><?php echo $heading_title ?></h1>
-      
+
       <ul class="breadcrumb">
         <?php foreach ($breadcrumbs as $breadcrumb): ?>
         <li><a href="<?php echo $breadcrumb['href'] ?>"><?php echo $breadcrumb['name'] ?></a></li>
@@ -313,6 +313,22 @@
                   <select name="rakuten_devolvida" class="form-control">
                     <?php foreach ($statuses as $status): ?>
                      <?php if ($rakuten_devolvida == $status['order_status_id']) { ?>
+                    <option value="<?php echo $status['order_status_id'] ?>" selected><?php echo $status['name'] ?></option>
+                    <?php } else { ?>
+                    <option value="<?php echo $status['order_status_id'] ?>"><?php echo $status['name'] ?></option>
+                    <?php } ?>
+                     <?php endforeach; ?>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Devolvida -->
+              <div class="form-group">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_devolvida_parcial ?>"><?php echo $entry_devolvido_parcial ?></span></label>
+                <div class="col-sm-10">
+                  <select name="rakuten_devolvida_parcial" class="form-control">
+                    <?php foreach ($statuses as $status): ?>
+                     <?php if ($rakuten_devolvida_parcial == $status['order_status_id']) { ?>
                     <option value="<?php echo $status['order_status_id'] ?>" selected><?php echo $status['name'] ?></option>
                     <?php } else { ?>
                     <option value="<?php echo $status['order_status_id'] ?>"><?php echo $status['name'] ?></option>
