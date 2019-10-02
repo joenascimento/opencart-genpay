@@ -5319,3 +5319,403 @@
  Mensagem: Transaction Approved
 [ Wed, 25 Sep 19 20:55:12 +0000][ {closure} ][info] Fim do transaction sem falhas success
 [ Wed, 25 Sep 19 20:55:14 +0000][ getOrderStatus ][info] success
+[ Tue, 01 Oct 19 19:59:53 +0000][ getTotalAmount ][info] 101
+[ Tue, 01 Oct 19 19:59:53 +0000][ getShippingAmount ][info] 5
+[ Tue, 01 Oct 19 19:59:53 +0000][ getTotalAmount ][info] 101
+[ Tue, 01 Oct 19 19:59:53 +0000][ getApiUrl ][info] https://oneapi-sandbox.rakutenpay.com.br/rpay/v1/
+[ Tue, 01 Oct 19 19:59:53 +0000][ getJsUrl ][info] https://oneapi-sandbox.rakutenpay.com.br/rpay/v1/
+[ Tue, 01 Oct 19 19:59:53 +0000][ getEnvironment ][info] sandbox
+[ Tue, 01 Oct 19 19:59:53 +0000][ getEnvironment ][info] https://oneapi-sandbox.rakutenpay.com.br/rpay/v1/
+[ Tue, 01 Oct 19 19:59:53 +0000][ getEnvironment ][info] https://static.rakutenpay.com.br/rpayjs/rpay-latest.dev.min.js
+[ Tue, 01 Oct 19 19:59:53 +0000][ getValidateJs ][info] https://static.rakutenpay.com.br/rpayjs/rpay-latest.dev.min.js
+[ Tue, 01 Oct 19 20:00:12 +0000][ getShippingMethod ][info] flat.flat
+[ Tue, 01 Oct 19 20:00:12 +0000][ getPaymentMethod ][info] rakuten_cartao
+[ Tue, 01 Oct 19 20:00:12 +0000][ getTotalAmount ][info] 101
+[ Tue, 01 Oct 19 20:00:12 +0000][ getShippingAmount ][info] 5
+[ Tue, 01 Oct 19 20:00:12 +0000][ getOrderId ][info] 27
+[ Tue, 01 Oct 19 20:00:12 +0000][ getWebhook ][info] http://localhost/2.3/upload/
+[ Tue, 01 Oct 19 20:00:12 +0000][ getOnlyNumbers ][info] 12345678909
+[ Tue, 01 Oct 19 20:00:12 +0000][ getDocument ][info] 12345678909
+[ Tue, 01 Oct 19 20:00:12 +0000][ getName ][info] Dev Maneiro
+[ Tue, 01 Oct 19 20:00:12 +0000][ getName ][info] Dev Maneiro
+[ Tue, 01 Oct 19 20:00:12 +0000][ getEmail ][info] devmaneiro@gmail.com
+[ Tue, 01 Oct 19 20:00:12 +0000][ getKind ][info] personal
+[ Tue, 01 Oct 19 20:00:12 +0000][ getPhone ][info] 11999999999
+[ Tue, 01 Oct 19 20:00:12 +0000][ getPhone ][info] 11999999999
+[ Tue, 01 Oct 19 20:00:12 +0000][ getPhone ][info] 11999999999
+[ Tue, 01 Oct 19 20:00:12 +0000][ getPhone ][info] 11999999999
+[ Tue, 01 Oct 19 20:00:12 +0000][ getOrderId ][info] 27
+[ Tue, 01 Oct 19 20:00:12 +0000][ getIp ][info] 172.25.0.1
+[ Tue, 01 Oct 19 20:00:12 +0000][ getSubTotalAmount ][info] 101
+[ Tue, 01 Oct 19 20:00:13 +0000][ getShippingAmount ][info] 5
+[ Tue, 01 Oct 19 20:00:13 +0000][ getTaxAmount ][info] 0
+[ Tue, 01 Oct 19 20:00:13 +0000][ getTotalAmount ][info] 101
+[ Tue, 01 Oct 19 20:00:13 +0000][ getStreetAddress ][info] Avenida Francisco Matarazzo
+[ Tue, 01 Oct 19 20:00:13 +0000][ getName ][info] Dev Maneiro
+[ Tue, 01 Oct 19 20:00:13 +0000][ getStreetAddress ][info] Avenida Francisco Matarazzo
+[ Tue, 01 Oct 19 20:00:13 +0000][ getAddressNumber ][info] 1500
+[ Tue, 01 Oct 19 20:00:13 +0000][ getAddressComplement ][info] 6 andar
+[ Tue, 01 Oct 19 20:00:13 +0000][ getCity ][info] São Paulo
+[ Tue, 01 Oct 19 20:00:13 +0000][ getAddressDistrict ][info] _
+[ Tue, 01 Oct 19 20:00:13 +0000][ getState ][info] SP
+[ Tue, 01 Oct 19 20:00:13 +0000][ getCountry ][info] BR
+[ Tue, 01 Oct 19 20:00:13 +0000][ getPostalCode ][info] 05001100
+[ Tue, 01 Oct 19 20:00:13 +0000][ getOrderId ][info] 27
+[ Tue, 01 Oct 19 20:00:13 +0000][ {closure} ][info] Array
+(
+    [reference] => 27
+    [amount] => 106
+    [currency] => BRL
+    [webhook_url] => http://localhost/2.3/upload/index.php?route=extension/payment/rakuten/callback
+    [fingerprint] => d5703f24d5540b15fdfc2a2a04a14e0c-2lsuagj5oo9k189n839
+    [payments] => Array
+        (
+            [0] => Array
+                (
+                    [reference] => 27
+                    [method] => credit_card
+                    [amount] => 106
+                    [installments_quantity] => 1
+                    [brand] => visa
+                    [token] => 191001200014rRR5XQvs4D9zwP125462
+                    [cvv] => 123
+                    [holder_name] => rakuten
+                    [holder_document] => 123.456.789-09
+                    [options] => Array
+                        (
+                            [save_card] => 
+                            [new_card] => 
+                            [recurrency] => 
+                        )
+
+                )
+
+        )
+
+    [customer] => Array
+        (
+            [document] => 12345678909
+            [name] => Dev Maneiro
+            [business_name] => Dev Maneiro
+            [email] => devmaneiro@gmail.com
+            [birth_date] => 1999-01-01
+            [kind] => personal
+            [addresses] => Array
+                (
+                    [0] => Array
+                        (
+                            [kind] => billing
+                            [contact] => Dev Maneiro
+                            [street] => Avenida Francisco Matarazzo
+                            [number] => 1500
+                            [complement] => 6 andar
+                            [city] => São Paulo
+                            [district] => _
+                            [state] => SP
+                            [country] => BR
+                            [zipcode] => 05001100
+                        )
+
+                    [1] => Array
+                        (
+                            [kind] => shipping
+                            [contact] => Dev Maneiro
+                            [street] => Avenida Francisco Matarazzo
+                            [number] => 1500
+                            [complement] => 6 andar
+                            [city] => São Paulo
+                            [district] => _
+                            [state] => SP
+                            [country] => BR
+                            [zipcode] => 05001100
+                        )
+
+                )
+
+            [phones] => Array
+                (
+                    [0] => Array
+                        (
+                            [kind] => billing
+                            [reference] => others
+                            [number] => Array
+                                (
+                                    [country_code] => 55
+                                    [area_code] => 11999999999
+                                    [number] => 11999999999
+                                )
+
+                        )
+
+                    [1] => Array
+                        (
+                            [kind] => shipping
+                            [reference] => others
+                            [number] => Array
+                                (
+                                    [country_code] => 55
+                                    [area_code] => 11999999999
+                                    [number] => 11999999999
+                                )
+
+                        )
+
+                )
+
+        )
+
+    [order] => Array
+        (
+            [reference] => 27
+            [payer_ip] => 172.25.0.1
+            [items_amount] => 101
+            [shipping_amount] => 5
+            [taxes_amount] => 0
+            [discount_amount] => 0
+            [items] => Array
+                (
+                    [0] => Array
+                        (
+                            [reference] => 40
+                            [description] => iPhone | product 11
+                            [amount] => 101
+                            [quantity] => 1
+                            [total_amount] => 101
+                            [categories] => Array
+                                (
+                                    [0] => Array
+                                        (
+                                            [name] => Desktops
+                                            [id] => 20
+                                        )
+
+                                    [1] => Array
+                                        (
+                                            [name] => Phones &amp; PDAs
+                                            [id] => 24
+                                        )
+
+                                )
+
+                        )
+
+                )
+
+        )
+
+)
+
+[ Tue, 01 Oct 19 20:00:13 +0000][ getApiUrl ][info] https://oneapi-sandbox.rakutenpay.com.br/rpay/v1/
+[ Tue, 01 Oct 19 20:00:13 +0000][ getSignature ][info] /4yfUpiHvGqjsp9OSH1HT/L9lfYvvShuFGEzE7Jlyq4=
+[ Tue, 01 Oct 19 20:00:18 +0000][ getApiUrl ][info] https://oneapi-sandbox.rakutenpay.com.br/rpay/v1/
+[ Tue, 01 Oct 19 20:00:18 +0000][ getJsUrl ][info] https://oneapi-sandbox.rakutenpay.com.br/rpay/v1/
+[ Tue, 01 Oct 19 20:00:18 +0000][ getEnvironment ][info] sandbox
+[ Tue, 01 Oct 19 20:00:18 +0000][ getEnvironment ][info] https://oneapi-sandbox.rakutenpay.com.br/rpay/v1/
+[ Tue, 01 Oct 19 20:00:18 +0000][ getEnvironment ][info] https://static.rakutenpay.com.br/rpayjs/rpay-latest.dev.min.js
+[ Tue, 01 Oct 19 20:00:18 +0000][ {closure} ][info] 8 - declined
+[ Tue, 01 Oct 19 20:00:18 +0000][ {closure} ][info] Adicionando Order History: 27 6a722b2b-072d-4f3b-9408-dd4effb87d14 sandbox
+[ Tue, 01 Oct 19 20:00:18 +0000][ {closure} ][info] Comentario: Cartão de crédito: 429207******5462
+ Código: 05
+ Mensagem: Not Authorized
+[ Tue, 01 Oct 19 20:00:18 +0000][ {closure} ][info] Fim do transaction sem falhas declined
+[ Tue, 01 Oct 19 20:00:19 +0000][ getOrderStatus ][info] declined
+[ Tue, 01 Oct 19 20:01:16 +0000][ getTotalAmount ][info] 101
+[ Tue, 01 Oct 19 20:01:16 +0000][ getShippingAmount ][info] 5
+[ Tue, 01 Oct 19 20:01:16 +0000][ getTotalAmount ][info] 101
+[ Tue, 01 Oct 19 20:01:16 +0000][ getApiUrl ][info] https://oneapi-sandbox.rakutenpay.com.br/rpay/v1/
+[ Tue, 01 Oct 19 20:01:16 +0000][ getJsUrl ][info] https://oneapi-sandbox.rakutenpay.com.br/rpay/v1/
+[ Tue, 01 Oct 19 20:01:16 +0000][ getEnvironment ][info] sandbox
+[ Tue, 01 Oct 19 20:01:16 +0000][ getEnvironment ][info] https://oneapi-sandbox.rakutenpay.com.br/rpay/v1/
+[ Tue, 01 Oct 19 20:01:16 +0000][ getEnvironment ][info] https://static.rakutenpay.com.br/rpayjs/rpay-latest.dev.min.js
+[ Tue, 01 Oct 19 20:01:16 +0000][ getValidateJs ][info] https://static.rakutenpay.com.br/rpayjs/rpay-latest.dev.min.js
+[ Tue, 01 Oct 19 20:01:27 +0000][ getShippingMethod ][info] flat.flat
+[ Tue, 01 Oct 19 20:01:27 +0000][ getPaymentMethod ][info] rakuten_cartao
+[ Tue, 01 Oct 19 20:01:27 +0000][ getTotalAmount ][info] 101
+[ Tue, 01 Oct 19 20:01:27 +0000][ getShippingAmount ][info] 5
+[ Tue, 01 Oct 19 20:01:27 +0000][ getOrderId ][info] 28
+[ Tue, 01 Oct 19 20:01:27 +0000][ getWebhook ][info] http://localhost/2.3/upload/
+[ Tue, 01 Oct 19 20:01:27 +0000][ getOnlyNumbers ][info] 12345678909
+[ Tue, 01 Oct 19 20:01:27 +0000][ getDocument ][info] 12345678909
+[ Tue, 01 Oct 19 20:01:27 +0000][ getName ][info] Dev Maneiro
+[ Tue, 01 Oct 19 20:01:27 +0000][ getName ][info] Dev Maneiro
+[ Tue, 01 Oct 19 20:01:27 +0000][ getEmail ][info] devmaneiro@gmail.com
+[ Tue, 01 Oct 19 20:01:27 +0000][ getKind ][info] personal
+[ Tue, 01 Oct 19 20:01:27 +0000][ getPhone ][info] 11999999999
+[ Tue, 01 Oct 19 20:01:27 +0000][ getPhone ][info] 11999999999
+[ Tue, 01 Oct 19 20:01:27 +0000][ getPhone ][info] 11999999999
+[ Tue, 01 Oct 19 20:01:27 +0000][ getPhone ][info] 11999999999
+[ Tue, 01 Oct 19 20:01:27 +0000][ getOrderId ][info] 28
+[ Tue, 01 Oct 19 20:01:27 +0000][ getIp ][info] 172.25.0.1
+[ Tue, 01 Oct 19 20:01:27 +0000][ getSubTotalAmount ][info] 101
+[ Tue, 01 Oct 19 20:01:27 +0000][ getShippingAmount ][info] 5
+[ Tue, 01 Oct 19 20:01:27 +0000][ getTaxAmount ][info] 0
+[ Tue, 01 Oct 19 20:01:27 +0000][ getTotalAmount ][info] 101
+[ Tue, 01 Oct 19 20:01:27 +0000][ getStreetAddress ][info] Avenida Francisco Matarazzo
+[ Tue, 01 Oct 19 20:01:27 +0000][ getName ][info] Dev Maneiro
+[ Tue, 01 Oct 19 20:01:27 +0000][ getStreetAddress ][info] Avenida Francisco Matarazzo
+[ Tue, 01 Oct 19 20:01:27 +0000][ getAddressNumber ][info] 1500
+[ Tue, 01 Oct 19 20:01:27 +0000][ getAddressComplement ][info] 6 andar
+[ Tue, 01 Oct 19 20:01:27 +0000][ getCity ][info] São Paulo
+[ Tue, 01 Oct 19 20:01:27 +0000][ getAddressDistrict ][info] _
+[ Tue, 01 Oct 19 20:01:27 +0000][ getState ][info] SP
+[ Tue, 01 Oct 19 20:01:27 +0000][ getCountry ][info] BR
+[ Tue, 01 Oct 19 20:01:27 +0000][ getPostalCode ][info] 05001100
+[ Tue, 01 Oct 19 20:01:27 +0000][ getOrderId ][info] 28
+[ Tue, 01 Oct 19 20:01:27 +0000][ {closure} ][info] Array
+(
+    [reference] => 28
+    [amount] => 106
+    [currency] => BRL
+    [webhook_url] => http://localhost/2.3/upload/index.php?route=extension/payment/rakuten/callback
+    [fingerprint] => d5703f24d5540b15fdfc2a2a04a14e0c-dnubwmm64mwk189p093
+    [payments] => Array
+        (
+            [0] => Array
+                (
+                    [reference] => 28
+                    [method] => credit_card
+                    [amount] => 106
+                    [installments_quantity] => 2
+                    [brand] => visa
+                    [token] => 19100120001iCB45x4gkvnGdNPo85462
+                    [cvv] => 123
+                    [holder_name] => Rakuten
+                    [holder_document] => 123.456.789-09
+                    [options] => Array
+                        (
+                            [save_card] => 
+                            [new_card] => 
+                            [recurrency] => 
+                        )
+
+                )
+
+        )
+
+    [customer] => Array
+        (
+            [document] => 12345678909
+            [name] => Dev Maneiro
+            [business_name] => Dev Maneiro
+            [email] => devmaneiro@gmail.com
+            [birth_date] => 1999-01-01
+            [kind] => personal
+            [addresses] => Array
+                (
+                    [0] => Array
+                        (
+                            [kind] => billing
+                            [contact] => Dev Maneiro
+                            [street] => Avenida Francisco Matarazzo
+                            [number] => 1500
+                            [complement] => 6 andar
+                            [city] => São Paulo
+                            [district] => _
+                            [state] => SP
+                            [country] => BR
+                            [zipcode] => 05001100
+                        )
+
+                    [1] => Array
+                        (
+                            [kind] => shipping
+                            [contact] => Dev Maneiro
+                            [street] => Avenida Francisco Matarazzo
+                            [number] => 1500
+                            [complement] => 6 andar
+                            [city] => São Paulo
+                            [district] => _
+                            [state] => SP
+                            [country] => BR
+                            [zipcode] => 05001100
+                        )
+
+                )
+
+            [phones] => Array
+                (
+                    [0] => Array
+                        (
+                            [kind] => billing
+                            [reference] => others
+                            [number] => Array
+                                (
+                                    [country_code] => 55
+                                    [area_code] => 11999999999
+                                    [number] => 11999999999
+                                )
+
+                        )
+
+                    [1] => Array
+                        (
+                            [kind] => shipping
+                            [reference] => others
+                            [number] => Array
+                                (
+                                    [country_code] => 55
+                                    [area_code] => 11999999999
+                                    [number] => 11999999999
+                                )
+
+                        )
+
+                )
+
+        )
+
+    [order] => Array
+        (
+            [reference] => 28
+            [payer_ip] => 172.25.0.1
+            [items_amount] => 101
+            [shipping_amount] => 5
+            [taxes_amount] => 0
+            [discount_amount] => 0
+            [items] => Array
+                (
+                    [0] => Array
+                        (
+                            [reference] => 40
+                            [description] => iPhone | product 11
+                            [amount] => 101
+                            [quantity] => 1
+                            [total_amount] => 101
+                            [categories] => Array
+                                (
+                                    [0] => Array
+                                        (
+                                            [name] => Desktops
+                                            [id] => 20
+                                        )
+
+                                    [1] => Array
+                                        (
+                                            [name] => Phones &amp; PDAs
+                                            [id] => 24
+                                        )
+
+                                )
+
+                        )
+
+                )
+
+        )
+
+)
+
+[ Tue, 01 Oct 19 20:01:27 +0000][ getApiUrl ][info] https://oneapi-sandbox.rakutenpay.com.br/rpay/v1/
+[ Tue, 01 Oct 19 20:01:27 +0000][ getSignature ][info] 2udF57o+CFj8z0tH5O4WmL3dKDT3CBG+36VnA3dkbYc=
+[ Tue, 01 Oct 19 20:01:32 +0000][ getApiUrl ][info] https://oneapi-sandbox.rakutenpay.com.br/rpay/v1/
+[ Tue, 01 Oct 19 20:01:32 +0000][ getJsUrl ][info] https://oneapi-sandbox.rakutenpay.com.br/rpay/v1/
+[ Tue, 01 Oct 19 20:01:32 +0000][ getEnvironment ][info] sandbox
+[ Tue, 01 Oct 19 20:01:32 +0000][ getEnvironment ][info] https://oneapi-sandbox.rakutenpay.com.br/rpay/v1/
+[ Tue, 01 Oct 19 20:01:32 +0000][ getEnvironment ][info] https://static.rakutenpay.com.br/rpayjs/rpay-latest.dev.min.js
+[ Tue, 01 Oct 19 20:01:32 +0000][ {closure} ][info] 8 - declined
+[ Tue, 01 Oct 19 20:01:32 +0000][ {closure} ][info] Adicionando Order History: 28 15fc70b7-8248-4585-8645-19a7310e890c sandbox
+[ Tue, 01 Oct 19 20:01:32 +0000][ {closure} ][info] Comentario: Cartão de crédito: 429207******5462
+ Código: 05
+ Mensagem: Not Authorized
+[ Tue, 01 Oct 19 20:01:32 +0000][ {closure} ][info] Fim do transaction sem falhas declined
+[ Tue, 01 Oct 19 20:01:33 +0000][ getOrderStatus ][info] declined

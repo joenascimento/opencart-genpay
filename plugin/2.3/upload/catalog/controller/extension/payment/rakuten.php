@@ -34,7 +34,7 @@ class ControllerExtensionPaymentRakuten extends Controller {
 				}
 			}
 			$entityHeaders = $headers;
-			$signatureHeader = $entityHeaders;
+			$signatureHeader = $entityHeaders['Signature'];
 
 		} else {
 
@@ -55,7 +55,7 @@ class ControllerExtensionPaymentRakuten extends Controller {
 			echo "<h3>ERRO:</h3>";
 			echo "<h4>pedido: ". print_r($payments['reference'], true) . "</h4>";
 			echo "<h4>As chaves de assinatura são diferentes</h4>";
-			$rakuten->setLog('As chaves não batem: ' . $signatureHeader . ' x ' . $signatureBase64);
+			$rakuten->setLog('As chaves não batem: ' . print_r($signatureHeader, true) . ' x ' . $signatureBase64);
 
 			return $signatureHeader;
 		}
