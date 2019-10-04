@@ -474,8 +474,8 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getStreetAddress($order)
     {
-        $this->setLog(utf8_decode($order['payment_address_1']));
-        return utf8_decode($order['payment_address_1']);
+        $this->setLog($order['payment_address_1']);
+        return $order['payment_address_1'];
     }
 
     /**
@@ -486,8 +486,8 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getShippingStreetAddress($order)
     {
-        $this->setLog(utf8_decode($order['payment_address_1']));
-        return utf8_decode($order['payment_address_1']);
+        $this->setLog($order['payment_address_1']);
+        return $order['payment_address_1'];
     }
 
     /**
@@ -530,7 +530,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      * @return string
      */
     public function getShippingAddressDistrict($custom_field) {
-        $key = $this->config->get('rakuten_complement');
+        $key = $this->config->get('rakuten_district');
         if (array_key_exists($key , $custom_field)) {
             $this->setLog($custom_field[$key]);
             return $custom_field[$key];

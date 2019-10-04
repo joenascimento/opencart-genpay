@@ -206,6 +206,10 @@
 
             return fingerprint_element;
           },
+          shipping: function () {
+            var shipping = document.getElementsByName('shipping_address')[1].checked;
+            return shipping;
+          },
           quantity: function () {
             var installment_quantity = document.getElementById('parcelas').value;
 
@@ -273,6 +277,7 @@
         },
         success: function (response) {
           console.log('success transition...');
+          console.log(response);
 
           $.ajax({
             url: 'index.php?route=extension/payment/rakuten_cartao/confirm',
@@ -280,6 +285,7 @@
             data: { body: response },
             success: function () {
               console.log('success confirm: ');
+              console.log(response);
               setTimeout(function () {
                 location.href = '<?php echo $continue ?>';
               }, 1000);

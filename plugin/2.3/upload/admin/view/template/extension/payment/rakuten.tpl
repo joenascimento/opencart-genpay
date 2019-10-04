@@ -240,6 +240,28 @@
                 </div>
               </div>
 
+              <!-- Custom Field District -->
+              <div class="form-group">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_district ?>"><?php echo $entry_district ?></span></label>
+                <div class="col-sm-10">
+                  <span class="input-group">
+                    <select name="rakuten_district" class="form-control">
+                    <?php foreach ($custom_fields as $custom_field): ?>
+                     <?php if ($custom_field['custom_field_id'] == $rakuten_district) { ?>
+                    <option value="<?php echo $custom_field['custom_field_id'] ?>" selected><?php echo $custom_field['name'] ?></option>
+                    <?php } else { ?>
+                    <option value="<?php echo $custom_field['custom_field_id'] ?>"><?php echo $custom_field['name'] ?></option>
+                    <?php } ?>
+                     <?php endforeach; ?>
+                    </select>
+
+                    <span class="input-group-btn">
+                      <a href="<?php echo $link_custom_field ?>" class="btn btn-primary"><?php echo $text_custom_field ?></a>
+                    </span>
+                  </span>
+                </div>
+              </div>
+
               <!-- Custom Field (CPF) -->
               <div class="form-group required">
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_cpf ?>"><?php echo $entry_cpf ?></span></label>

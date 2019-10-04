@@ -213,7 +213,7 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
         $data['payments'][] = $payment;
 
         // Shipping Address
-        if ( ! empty( $_POST['ship_to_different_address'] ) ) {
+        if ($posted['shipping'] == 'true') {
             $shipping_address = [
                 'kind' => 'shipping',
                 'contact' => $rakuten->getName($order_info),
@@ -221,7 +221,7 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
                 'number' => $rakuten->getShippingAddressNumber($custom_field),
                 'complement' => $rakuten->getShippingAddressComplement($custom_field),
                 'city' => $rakuten->getShippingCity($order_info),
-                'district' => $rakuten->getShippingDistrict($custom_field),
+                'district' => $rakuten->getShippingAddressDistrict($custom_field),
                 'state' => $rakuten->getShippingState($order_info),
                 'country' => $rakuten->getShippingCountry($order_info),
                 'zipcode' => $rakuten->getShippingPostalCode($order_info),

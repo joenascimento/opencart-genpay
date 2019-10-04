@@ -171,6 +171,12 @@ class ControllerExtensionPaymentRakuten extends Controller {
 			$data['rakuten_cpf'] = $this->config->get('rakuten_cpf');
 		}
 
+        /* Custom Field District */
+		if (isset($this->request->post['rakuten_district'])) {
+			$data['rakuten_district'] = $this->request->post['rakuten_district'];
+		} else {
+			$data['rakuten_district'] = $this->config->get('rakuten_district');
+        }
 
 		/* Aguardando Pagamento */
 		if (isset($this->request->post['rakuten_aguardando_pagamento'])) {
