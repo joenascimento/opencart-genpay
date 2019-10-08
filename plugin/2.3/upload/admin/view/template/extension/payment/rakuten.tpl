@@ -218,6 +218,50 @@
                 </div>
               </div>
 
+
+              <!-- Custom Field BirthDate -->
+              <div class="form-group required">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_birthdate ?>"><?php echo $entry_birthdate ?></span></label>
+                <div class="col-sm-10">
+                  <span class="input-group">
+                    <select name="rakuten_birthdate" class="form-control">
+                    <?php foreach ($custom_fields as $custom_field): ?>
+                     <?php if ($custom_field['custom_field_id'] == $rakuten_birthdate) { ?>
+                    <option value="<?php echo $custom_field['custom_field_id'] ?>" selected><?php echo $custom_field['name'] ?></option>
+                    <?php } else { ?>
+                    <option value="<?php echo $custom_field['custom_field_id'] ?>"><?php echo $custom_field['name'] ?></option>
+                    <?php } ?>
+                     <?php endforeach; ?>
+                    </select>
+
+                    <span class="input-group-btn">
+                      <a href="<?php echo $link_custom_field ?>" class="btn btn-primary"><?php echo $text_custom_field ?></a>
+                    </span>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Custom Field Complement -->
+              <div class="form-group">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_complement ?>"><?php echo $entry_complement ?></span></label>
+                <div class="col-sm-10">
+                  <span class="input-group">
+                    <select name="rakuten_complement" class="form-control">
+                    <?php foreach ($custom_fields as $custom_field): ?>
+                     <?php if ($custom_field['custom_field_id'] == $rakuten_complement) { ?>
+                    <option value="<?php echo $custom_field['custom_field_id'] ?>" selected><?php echo $custom_field['name'] ?></option>
+                    <?php } else { ?>
+                    <option value="<?php echo $custom_field['custom_field_id'] ?>"><?php echo $custom_field['name'] ?></option>
+                    <?php } ?>
+                     <?php endforeach; ?>
+                    </select>
+
+                    <span class="input-group-btn">
+                      <a href="<?php echo $link_custom_field ?>" class="btn btn-primary"><?php echo $text_custom_field ?></a>
+                    </span>
+                  </span>
+                </div>
+              </div>
               <!-- Custom Field Complement -->
               <div class="form-group">
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_complement ?>"><?php echo $entry_complement ?></span></label>

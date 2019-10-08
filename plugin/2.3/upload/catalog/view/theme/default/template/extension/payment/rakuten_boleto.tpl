@@ -6,7 +6,7 @@
   <div class="form-group">
     <label class="col-sm-2 control-label">CPF</label>
     <div class="col-sm-3">
-        <form action="#" data-rkp="form" id="rakuten-billet">
+        <form action="<?php echo $continue; ?>" data-rkp="form" id="rakuten-billet">
             <fieldset>
                 <input type="hidden" data-rkp="method" value="billet">
             </fieldset>
@@ -15,11 +15,11 @@
       <span id="error-cpf" class="hide">Campo CPF/CNPJ do cartão inválido.</span>
     </div>
   </div>
-  
+
   <div class="form-group">
     <div class="col-sm-10 col-sm-offset-2">
       <button type="button" id="button-confirm" class="btn btn-primary" data-loading-text="Aguarde...">
-        <i class="fa fa-barcode"></i> 
+        <i class="fa fa-barcode"></i>
         Finalizar compra
       </button>
     </div>
@@ -83,19 +83,21 @@
                     },
                     success: function (response) {
                         console.log('success transition...');
+                        console.log(response);
 
-                        $.ajax({
-                            url: 'index.php?route=extension/payment/rakuten_boleto/confirm',
-                            type: 'POST',
-                            data: { body: response },
-                                success: function () {
-                                    console.log('success confirm: ');
-
-                                    setTimeout(function () {
-                                        location.href = '<?php echo $continue ?>';
-                                    }, 1000);
-                                },
-                        })
+//                        $.ajax({
+//                            url: 'index.php?route=extension/payment/rakuten_boleto/confirm',
+//                            type: 'POST',
+//                            data: { body: response },
+//                                success: function (response) {
+//                                    console.log('success confirm: ');
+//                                    console.log(response);
+//
+//                                    setTimeout(function () {
+//                                        location.href = '<?php echo $continue ?>?billet_url=' + response;
+//                                    }, 1000);
+//                                },
+//                        })
                     },
                     complete: function(){
                         $('#button-confirm').button('reset');

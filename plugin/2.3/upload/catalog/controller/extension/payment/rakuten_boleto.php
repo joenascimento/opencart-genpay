@@ -1,6 +1,6 @@
 <?php
 class ControllerExtensionPaymentRakutenBoleto extends Controller {
-	
+
 	public function index() {
 
         /** Load Models */
@@ -45,12 +45,21 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
         /** Variables */
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $rakuten = $this->model_extension_payment_rakuten;
-        $custom_field = $order_info['shipping_custom_field'];
+        $custom_payment_fields = $order_info['payment_custom_field']; //District, complement and address number
+        $custom_shipping_fields = $order_info['shipping_custom_field']; //District, complement and address number
         $shipping_method = $rakuten->getShippingMethod();
-        $payment_method = $rakuten->getPaymentMethod();
         $posted = $_POST;
-
+        $result = json_decode($posted['body'], true);
+        $payments = array_shift($result['payments']);
+        $result_status = $payments['result'];
+        $billetUrlRaw = $payments['billet']['url'];
+        $billet_url = '<a href="'.$payments['billet']['url'].'" target="_blank">Visualizar Boleto</a>';
+        $chargeUuid = $result['charge_uuid'];
+        $environment = $rakuten->getEnvironment()['place'];
         $totalamount = $rakuten->getTotalAmount() + $rakuten->getShippingAmount();
+
+        echo "<pre>";
+        die(print_r($posted));
 
         /** Payload */
         $data = array(
@@ -137,10 +146,10 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
                 'kind' => 'billing',
                 'contact' => $rakuten->getName($order_info),
                 'street' => $rakuten->getStreetAddress($order_info),
-                'number' => $rakuten->getAddressNumber($custom_field),
-                'complement' => $rakuten->getAddressComplement($custom_field),
+                'number' => $rakuten->getAddressNumber($custom_payment_fields),
+                'complement' => $rakuten->getAddressComplement($custom_payment_fields),
                 'city' => $rakuten->getCity($order_info),
-                'district' => $rakuten->getAddressDistrict($custom_field),
+                'district' => $rakuten->getAddressDistrict($custom_payment_fields),
                 'state' => $rakuten->getState($order_info),
                 'country' => $rakuten->getCountry($order_info),
                 'zipcode' => $rakuten->getPostalCode($order_info),
@@ -149,111 +158,66 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
             $data['customer']['addresses'][] = $billing_address;
         }
 
-        if ( $payment_method == 'rakuten_credit_card' ) {
-            $payment = [
-                'reference'                => $rakuten->getOrderId($order_info),
-                'method'                   => $payment_method,
-                'amount'                   => $totalamount,
-                'installments_quantity'    => (integer) $posted['rakuten_pay_installments'],
-                'brand'                    => strtolower( $posted['rakuten_pay_card_brand'] ),
-                'token'                    => $posted['rakuten_pay_token'],
-                'cvv'                      => $posted['rakuten_pay_card_cvc'],
-                'holder_name'              => $posted['rakuten_pay_card_holder_name'],
-                'holder_document'          => $posted['rakuten_pay_card_holder_document'],
-                'options'                  => [
-                    'save_card'   => false,
-                    'new_card'    => false,
-                    'recurrency'  => false
-                ]
-            ];
-        } else {
-            $payment = [
-                'reference' => $rakuten->getOrderId($order_info),
-                'method' => 'billet',
-                'amount' => (float) $totalamount,
-            ];
-        }
-
-        $data['payments'][] = $payment;
 
         // Shipping Address
-        if ( ! empty( $_POST['ship_to_different_address'] ) ) {
+        if (!empty($rakuten->getShippingStreetAddress($order_info))) {
             $shipping_address = [
                 'kind' => 'shipping',
-                'contact' => $rakuten->getName($order_info),
+                'contact' => $rakuten->getShippingName($order_info),
                 'street' => $rakuten->getShippingStreetAddress($order_info),
-                'number' => $rakuten->getShippingAddressNumber($custom_field),
-                'complement' => $rakuten->getShippingAddressComplement($custom_field),
+                'number' => $rakuten->getShippingAddressNumber($custom_shipping_fields),
+                'complement' => $rakuten->getShippingAddressComplement($custom_shipping_fields),
                 'city' => $rakuten->getShippingCity($order_info),
-                'district' => $rakuten->getShippingDistrict($custom_field),
+                'district' => $rakuten->getShippingAddressDistrict($custom_shipping_fields),
                 'state' => $rakuten->getShippingState($order_info),
                 'country' => $rakuten->getShippingCountry($order_info),
                 'zipcode' => $rakuten->getShippingPostalCode($order_info),
             ];
 
-            // Non-WooCommerce default address fields.
-            if ( ! empty( $posted['shipping_address_number'] ) ) {
-                $shipping_address['number'] = $posted['shipping_address_number'];
-            }
-            if ( ! empty( $posted['shipping_district'] ) ) {
-                $shipping_address['district'] = $posted['shipping_district'];
-            }
-
-            $data['customer']['addresses'][] = $shipping_address;
-        } else {
-            $shipping_address                = $billing_address;
-            $shipping_address['kind']        = 'shipping';
             $data['customer']['addresses'][] = $shipping_address;
         }
+
+        // Billet Payment Method
+        $payment = [
+            'reference' => $rakuten->getOrderId($order_info),
+            'method' => 'billet',
+            'amount' => (float) $totalamount,
+        ];
+
+        $data['payments'][] = $payment;
+
 
         /** Captura o retorno da requisição */
         $rakuten->setLog(print_r($data, true));
         try {
 
-            $result = $rakuten->chargeTransaction( $data );
+            $rakuten->chargeTransaction( $data );
             $rakuten->setLog($result);
 
         } catch (Exception $e) {
 
             $rakuten->setException($e->getMessage());
 
-        }   
+        }
 
-        return $result;
-
-    }
-
-	public function confirm() {
-
-        $this->load->model('checkout/order');
-        $this->load->model('extension/payment/rakuten');
-
-        $rakuten = $this->model_extension_payment_rakuten;
-	    $response = $_POST;
-        $result = json_decode($response['body'], true);
-        $payments = array_shift($result['payments']);
-        $result_status = $payments['result'];
-        $billet_url = '<a href="'.$payments['billet']['url'].'" target="_blank">Visualizar Boleto</a>';
-        $chargeUuid = $result['charge_uuid'];
-        $environment = $rakuten->getEnvironment()['place'];
-
+#        return $result;
 		switch ($result_status) {
 			case 'pending':
 				$status = $this->config->get('rakuten_aguardando_pagamento');
                 $paymentStatus = 'pending';
 				break;
-			default: 
+			default:
 				$status = $this->config->get('rakuten_aguardando_pagamento');
                 $paymentStatus = 'pending';
 				break;
 		}
-		
+
         if (isset($this->session->data['order_id'])) {
             $order_id = $this->session->data['order_id'];
         } else {
             $order_id = $this->request->post["order_id"];
         }
-        
+
 		$this->model_checkout_order->addOrderHistory($order_id, $status, $billet_url, '1');
         $rakuten->setLog('Adicionando Order History: ' . $order_id . ' ' . $chargeUuid . ' ' . $paymentStatus . ' ' . $environment);
 
@@ -274,6 +238,66 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
 			unset($this->session->data['payment_methods']);
 			unset($this->session->data['comment']);
 			unset($this->session->data['coupon']);
+        }
+
+        echo print_r($billetUrlRaw, true);
+
+    }
+
+	public function confirm() {
+
+        $this->load->model('checkout/order');
+        $this->load->model('extension/payment/rakuten');
+
+        $rakuten = $this->model_extension_payment_rakuten;
+	    $response = $_POST;
+        $result = json_decode($response['body'], true);
+        $payments = array_shift($result['payments']);
+        $result_status = $payments['result'];
+        $billetUrlRaw = $payments['billet']['url'];
+        $billet_url = '<a href="'.$payments['billet']['url'].'" target="_blank">Visualizar Boleto</a>';
+        $chargeUuid = $result['charge_uuid'];
+        $environment = $rakuten->getEnvironment()['place'];
+
+		switch ($result_status) {
+			case 'pending':
+				$status = $this->config->get('rakuten_aguardando_pagamento');
+                $paymentStatus = 'pending';
+				break;
+			default:
+				$status = $this->config->get('rakuten_aguardando_pagamento');
+                $paymentStatus = 'pending';
+				break;
 		}
+
+        if (isset($this->session->data['order_id'])) {
+            $order_id = $this->session->data['order_id'];
+        } else {
+            $order_id = $this->request->post["order_id"];
+        }
+
+		$this->model_checkout_order->addOrderHistory($order_id, $status, $billet_url, '1');
+        $rakuten->setLog('Adicionando Order History: ' . $order_id . ' ' . $chargeUuid . ' ' . $paymentStatus . ' ' . $environment);
+
+        try {
+
+            $this->db->query("INSERT INTO `rakutenpay_orders` (`order_id`, `charge_uuid`, `status`, `environment`, `created_at`, `updated_at`) VALUES ('$order_id', '$chargeUuid', '$paymentStatus', '$environment', CURRENT_TIME, CURRENT_TIME)");
+
+        } catch (Exception $e) {
+
+            $rakuten->setException($e->getMessage());
+        }
+
+		if (isset($this->session->data['order_id'])) {
+			$this->cart->clear();
+			unset($this->session->data['shipping_method']);
+			unset($this->session->data['shipping_methods']);
+			unset($this->session->data['payment_method']);
+			unset($this->session->data['payment_methods']);
+			unset($this->session->data['comment']);
+			unset($this->session->data['coupon']);
+        }
+
+        echo print_r($billetUrlRaw, true);
 	}
 }

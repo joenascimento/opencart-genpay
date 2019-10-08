@@ -49,6 +49,13 @@ class ControllerExtensionPaymentRakuten extends Controller {
             $data['error_document'] = false;
         }
 
+        /* Error Document */
+        if (isset($this->error['birthdate'])) {
+            $data['error_birthdate'] = $this->error['birthdate'];
+        } else {
+            $data['error_birthdate'] = false;
+        }
+
         /* Error Api */
         if (isset($this->error['api'])) {
             $data['error_api'] = $this->error['api'];
@@ -107,6 +114,14 @@ class ControllerExtensionPaymentRakuten extends Controller {
 		} else {
 			$data['rakuten_email'] = $this->config->get('rakuten_email');
 		}
+
+
+        /* Email */
+		if (isset($this->request->post['rakuten_birthdate'])) {
+			$data['rakuten_birthdate'] = $this->request->post['rakuten_birthdate'];
+		} else {
+			$data['rakuten_birthdate'] = $this->config->get('rakuten_birthdate');
+        }
 
         /* Document */
         if (isset($this->request->post['rakuten_document'])) {

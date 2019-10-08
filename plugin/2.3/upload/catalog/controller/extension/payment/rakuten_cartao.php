@@ -71,7 +71,8 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
         /** Variables */
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']); //Order informations on the client session
         $rakuten = $this->model_extension_payment_rakuten; //Rakuten Model to get all the methods
-        $custom_field = $order_info['shipping_custom_field']; //District, complement and address number
+        $custom_payment_fields = $order_info['payment_custom_field']; //District, complement and address number
+        $custom_shipping_fields = $order_info['shipping_custom_field']; //District, complement and address number
         $shipping_method = $rakuten->getShippingMethod(); //shipping method without Rakuten Log
         $payment_method = $rakuten->getPaymentMethod(); //Payment Method of Rakuten (billet/credit_card)
         $posted = $_POST; // _POST received from the checkout form
@@ -163,16 +164,34 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
                 'kind' => 'billing',
                 'contact' => $rakuten->getName($order_info),
                 'street' => $rakuten->getStreetAddress($order_info),
-                'number' => $rakuten->getAddressNumber($custom_field),
-                'complement' => $rakuten->getAddressComplement($custom_field),
+                'number' => $rakuten->getAddressNumber($custom_payment_fields),
+                'complement' => $rakuten->getAddressComplement($custom_payment_fields),
                 'city' => $rakuten->getCity($order_info),
-                'district' => $rakuten->getAddressDistrict($custom_field),
+                'district' => $rakuten->getAddressDistrict($custom_payment_fields),
                 'state' => $rakuten->getState($order_info),
                 'country' => $rakuten->getCountry($order_info),
                 'zipcode' => $rakuten->getPostalCode($order_info),
             ];
 
             $data['customer']['addresses'][] = $billing_address;
+        }
+
+        // Shipping Address
+        if (!empty($rakuten->getShippingStreetAddress($order_info))) {
+            $shipping_address = [
+                'kind' => 'shipping',
+                'contact' => $rakuten->getShippingName($order_info),
+                'street' => $rakuten->getShippingStreetAddress($order_info),
+                'number' => $rakuten->getShippingAddressNumber($custom_shipping_fields),
+                'complement' => $rakuten->getShippingAddressComplement($custom_shipping_fields),
+                'city' => $rakuten->getShippingCity($order_info),
+                'district' => $rakuten->getShippingAddressDistrict($custom_shipping_fields),
+                'state' => $rakuten->getShippingState($order_info),
+                'country' => $rakuten->getShippingCountry($order_info),
+                'zipcode' => $rakuten->getShippingPostalCode($order_info),
+            ];
+
+            $data['customer']['addresses'][] = $shipping_address;
         }
 
         if ( $payment_method == 'rakuten_cartao' ) {
@@ -212,35 +231,7 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
 
         $data['payments'][] = $payment;
 
-        // Shipping Address
-        if ($posted['shipping'] == 'true') {
-            $shipping_address = [
-                'kind' => 'shipping',
-                'contact' => $rakuten->getName($order_info),
-                'street' => $rakuten->getShippingStreetAddress($order_info),
-                'number' => $rakuten->getShippingAddressNumber($custom_field),
-                'complement' => $rakuten->getShippingAddressComplement($custom_field),
-                'city' => $rakuten->getShippingCity($order_info),
-                'district' => $rakuten->getShippingAddressDistrict($custom_field),
-                'state' => $rakuten->getShippingState($order_info),
-                'country' => $rakuten->getShippingCountry($order_info),
-                'zipcode' => $rakuten->getShippingPostalCode($order_info),
-            ];
 
-            // Non-WooCommerce default address fields.
-            if ( ! empty( $posted['shipping_address_number'] ) ) {
-                $shipping_address['number'] = $posted['shipping_address_number'];
-            }
-            if ( ! empty( $posted['shipping_district'] ) ) {
-                $shipping_address['district'] = $posted['shipping_district'];
-            }
-
-            $data['customer']['addresses'][] = $shipping_address;
-        } else {
-            $shipping_address                = $billing_address;
-            $shipping_address['kind']        = 'shipping';
-            $data['customer']['addresses'][] = $shipping_address;
-        }
 
         /** Captura o retorno da requisição */
         $rakuten->setLog(print_r($data, true));

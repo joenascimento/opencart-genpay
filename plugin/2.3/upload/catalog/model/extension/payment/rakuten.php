@@ -100,7 +100,6 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getEnvironment()
     {
-
         $api = $this->getApiUrl();
         $js = $this->getJsUrl();
 
@@ -185,16 +184,15 @@ class ModelExtensionPaymentRakuten extends Controller {
     }
 
     /**
-     * Get Fisrtname and Lastname of customer
+     * Get billing Fisrtname and Lastname of customer
      *
      * @param $order
      * @return string
      */
     public function getName($order)
     {
-
         try {
-            $name = $order['firstname'] . ' ' . $order['lastname'];
+            $name = $order['payment_firstname'] . ' ' . $order['payment_lastname'];
             if (empty($name)) {
                 throw new Exception('Nome ou Sobrenome está vazio');
             }
@@ -207,7 +205,6 @@ class ModelExtensionPaymentRakuten extends Controller {
 
             return false;
         }
-
     }
 
     /**
@@ -421,6 +418,30 @@ class ModelExtensionPaymentRakuten extends Controller {
     }
 
     /**
+     * Get billing Fisrtname and Lastname of customer
+     *
+     * @param $order
+     * @return string
+     */
+    public function getShippingName($order)
+    {
+        try {
+            $name = $order['shipping_firstname'] . ' ' . $order['shipping_lastname'];
+            if (empty($name)) {
+                throw new Exception('Nome ou Sobrenome está vazio');
+            }
+
+            $this->setLog($name);
+            return $name;
+
+        } catch (Exception $e) {
+            $this->setException($e->getMessage());
+
+            return false;
+        }
+    }
+
+    /**
      * Get the shipping method code
      *
      * @return mixed
@@ -486,8 +507,8 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getShippingStreetAddress($order)
     {
-        $this->setLog($order['payment_address_1']);
-        return $order['payment_address_1'];
+        $this->setLog($order['shipping_address_1']);
+        return $order['shipping_address_1'];
     }
 
     /**
@@ -526,11 +547,13 @@ class ModelExtensionPaymentRakuten extends Controller {
 
     /**
      * Get custom field district
+     *
      * @param $custom_field
      * @return string
      */
     public function getShippingAddressDistrict($custom_field) {
         $key = $this->config->get('rakuten_district');
+
         if (array_key_exists($key , $custom_field)) {
             $this->setLog($custom_field[$key]);
             return $custom_field[$key];
@@ -550,7 +573,6 @@ class ModelExtensionPaymentRakuten extends Controller {
     {
         $this->setLog($this->only_numbers(preg_replace('/[^\d]/', '', $order['shipping_postcode'])));
         return $this->only_numbers(preg_replace('/[^\d]/', '', $order['shipping_postcode']));
-
     }
 
     /**
