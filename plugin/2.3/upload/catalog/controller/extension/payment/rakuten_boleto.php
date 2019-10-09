@@ -37,7 +37,6 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
 
 	public function transition()
     {
-
         /** Load Models */
         $this->load->model('checkout/order');
         $this->load->model('extension/payment/rakuten');
@@ -49,17 +48,11 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
         $custom_shipping_fields = $order_info['shipping_custom_field']; //District, complement and address number
         $shipping_method = $rakuten->getShippingMethod();
         $posted = $_POST;
-        $result = json_decode($posted['body'], true);
-        $payments = array_shift($result['payments']);
-        $result_status = $payments['result'];
-        $billetUrlRaw = $payments['billet']['url'];
-        $billet_url = '<a href="'.$payments['billet']['url'].'" target="_blank">Visualizar Boleto</a>';
-        $chargeUuid = $result['charge_uuid'];
+        #$result = json_decode($posted['body'], true);
         $environment = $rakuten->getEnvironment()['place'];
         $totalamount = $rakuten->getTotalAmount() + $rakuten->getShippingAmount();
 
-        echo "<pre>";
-        die(print_r($posted));
+        $rakuten->setLog(print_r($posted, true));
 
         /** Payload */
         $data = array(
@@ -186,118 +179,13 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
 
         $data['payments'][] = $payment;
 
-
-        /** Captura o retorno da requisição */
-        $rakuten->setLog(print_r($data, true));
         try {
-
-            $rakuten->chargeTransaction( $data );
-            $rakuten->setLog($result);
-
+            $response = $rakuten->chargeTransaction( $data );
+            #$billetUrlRaw = $payments['billet']['url'];
+            #$billet_url = '<a href="'.$payments['billet']['url'].'" target="_blank">Visualizar Boleto</a>';
+            return $response;
         } catch (Exception $e) {
-
-            $rakuten->setException($e->getMessage());
-
-        }
-
-#        return $result;
-		switch ($result_status) {
-			case 'pending':
-				$status = $this->config->get('rakuten_aguardando_pagamento');
-                $paymentStatus = 'pending';
-				break;
-			default:
-				$status = $this->config->get('rakuten_aguardando_pagamento');
-                $paymentStatus = 'pending';
-				break;
-		}
-
-        if (isset($this->session->data['order_id'])) {
-            $order_id = $this->session->data['order_id'];
-        } else {
-            $order_id = $this->request->post["order_id"];
-        }
-
-		$this->model_checkout_order->addOrderHistory($order_id, $status, $billet_url, '1');
-        $rakuten->setLog('Adicionando Order History: ' . $order_id . ' ' . $chargeUuid . ' ' . $paymentStatus . ' ' . $environment);
-
-        try {
-
-            $this->db->query("INSERT INTO `rakutenpay_orders` (`order_id`, `charge_uuid`, `status`, `environment`, `created_at`, `updated_at`) VALUES ('$order_id', '$chargeUuid', '$paymentStatus', '$environment', CURRENT_TIME, CURRENT_TIME)");
-
-        } catch (Exception $e) {
-
             $rakuten->setException($e->getMessage());
         }
-
-		if (isset($this->session->data['order_id'])) {
-			$this->cart->clear();
-			unset($this->session->data['shipping_method']);
-			unset($this->session->data['shipping_methods']);
-			unset($this->session->data['payment_method']);
-			unset($this->session->data['payment_methods']);
-			unset($this->session->data['comment']);
-			unset($this->session->data['coupon']);
-        }
-
-        echo print_r($billetUrlRaw, true);
-
     }
-
-	public function confirm() {
-
-        $this->load->model('checkout/order');
-        $this->load->model('extension/payment/rakuten');
-
-        $rakuten = $this->model_extension_payment_rakuten;
-	    $response = $_POST;
-        $result = json_decode($response['body'], true);
-        $payments = array_shift($result['payments']);
-        $result_status = $payments['result'];
-        $billetUrlRaw = $payments['billet']['url'];
-        $billet_url = '<a href="'.$payments['billet']['url'].'" target="_blank">Visualizar Boleto</a>';
-        $chargeUuid = $result['charge_uuid'];
-        $environment = $rakuten->getEnvironment()['place'];
-
-		switch ($result_status) {
-			case 'pending':
-				$status = $this->config->get('rakuten_aguardando_pagamento');
-                $paymentStatus = 'pending';
-				break;
-			default:
-				$status = $this->config->get('rakuten_aguardando_pagamento');
-                $paymentStatus = 'pending';
-				break;
-		}
-
-        if (isset($this->session->data['order_id'])) {
-            $order_id = $this->session->data['order_id'];
-        } else {
-            $order_id = $this->request->post["order_id"];
-        }
-
-		$this->model_checkout_order->addOrderHistory($order_id, $status, $billet_url, '1');
-        $rakuten->setLog('Adicionando Order History: ' . $order_id . ' ' . $chargeUuid . ' ' . $paymentStatus . ' ' . $environment);
-
-        try {
-
-            $this->db->query("INSERT INTO `rakutenpay_orders` (`order_id`, `charge_uuid`, `status`, `environment`, `created_at`, `updated_at`) VALUES ('$order_id', '$chargeUuid', '$paymentStatus', '$environment', CURRENT_TIME, CURRENT_TIME)");
-
-        } catch (Exception $e) {
-
-            $rakuten->setException($e->getMessage());
-        }
-
-		if (isset($this->session->data['order_id'])) {
-			$this->cart->clear();
-			unset($this->session->data['shipping_method']);
-			unset($this->session->data['shipping_methods']);
-			unset($this->session->data['payment_method']);
-			unset($this->session->data['payment_methods']);
-			unset($this->session->data['comment']);
-			unset($this->session->data['coupon']);
-        }
-
-        echo print_r($billetUrlRaw, true);
-	}
 }

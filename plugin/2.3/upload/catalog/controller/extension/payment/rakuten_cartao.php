@@ -231,110 +231,12 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
 
         $data['payments'][] = $payment;
 
-
-
-        /** Captura o retorno da requisição */
-        $rakuten->setLog(print_r($data, true));
         try {
-
             $result = $rakuten->chargeTransaction( $data );
-
         } catch (Exception $e) {
-
             $rakuten->setException($e->getMessage());
-
         }
 
         return $result;
-
     }
-
-	public function confirm() {
-
-        $this->load->model('checkout/order');
-
-        $this->load->model('extension/payment/rakuten');
-        $rakuten = $this->model_extension_payment_rakuten;
-	    $response = $_POST;
-        $result = json_decode($response['body'], true);
-        $chargeUuid = $result['charge_uuid'];
-        $payments = array_shift($result['payments']);
-        $resultStatus = $payments['result'];
-        $creditCard = $payments['credit_card']['number'];
-        $paymentMessage = $payments['credit_card']['authorization_message'];
-        $paymentCode = $payments['credit_card']['authorization_code'];
-        $comment = "Cartão de crédito: " . $creditCard . "\n Código: " . $paymentCode . "\n Mensagem: " . $paymentMessage;
-        $environment = $rakuten->getEnvironment()['place'];
-
-        if (isset($this->session->data['order_id'])) {
-            $order_id = $this->session->data['order_id'];
-        } else {
-            $order_id = $this->request->post["order_id"];
-        }
-
-		switch ($resultStatus) {
-            case 'pending':
-                $status = $this->config->get('rakuten_aguardando_pagamento');
-                $rakuten->setLog($status . ' - ' . $resultStatus);
-                break;
-            case 'success':
-                $status = $this->config->get('rakuten_aguardando_pagamento');
-                $rakuten->setLog($status . ' - ' . $resultStatus);
-                break;
-            case 'declined':
-                $status = $this->config->get('rakuten_negada');
-                $rakuten->setLog($status . ' - ' . $resultStatus);
-                break;
-            case 'failure':
-                $status = $this->config->get('rakuten_falha');
-                $rakuten->setLog($status . ' - ' . $resultStatus);
-                break;
-            case 'refunded':
-                $status = $this->config->get('rakuten_devolvida');
-                $rakuten->setLog($status . ' - ' . $resultStatus);
-                break;
-            case 'cancelled':
-                $status = $this->config->get('rakuten_cancelada');
-                $rakuten->setLog($status . ' - ' . $resultStatus);
-                break;
-            default:
-                $status = $this->config->get('rakuten_aguardando_pagamento');
-                $rakuten->setLog($status . ' - ' . $resultStatus);
-                break;
-		}
-
-		$this->model_checkout_order->addOrderHistory($order_id, $status, $comment, '1' );
-        $rakuten->setLog('Adicionando Order History: ' . $order_id . ' ' . $chargeUuid . ' ' . $environment);
-
-        try {
-            if (empty($comment)) {
-                throw new Exception('Comentário vazio');
-            }
-            $rakuten->setLog('Comentario: ' . $comment);
-        } catch (Exception $e) {
-            $rakuten->setException($e->getMessage());
-        }
-
-        try {
-
-            $this->db->query("INSERT INTO `rakutenpay_orders` (`order_id`, `charge_uuid`, `status`, `environment`, `created_at`, `updated_at`) VALUES ('$order_id', '$chargeUuid', '$resultStatus', '$environment', CURRENT_TIME, CURRENT_TIME)");
-
-        } catch (Exception $e) {
-
-            $rakuten->setException($e->getMessage());
-        }
-
-		if (isset($this->session->data['order_id'])) {
-			$this->cart->clear();
-			unset($this->session->data['shipping_method']);
-			unset($this->session->data['shipping_methods']);
-			unset($this->session->data['payment_method']);
-			unset($this->session->data['payment_methods']);
-			unset($this->session->data['comment']);
-			unset($this->session->data['coupon']);
-		}
-
-		$rakuten->setLog('Fim do transaction sem falhas ' . $resultStatus);
-		return $resultStatus;
-	}
 }

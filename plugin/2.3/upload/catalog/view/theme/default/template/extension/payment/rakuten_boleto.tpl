@@ -102,6 +102,7 @@
                     complete: function(){
                         $('#button-confirm').button('reset');
                         console.log('completo');
+                        location.href = '<?php echo $continue ?>';
                     }
             })
         }

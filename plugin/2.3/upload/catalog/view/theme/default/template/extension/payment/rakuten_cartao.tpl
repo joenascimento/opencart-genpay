@@ -279,22 +279,23 @@
           console.log('success transition...');
           console.log(response);
 
-          $.ajax({
-            url: 'index.php?route=extension/payment/rakuten_cartao/confirm',
-            type: 'POST',
-            data: { body: response },
-            success: function () {
-              console.log('success confirm: ');
-              console.log(response);
-              setTimeout(function () {
-                location.href = '<?php echo $continue ?>';
-              }, 1000);
-            }
-          })
+//          $.ajax({
+//            url: 'index.php?route=extension/payment/rakuten_cartao/confirm',
+//            type: 'POST',
+//            data: { body: response },
+//            success: function () {
+//              console.log('success confirm: ');
+//              console.log(response);
+//              setTimeout(function () {
+//                location.href = '<?php echo $continue ?>';
+//              }, 1000);
+//            }
+//          })
         },
         complete: function(){
           $('#button-confirm').button('reset');
           console.log('completo');
+          location.href = '<?php echo $continue; ?>';
         }
       })
     }
