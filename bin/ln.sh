@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "start plugins symbolic link to the container"
 docker exec nginx-opencart bash -c "ln -sf /var/www/html/plugin/2.3/upload/admin/controller/extension/payment/* /var/www/html/2.3/upload/admin/controller/extension/payment/"
 docker exec nginx-opencart bash -c "ln -sf /var/www/html/plugin/2.3/upload/admin/model/extension/payment/* /var/www/html/2.3/upload/admin/model/extension/payment/"
 docker exec nginx-opencart bash -c "ln -sf /var/www/html/plugin/2.3/upload/admin/language/en-gb/extension/payment/* /var/www/html/2.3/upload/admin/language/en-gb/extension/payment/"
@@ -27,3 +28,4 @@ docker exec php-opencart bash -c "ln -sf /var/www/html/plugin/2.3/upload/catalog
 docker exec php-opencart bash -c "ln -sf /var/www/html/plugin/2.3/upload/catalog/view/theme/default/stylesheet/* /var/www/html/2.3/upload/catalog/view/theme/default/stylesheet/"
 docker exec php-opencart bash -c "ln -sf /var/www/html/plugin/2.3/upload/catalog/view/theme/default/template/common/* /var/www/html/2.3/upload/catalog/view/theme/default/template/common/"
 docker exec php-opencart bash -c "ln -sf /var/www/html/plugin/2.3/upload/catalog/view/theme/default/template/extension/payment/* /var/www/html/2.3/upload/catalog/view/theme/default/template/extension/payment/"
+echo "Symbolic links complete"
