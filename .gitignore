@@ -1,3 +1,5 @@
 .idea
 .DS_Store
 mysql
+www/2.3/upload/system/storage/cache/
+www/3.0/upload/system/storage/cache/
