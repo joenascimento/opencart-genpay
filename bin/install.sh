@@ -1,5 +1,3 @@
 #!/bin/bash
-docker-compose start
+docker-compose up -d
 ./bin/ln.sh
-./bin/db.sh
-
