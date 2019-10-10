@@ -1,0 +1,1 @@
+/var/www/html/plugin/2.3/upload/admin/language/en-gb/extension/payment/rakuten_cartao.php
