@@ -827,10 +827,12 @@ class ModelExtensionPaymentRakuten extends Controller {
         $result = json_decode($response, true);
         $payments = array_shift($result['payments']);
         $paymentMethod = $payments['method'];
+        $status = $result['result'];
         $resultStatus = $payments['result'];
         $chargeUuid = $result['charge_uuid'];
 
         return [
+            'status' => $status,
             'result_status' => $resultStatus,
             'charge_uuid' => $chargeUuid,
             'payment_method' => $paymentMethod,
@@ -854,60 +856,67 @@ class ModelExtensionPaymentRakuten extends Controller {
 
             $environment = $this->getEnvironment()['place'];
 
-            switch ($normalized['result_status']) {
-                case 'pending':
-                    $status = $this->config->get('rakuten_aguardando_pagamento');
-                    $this->setLog($status . ' - ' . $normalized['result_status']);
-                    break;
-                case 'success':
-                    $status = $this->config->get('rakuten_aguardando_pagamento');
-                    $this->setLog($status . ' - ' . $normalized['result_status']);
-                    break;
-                case 'declined':
-                    $status = $this->config->get('rakuten_negada');
-                    $this->setLog($status . ' - ' . $normalized['result_status']);
-                    break;
-                case 'failure':
-                    $status = $this->config->get('rakuten_falha');
-                    $this->setLog($status . ' - ' . $normalized['result_status']);
-                    break;
-                case 'refunded':
-                    $status = $this->config->get('rakuten_devolvida');
-                    $this->setLog($status . ' - ' . $normalized['result_status']);
-                    break;
-                case 'cancelled':
-                    $status = $this->config->get('rakuten_cancelada');
-                    $this->setLog($status . ' - ' . $normalized['result_status']);
-                    break;
-                default:
-                    $status = $this->config->get('rakuten_aguardando_pagamento');
-                    $this->setLog($status . ' - ' . $normalized['result_status']);
-                    break;
-            }
+            if ($normalized['status'] !== 'failure') {
+                switch ($normalized['result_status']) {
+                    case 'pending':
+                        $status = $this->config->get('rakuten_aguardando_pagamento');
+                        $this->setLog($status . ' - ' . $normalized['result_status']);
+                        break;
+                    case 'success':
+                        $status = $this->config->get('rakuten_aguardando_pagamento');
+                        $this->setLog($status . ' - ' . $normalized['result_status']);
+                        break;
+                    case 'declined':
+                        $status = $this->config->get('rakuten_negada');
+                        $this->setLog($status . ' - ' . $normalized['result_status']);
+                        break;
+                    case 'failure':
+                        $status = $this->config->get('rakuten_falha');
+                        $this->setLog($status . ' - ' . $normalized['result_status']);
+                        break;
+                    case 'refunded':
+                        $status = $this->config->get('rakuten_devolvida');
+                        $this->setLog($status . ' - ' . $normalized['result_status']);
+                        break;
+                    case 'cancelled':
+                        $status = $this->config->get('rakuten_cancelada');
+                        $this->setLog($status . ' - ' . $normalized['result_status']);
+                        break;
+                    default:
+                        $status = $this->config->get('rakuten_aguardando_pagamento');
+                        $this->setLog($status . ' - ' . $normalized['result_status']);
+                        break;
+                }
 
-            $this->db->query("INSERT INTO `rakutenpay_orders` (`order_id`, `charge_uuid`, `status`, `environment`, `created_at`, `updated_at`) VALUES ('$order_id', '{$normalized['charge_uuid']}', '{$normalized['result_status']}', '$environment', CURRENT_TIME, CURRENT_TIME)");
+                $this->db->query("INSERT INTO `rakutenpay_orders` (`order_id`, `charge_uuid`, `status`, `environment`, `created_at`, `updated_at`) VALUES ('$order_id', '{$normalized['charge_uuid']}', '{$normalized['result_status']}', '$environment', CURRENT_TIME, CURRENT_TIME)");
 
-            if (isset($this->session->data['order_id'])) {
-                $this->cart->clear();
-                unset($this->session->data['shipping_method']);
-                unset($this->session->data['shipping_methods']);
-                unset($this->session->data['payment_method']);
-                unset($this->session->data['payment_methods']);
-                unset($this->session->data['comment']);
-                unset($this->session->data['coupon']);
-            }
+                if (isset($this->session->data['order_id'])) {
+                    $this->cart->clear();
+                    unset($this->session->data['shipping_method']);
+                    unset($this->session->data['shipping_methods']);
+                    unset($this->session->data['payment_method']);
+                    unset($this->session->data['payment_methods']);
+                    unset($this->session->data['comment']);
+                    unset($this->session->data['coupon']);
+                }
 
-            if ($this->isBillet($normalized)) {
-                $billet_url = '<a href="'.$normalized['payment']['billet']['url'].'" target="_blank">Visualizar Boleto</a>';
+                if ($this->isBillet($normalized)) {
+                    $billet_url = '<a href="'.$normalized['payment']['billet']['url'].'" target="_blank">Visualizar Boleto</a>';
+                    $this->model_checkout_order->addOrderHistory($order_id, $status, $billet_url, '1');
+                    $this->setLog('Adicionando Order History: ' . $order_id . ' ' . $normalized['charge_uuid'] . ' ' . $normalized['result_status'] . ' ' . $environment);
+
+                    return $normalized['payment']['billet']['url'];
+                }
+            } else {
+                $status = $this->config->get('rakuten_falha');
+                $this->setLog($status . ' - ' . $normalized['result_status']);
                 $this->model_checkout_order->addOrderHistory($order_id, $status, $billet_url, '1');
-                $this->setLog('Adicionando Order History: ' . $order_id . ' ' . $normalized['charge_uuid'] . ' ' . $normalized['result_status'] . ' ' . $environment);
 
-                return $normalized['payment']['billet']['url'];
+                return false;
             }
         } catch (Exception $e) {
             $this->setException($e->getMessage());
         }
-
 
         $creditCard = $normalized['payment']['credit_card']['number'];
         $paymentMessage = $normalized['payment']['credit_card']['authorization_message'];

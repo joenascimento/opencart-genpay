@@ -2,8 +2,10 @@
 .DS_Store
 mysql
 www/2.3/upload/system/storage/cache/
+www/2.3/upload/system/storage/logs/error.log
 www/2.3/upload/rakuten.log
 www/2.3/upload/image/cache
 www/3.0/upload/system/storage/cache/
+www/3.0/upload/system/storage/logs/error.log
 www/3.0/upload/rakuten.log
 www/3.0/upload/image/cache

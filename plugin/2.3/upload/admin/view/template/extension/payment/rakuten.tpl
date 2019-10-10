@@ -196,29 +196,6 @@
                 </div>
               </div>
 
-              <!-- Custom Field Number -->
-              <div class="form-group required">
-                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_number ?>"><?php echo $entry_number ?></span></label>
-                <div class="col-sm-10">
-                  <span class="input-group">
-                    <select name="rakuten_number" class="form-control">
-                    <?php foreach ($custom_fields as $custom_field): ?>
-                     <?php if ($custom_field['custom_field_id'] == $rakuten_number) { ?>
-                    <option value="<?php echo $custom_field['custom_field_id'] ?>" selected><?php echo $custom_field['name'] ?></option>
-                    <?php } else { ?>
-                    <option value="<?php echo $custom_field['custom_field_id'] ?>"><?php echo $custom_field['name'] ?></option>
-                    <?php } ?>
-                     <?php endforeach; ?>
-                    </select>
-
-                    <span class="input-group-btn">
-                      <a href="<?php echo $link_custom_field ?>" class="btn btn-primary"><?php echo $text_custom_field ?></a>
-                    </span>
-                  </span>
-                </div>
-              </div>
-
-
               <!-- Custom Field BirthDate -->
               <div class="form-group required">
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_birthdate ?>"><?php echo $entry_birthdate ?></span></label>
@@ -241,14 +218,14 @@
                 </div>
               </div>
 
-              <!-- Custom Field Complement -->
-              <div class="form-group">
-                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_complement ?>"><?php echo $entry_complement ?></span></label>
+              <!-- Custom Field Number -->
+              <div class="form-group required">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_number ?>"><?php echo $entry_number ?></span></label>
                 <div class="col-sm-10">
                   <span class="input-group">
-                    <select name="rakuten_complement" class="form-control">
+                    <select name="rakuten_number" class="form-control">
                     <?php foreach ($custom_fields as $custom_field): ?>
-                     <?php if ($custom_field['custom_field_id'] == $rakuten_complement) { ?>
+                     <?php if ($custom_field['custom_field_id'] == $rakuten_number) { ?>
                     <option value="<?php echo $custom_field['custom_field_id'] ?>" selected><?php echo $custom_field['name'] ?></option>
                     <?php } else { ?>
                     <option value="<?php echo $custom_field['custom_field_id'] ?>"><?php echo $custom_field['name'] ?></option>
@@ -262,6 +239,7 @@
                   </span>
                 </div>
               </div>
+
               <!-- Custom Field Complement -->
               <div class="form-group">
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_complement ?>"><?php echo $entry_complement ?></span></label>
@@ -285,7 +263,7 @@
               </div>
 
               <!-- Custom Field District -->
-              <div class="form-group">
+              <div class="form-group required">
                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-html="true" title="<?php echo $help_district ?>"><?php echo $entry_district ?></span></label>
                 <div class="col-sm-10">
                   <span class="input-group">
