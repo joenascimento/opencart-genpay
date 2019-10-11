@@ -171,7 +171,6 @@ class ModelExtensionPaymentRakuten extends Controller {
         $document = $this->getOnlyNumbers($order['custom_field'][$this->config->get('rakuten_cpf')]);
         $this->setLog($document);
         return $document;
-
     }
 
     /**
@@ -243,7 +242,6 @@ class ModelExtensionPaymentRakuten extends Controller {
     {
         $this->setLog('personal');
         return 'personal';
-
     }
 
     /**
@@ -256,7 +254,6 @@ class ModelExtensionPaymentRakuten extends Controller {
     {
         $this->setLog($order['order_id']);
         return (string) $order['order_id'];
-
     }
 
     /**
@@ -267,7 +264,6 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getCurrency($order)
     {
-
 //        return $order['currency_code'];
         return 'BRL';
 
@@ -289,6 +285,25 @@ class ModelExtensionPaymentRakuten extends Controller {
     {
         $this->setLog((float) $this->cart->getSubTotal());
         return (float) $this->cart->getSubTotal();
+    }
+
+
+    /**
+     * Get BirthDate Custom Field
+     *
+     * @param $order
+     * @return mixed
+     */
+    public function getBirthDate($order)
+    {
+        $birthDate = $order['custom_field'][$this->config->get('rakuten_birthdate')];
+        if (empty($birthDate)) {
+            $this->setLog('1999-01-01 padrão');
+            return '1999-01-01';
+        }
+
+        $this->setLog($birthDate);
+        return $birthDate;
     }
 
     /**

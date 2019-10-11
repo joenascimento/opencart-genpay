@@ -67,7 +67,7 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
                 'name'          => $rakuten->getName($order_info),
                 'business_name' => $rakuten->getName($order_info),
                 'email'         => $rakuten->getEmail($order_info),
-                'birth_date'    => '1999-01-01',
+                'birth_date'    => $rakuten->getBirthDate($order_info),
                 'kind'          => $rakuten->getKind($order_info),
                 'addresses'     => array(),
                 'phones'        => array(

@@ -84,20 +84,6 @@
                     success: function (response) {
                         console.log('success transition...');
                         console.log(response);
-
-//                        $.ajax({
-//                            url: 'index.php?route=extension/payment/rakuten_boleto/confirm',
-//                            type: 'POST',
-//                            data: { body: response },
-//                                success: function (response) {
-//                                    console.log('success confirm: ');
-//                                    console.log(response);
-//
-//                                    setTimeout(function () {
-//                                        location.href = '<?php echo $continue ?>?billet_url=' + response;
-//                                    }, 1000);
-//                                },
-//                        })
                     },
                     complete: function(){
                         $('#button-confirm').button('reset');

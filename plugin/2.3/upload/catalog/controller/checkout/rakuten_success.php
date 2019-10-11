@@ -4,7 +4,6 @@ class ControllerCheckoutRakutenSuccess extends Controller {
 
         $this->load->language('checkout/success');
         $this->load->language('extension/payment/rakuten');
-        $this->load->model('extension/payment/rakuten');
 
         if (isset($this->session->data['order_id'])) {
             $this->session->data['success_order_id'] = $this->session->data['order_id'];
