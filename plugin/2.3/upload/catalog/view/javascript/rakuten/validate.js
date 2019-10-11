@@ -10,7 +10,6 @@ function validateCardHolderName() {
             error.classList.add('show');
 
             cardHolderName.classList.add('border-error');
-            cardHolderName.focus();
 
         } else {
 
@@ -37,7 +36,6 @@ function validateCardNumber() {
             error.classList.add('show');
 
             cardNumber.classList.add('border-error');
-            cardNumber.focus();
 
         } else {
 
@@ -56,7 +54,6 @@ function validateCardNumber() {
             error_digits.classList.add('show');
 
             cardNumber.classList.add('border-error');
-            cardNumber.focus();
         } else {
 
             var rpay = new RPay();
@@ -69,7 +66,6 @@ function validateCardNumber() {
                 error_digits.classList.add('show');
 
                 cardNumber.classList.add('border-error');
-                cardNumber.focus();
                 return false;
             }
 
@@ -100,7 +96,6 @@ function validateCardMonthYear() {
             error_month.classList.add('show');
 
             cardMonthSelect.classList.add('border-error');
-            cardMonthSelect.focus();
 
         } else {
 
@@ -122,7 +117,6 @@ function validateCardMonthYear() {
             error_year.classList.add('show');
 
             cardYearSelect.classList.add('border-error');
-            cardYearSelect.focus();
 
         } else {
 
@@ -204,7 +198,6 @@ function validateCardCVV() {
             error.classList.add('show');
 
             cardCVV.classList.add('border-error');
-            cardCVV.focus();
 
         } else {
 
@@ -230,7 +223,6 @@ function validateCardInstallment() {
             error.classList.add('show');
 
             cardInstallment.classList.add('border-error');
-            cardInstallment.focus();
 
         } else {
 

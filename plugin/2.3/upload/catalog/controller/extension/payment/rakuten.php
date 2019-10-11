@@ -40,25 +40,18 @@ class ControllerExtensionPaymentRakuten extends Controller {
 			$signatureHeader = $entityHeaders['Signature'];
 
 		} else {
-
 			$entityHeaders = apache_request_headers();
 			$signatureHeader = $entityHeaders['Signature'];
 		}
 
 		if ( empty( $rawResponse ) ) {
-
 			print_r($rawResponse);
-
 			return $rawResponse;
-
 		}
 
 		if ( empty($signatureHeader) || $signatureHeader !== $signatureBase64 ) {
-
-			echo "<h3>ERRO:</h3>";
-			echo "<h4>pedido: ". print_r($payments['reference'], true) . "</h4>";
-			echo "<h4>As chaves de assinatura são diferentes</h4>";
-			$rakuten->setLog('As chaves não batem: ' . print_r($signatureHeader, true) . ' x ' . $signatureBase64);
+            $rakuten->setLog('As chaves não batem: ' . print_r($signatureHeader, true) . ' x ' . $signatureBase64);
+            header('HTTP/1.0 403 Forbidden');
 
 			return $signatureHeader;
 		}
