@@ -538,8 +538,8 @@ class ModelExtensionPaymentRakuten extends Controller {
             $this->setLog($custom_field[$key]);
             return $custom_field[$key];
         } else {
-            $this->setLog(0);
-            return 0;
+            $this->setLog('0');
+            return '0';
         }
     }
 
@@ -822,7 +822,7 @@ class ModelExtensionPaymentRakuten extends Controller {
             echo "cURL Error #:" . $err;
         } else {
             $normalized = $this->normalizeReponse($response);
-            $status = $this->updatStatus($normalized, $order_id);
+            $status = $this->updateStatus($normalized, $order_id);
 
             return $status;
         }
@@ -863,7 +863,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      * @access private
      * @return void
      */
-    private function updatStatus($normalized, $order_id)
+    private function updateStatus($normalized, $order_id)
     {
         try {
             /** Load Model order */
@@ -887,10 +887,6 @@ class ModelExtensionPaymentRakuten extends Controller {
                         break;
                     case 'failure':
                         $status = $this->config->get('rakuten_falha');
-                        $this->setLog($status . ' - ' . $normalized['result_status']);
-                        break;
-                    case 'refunded':
-                        $status = $this->config->get('rakuten_devolvida');
                         $this->setLog($status . ' - ' . $normalized['result_status']);
                         break;
                     case 'cancelled':
@@ -1233,7 +1229,8 @@ class ModelExtensionPaymentRakuten extends Controller {
             'amount' => $amount,
         ];
 
-        $url = "https://oneapi-sandbox.rakutenpay.com.br/rpay/v1/checkout" . '?' . http_build_query($params);
+        $endpoint = 'checkout';
+        $url = $this->getEnvironment()['api'] . $endpoint . '?' . http_build_query($params);
 
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,
