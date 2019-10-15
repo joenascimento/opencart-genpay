@@ -1,4 +1,7 @@
 <?php
+
+use Squareup\Exception;
+
 class ModelExtensionPaymentRakuten extends Controller {
 
     private $environment;
@@ -368,9 +371,12 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getCity($order)
     {
-        $this->setLog($order['payment_city']);
-        return $order['payment_city'];
-
+        try {
+            $this->setLog($order['payment_city']);
+            return $order['payment_city'];
+        } catch (Exception $e) {
+            $this->setException($e->getMessage());
+        }
     }
 
     /**
@@ -394,8 +400,12 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getState($order)
     {
-        $this->setLog($order['payment_zone_code']);
-        return $order['payment_zone_code'];
+        try {
+            $this->setLog($order['payment_zone_code']);
+            return $order['payment_zone_code'];
+        } catch (Exception $e) {
+            $this->setException($e->getMessage());
+        }
     }
 
     /**
@@ -406,8 +416,12 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getCountry($order)
     {
-        $this->setLog($order['payment_iso_code_2']);
-        return $order['payment_iso_code_2'];
+        try {
+            $this->setLog($order['payment_iso_code_2']);
+            return $order['payment_iso_code_2'];
+        } catch(Exception $e) {
+            $this->setException($e->getMessage());
+        }
     }
 
     /**
@@ -418,8 +432,27 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getPhone($order)
     {
-        $this->setLog($order['telephone']);
-        return $order['telephone'];
+        try {
+            if (!empty($order['telephone'])) {
+
+                $phone = trim($this->getOnlyNumbers($order['telephone']));
+                $ddd = substr($phone, 0,2);
+                $number = substr($phone, 2);
+
+                $this->setLog($ddd.' '.$number);
+                return [
+                    'ddd' => $ddd,
+                    'number' => $number,
+                ];
+            }
+            $this->setLog('11 999999999 padrao');
+            return [
+                'ddd' => '11',
+                'number' => '999999999',
+            ];
+        } catch(Exception $e) {
+            $this->setException($e->getMessage());
+        }
     }
 
     /**

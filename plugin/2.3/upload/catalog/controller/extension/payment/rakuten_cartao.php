@@ -97,38 +97,22 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
                 'addresses'     => array(),
                 'phones'        => array(
                     array(
-                        'kind'         => 'billing',
-                        'reference'    => 'others',
-                        'number'       => array(
+                        'kind' => 'billing',
+                        'reference' => 'others',
+                        'number' => [
                             'country_code' => '55',
-                            'area_code'    => preg_replace(
-                                '/\((\d{2})\)\s(\d{4,5})-(\d{4})/',
-                                '${1}',
-                                $rakuten->getPhone($order_info)
-                            ),
-                            'number' => preg_replace(
-                                '/\((\d{2})\)\s(\d{4,5})-(\d{4})/',
-                                '${2}${3}',
-                                $rakuten->getPhone($order_info)
-                            )
-                        )
+                            'area_code' => $rakuten->getPhone($order_info)['ddd'],
+                            'number' => $rakuten->getPhone($order_info)['number'],
+                        ]
                     ),
                     array(
-                        'kind'         => 'shipping',
-                        'reference'    => 'others',
-                        'number'       => array(
+                        'kind' => 'shipping',
+                        'reference' => 'others',
+                        'number' => [
                             'country_code' => '55',
-                            'area_code'    => preg_replace(
-                                '/\((\d{2})\)\s(\d{4,5})-(\d{4})/',
-                                '${1}',
-                                $rakuten->getPhone($order_info)
-                            ),
-                            'number' => preg_replace(
-                                '/\((\d{2})\)\s(\d{4,5})-(\d{4})/',
-                                '${2}${3}',
-                                $rakuten->getPhone($order_info)
-                            )
-                        )
+                            'area_code' => $rakuten->getPhone($order_info)['ddd'],
+                            'number' => $rakuten->getPhone($order_info)['number'],
+                            ]
                     )
                 )
             ],
