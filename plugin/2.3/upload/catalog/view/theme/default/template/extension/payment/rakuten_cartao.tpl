@@ -206,10 +206,6 @@
 
             return fingerprint_element;
           },
-          shipping: function () {
-            var shipping = document.getElementsByName('shipping_address')[1].checked;
-            return shipping;
-          },
           quantity: function () {
             var installment_quantity = document.getElementById('parcelas').value;
 

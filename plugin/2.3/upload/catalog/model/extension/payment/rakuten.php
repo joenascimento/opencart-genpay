@@ -170,6 +170,7 @@ class ModelExtensionPaymentRakuten extends Controller {
     {
         $document = $this->getOnlyNumbers($order['custom_field'][$this->config->get('rakuten_cpf')]);
         $this->setLog($document);
+
         return $document;
     }
 
@@ -283,8 +284,9 @@ class ModelExtensionPaymentRakuten extends Controller {
 
     public function getSubTotalAmount()
     {
-        $this->setLog((float) $this->cart->getSubTotal());
-        return (float) $this->cart->getSubTotal();
+        $subtotalAmount = number_format($this->cart->getSubTotal(), 2, '.', '.');
+        $this->setLog((float) $subtotalAmount);
+        return (float) $subtotalAmount;
     }
 
 
@@ -836,19 +838,22 @@ class ModelExtensionPaymentRakuten extends Controller {
      *
      * @return void
      */
-    private function normalizeReponse($response) {
+    private function normalizeReponse($response)
+    {
 
         $this->setLog(print_r($response, true));
         $result = json_decode($response, true);
         $payments = array_shift($result['payments']);
         $paymentMethod = $payments['method'];
         $status = $result['result'];
+        $resultMessages = implode(",\n", $result['result_messages']);
         $resultStatus = $payments['result'];
         $chargeUuid = $result['charge_uuid'];
 
         return [
             'status' => $status,
             'result_status' => $resultStatus,
+            'result_messages' => $resultMessages,
             'charge_uuid' => $chargeUuid,
             'payment_method' => $paymentMethod,
             'payment' => $payments,
@@ -920,8 +925,8 @@ class ModelExtensionPaymentRakuten extends Controller {
                 }
             } else {
                 $status = $this->config->get('rakuten_falha');
-                $this->setLog($status . ' - ' . $normalized['result_status']);
-                $this->model_checkout_order->addOrderHistory($order_id, $status, $billet_url, '1');
+                $this->setLog($status . ' - ' . print_r($normalized['result_messages'], true));
+                $this->model_checkout_order->addOrderHistory($order_id, $status, $normalized['result_messages'], '1');
 
                 return false;
             }
@@ -935,6 +940,7 @@ class ModelExtensionPaymentRakuten extends Controller {
         $comment = "Cartão de crédito: " . $creditCard . "\n Código: " . $paymentCode . "\n Mensagem: " . $paymentMessage;
         $this->model_checkout_order->addOrderHistory($order_id, $status, $comment, '1');
         $this->setLog('Adicionando Order History: ' . $order_id . ' ' . $normalized['charge_uuid'] . ' ' . $normalized['result_status'] . ' ' . $environment);
+
         return $comment;
     }
 
@@ -1132,12 +1138,11 @@ class ModelExtensionPaymentRakuten extends Controller {
                     );
                 } else {
                     $value = $amount / $quantity;
-                    $value = ceil($value * 100) / 100;// rounds up to the nearest cent
+                    $value = ($value * 100) / 100;
                     $total = $value * $quantity;
-                    $total = ceil($total * 100) / 100;
                     $installments[$quantity]['quantity'] = $quantity;
                     $installments[$quantity]['amount'] = $value;
-                    $installments[$quantity]['total_amount'] = $total;
+                    $installments[$quantity]['total_amount'] = number_format($total, 2, '.', '.');
                     $installments[$quantity]['interest_amount'] = 0.0;
                     $installments[$quantity]['interest_percent'] = 0.0;
                     $installments[$quantity]['text'] = str_replace('.', ',', $this->getInstallmentText
@@ -1152,9 +1157,8 @@ class ModelExtensionPaymentRakuten extends Controller {
 
             for ($quantity = 1; $quantity <= $maxNoInstallments; $quantity++) {
                 $value = $amount / $quantity;
-                $value = ceil($value * 100) / 100;// rounds up to the nearest cent
+                $value = ($value * 100) / 100;
                 $total = $value * $quantity;
-                $total = ceil($total * 100) / 100;
 
                 if ($value < $minimumInstallment) {
                     break;
@@ -1162,7 +1166,7 @@ class ModelExtensionPaymentRakuten extends Controller {
 
                 $installments[$quantity]['quantity'] = $quantity;
                 $installments[$quantity]['amount'] = $value;
-                $installments[$quantity]['total_amount'] = $total;
+                $installments[$quantity]['total_amount'] = number_format($total, 2, '.', '.');
                 $installments[$quantity]['interest_amount'] = 0.0;
                 $installments[$quantity]['interest_percent'] = 0.0;
                 $installments[$quantity]['text'] = str_replace('.', ',', $this->getInstallmentText
@@ -1253,11 +1257,13 @@ class ModelExtensionPaymentRakuten extends Controller {
         curl_close($curl);
 
         $json_response = json_decode($response, true);
+        $parseInstallment = array_column($json_response['payments'], 'installments');
+        $installments = array_shift($parseInstallment);
 
         if ($err) {
             echo "cURL Error #:" . $err;
         }
-        return $json_response['payments'][1]['installments'];
+        return $installments;
     }
 
     /**
