@@ -1,1 +1,0 @@
-/var/www/html/plugin/2.3/upload/catalog/model/extension/payment/rakuten_boleto.php

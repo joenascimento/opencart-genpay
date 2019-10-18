@@ -1,3 +1,0 @@
-2019-10-11 15:48:36 - PHP Notice:  Array to string conversion in /var/www/html/plugin/2.3/upload/catalog/controller/checkout/rakuten_success.php on line 10
-2019-10-11 16:14:49 - PHP Notice:  Undefined index: custom_field in /var/www/html/plugin/2.3/upload/catalog/model/extension/payment/rakuten.php on line 299
-2019-10-11 16:22:54 - PHP Notice:  Undefined index: custom_field in /var/www/html/plugin/2.3/upload/catalog/model/extension/payment/rakuten.php on line 299

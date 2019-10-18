@@ -77,12 +77,13 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
         $payment_method = $rakuten->getPaymentMethod(); //Payment Method of Rakuten (billet/credit_card)
         $posted = $_POST; // _POST received from the checkout form
         $buyerInterest = $rakuten->getBuyerInterest();
-        $totalamount = $rakuten->getTotalAmount() + $rakuten->getShippingAmount() + $posted['amount'] ; //Sum of cart total amount, shipping amount and rakuten interest amount.
+        $total = $rakuten->getTotalAmount() + $rakuten->getShippingAmount() + $posted['amount'] ; //Sum of cart total amount, shipping amount and rakuten interest amount.
+        $total_amount = number_format($total, 2, '.', '.');
 
         /** Payload */
         $data = array(
             'reference'   => $rakuten->getOrderId($order_info),
-            'amount'      => $totalamount,
+            'amount'      => $total_amount,
             'currency'    => $rakuten->getCurrency($order_info),
             'webhook_url' => $rakuten->getWebhook() . 'index.php?route=extension/payment/rakuten/callback',
             'fingerprint' => $posted['fingerprint'],
@@ -182,7 +183,7 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
             $payment = [
                 'reference'                => $rakuten->getOrderId($order_info),
                 'method'                   => 'credit_card',
-                'amount'                   => $totalamount,
+                'amount'                   => $total_amount,
                 'installments_quantity'    => (integer) $posted['quantity'],
                 'brand'                    => strtolower( $posted['brand'] ),
                 'token'                    => $posted['token'],
@@ -209,7 +210,7 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
             $payment = [
                 'reference' => $rakuten->getOrderId($order_info),
                 'method' => 'billet',
-                'amount' => (float) $totalamount,
+                'amount' => (float) $total_amount,
             ];
         }
 
