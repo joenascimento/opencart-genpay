@@ -83,7 +83,7 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
         /** Payload */
         $data = array(
             'reference'   => $rakuten->getOrderId($order_info),
-            'amount'      => $total_amount,
+            'amount'      => (float) $total_amount,
             'currency'    => $rakuten->getCurrency($order_info),
             'webhook_url' => $rakuten->getWebhook() . 'index.php?route=extension/payment/rakuten/callback',
             'fingerprint' => $posted['fingerprint'],
@@ -183,7 +183,7 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
             $payment = [
                 'reference'                => $rakuten->getOrderId($order_info),
                 'method'                   => 'credit_card',
-                'amount'                   => $total_amount,
+                'amount'                   => (float) $total_amount,
                 'installments_quantity'    => (integer) $posted['quantity'],
                 'brand'                    => strtolower( $posted['brand'] ),
                 'token'                    => $posted['token'],

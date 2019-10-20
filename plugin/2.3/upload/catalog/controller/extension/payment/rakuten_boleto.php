@@ -50,14 +50,14 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
         $posted = $_POST;
         #$result = json_decode($posted['body'], true);
         $environment = $rakuten->getEnvironment()['place'];
-        $totalamount = $rakuten->getTotalAmount() + $rakuten->getShippingAmount();
+        $total_amount = number_format($rakuten->getTotalAmount() + $rakuten->getShippingAmount(), 2, '.', '.');
 
         $rakuten->setLog(print_r($posted, true));
 
         /** Payload */
         $data = array(
             'reference'   => $rakuten->getOrderId($order_info),
-            'amount'      => $totalamount,
+            'amount'      => (float) $total_amount,
             'currency'    => $rakuten->getCurrency($order_info),
             'webhook_url' => $rakuten->getWebhook() . 'index.php?route=extension/payment/rakuten/callback',
             'fingerprint' => $posted['fingerprint'],
@@ -158,7 +158,7 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
         $payment = [
             'reference' => $rakuten->getOrderId($order_info),
             'method' => 'billet',
-            'amount' => (float) $totalamount,
+            'amount' => (float) $total_amount,
         ];
 
         $data['payments'][] = $payment;
