@@ -858,7 +858,7 @@ class ModelExtensionPaymentRakuten extends Controller {
         } else {
             $normalized = $this->normalizeReponse($response);
             $status = $this->updateStatus($normalized, $order_id);
-
+            $this->setLog(print_r($status, true));
             return $status;
         }
     }

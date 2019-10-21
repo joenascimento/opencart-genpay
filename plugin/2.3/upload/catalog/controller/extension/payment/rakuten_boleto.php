@@ -165,8 +165,7 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
 
         try {
             $response = $rakuten->chargeTransaction( $data );
-            #$billetUrlRaw = $payments['billet']['url'];
-            #$billet_url = '<a href="'.$payments['billet']['url'].'" target="_blank">Visualizar Boleto</a>';
+            print_r($response);
             return $response;
         } catch (Exception $e) {
             $rakuten->setException($e->getMessage());
