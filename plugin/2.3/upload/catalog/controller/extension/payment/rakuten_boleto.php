@@ -1,4 +1,5 @@
 <?php
+
 class ControllerExtensionPaymentRakutenBoleto extends Controller {
 
 	public function index() {
@@ -48,8 +49,7 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
         $custom_shipping_fields = $order_info['shipping_custom_field']; //District, complement and address number
         $shipping_method = $rakuten->getShippingMethod();
         $posted = $_POST;
-        #$result = json_decode($posted['body'], true);
-        $environment = $rakuten->getEnvironment()['place'];
+        #$environment = $rakuten->getEnvironment()['place'];
         $total_amount = number_format($rakuten->getTotalAmount() + $rakuten->getShippingAmount(), 2, '.', '.');
 
         $rakuten->setLog(print_r($posted, true));

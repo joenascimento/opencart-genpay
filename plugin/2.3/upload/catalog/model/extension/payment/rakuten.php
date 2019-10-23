@@ -1,7 +1,5 @@
 <?php
 
-use Squareup\Exception;
-
 class ModelExtensionPaymentRakuten extends Controller {
 
     private $environment;
@@ -287,7 +285,7 @@ class ModelExtensionPaymentRakuten extends Controller {
 
     public function getSubTotalAmount()
     {
-        $subtotalAmount = number_format($this->cart->getSubTotal(), 2, '.', '.');
+        $subtotalAmount = $this->cart->getSubTotal();
         $this->setLog((float) $subtotalAmount);
         return (float) $subtotalAmount;
     }
@@ -766,6 +764,7 @@ class ModelExtensionPaymentRakuten extends Controller {
                 $count++;
             }
 
+            $this->setLog(print_r($items, true));
             return $items;
         } catch (Exception $e) {
             $this->setException($e->getMessage());
@@ -799,6 +798,7 @@ class ModelExtensionPaymentRakuten extends Controller {
                 ];
             }
 
+            #$this->setLog(print_r($category_id, true));
             return $category_id;
         } catch (Exception $e) {
             $this->setException($e->getMessage());
@@ -1174,8 +1174,8 @@ class ModelExtensionPaymentRakuten extends Controller {
                     $value = ($value * 100) / 100;
                     $total = $value * $quantity;
                     $installments[$quantity]['quantity'] = $quantity;
-                    $installments[$quantity]['amount'] = $value;
-                    $installments[$quantity]['total_amount'] = number_format($total, 2, '.', '.');
+                    $installments[$quantity]['amount'] = number_format($value, 2, '.', '');
+                    $installments[$quantity]['total_amount'] = number_format($total, 2, '.', '');
                     $installments[$quantity]['interest_amount'] = 0.0;
                     $installments[$quantity]['interest_percent'] = 0.0;
                     $installments[$quantity]['text'] = str_replace('.', ',', $this->getInstallmentText
@@ -1208,6 +1208,7 @@ class ModelExtensionPaymentRakuten extends Controller {
                 );
             }
         }
+        $this->setLog(print_r($installments, true));
         return $installments;
     }
 

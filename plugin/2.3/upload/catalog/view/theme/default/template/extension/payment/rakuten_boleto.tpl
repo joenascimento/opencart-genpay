@@ -47,8 +47,6 @@
 
     button.addEventListener("click", function(e) {
 
-        // var document = $('#cpf').val();
-
         var rpay = new RPay();
         var headers = {
             'Accept': 'application/json'
@@ -78,18 +76,26 @@
                 type: 'POST',
                 headers: headers,
                 data: { fingerprint: $('#rakuten-billet > input').val() },
-                    beforeSend: function() {
-                        $('#button-confirm').button('loading');
-                    },
-                    success: function (response) {
-                        console.log('success transition...');
-                        console.log(response);
-                    },
-                    complete: function(){
-                        $('#button-confirm').button('reset');
-                        console.log('completo');
-                        location.href = '<?php echo $continue ?>';
-                    }
+                beforeSend: function() {
+                    $('#button-confirm').button('loading');
+                },
+                success: function (billet_url) {
+                    console.log('success transition...');
+                    console.log(billet_url);
+                    $.ajax({
+                        url: 'index.php?route=checkout/rakuten_success'
+                        type: 'get'
+                        data: { billet_url },
+                        success: function() {
+                            console.log('confirmanado')
+                        }
+                    })
+                },
+                complete: function(){
+                    $('#button-confirm').button('reset');
+                    console.log('completo');
+                    location.href = '<?php echo $continue ?>';
+                }
             })
         }
     });

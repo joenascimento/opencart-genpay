@@ -78,7 +78,8 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
         $posted = $_POST; // _POST received from the checkout form
         $buyerInterest = $rakuten->getBuyerInterest();
         $total = $rakuten->getTotalAmount() + $rakuten->getShippingAmount() + $posted['amount'] ; //Sum of cart total amount, shipping amount and rakuten interest amount.
-        $total_amount = number_format($total, 2, '.', '.');
+        $total_amount = number_format($total, 2, '.', '');
+        $rakuten->setLog('posted: '.print_r($posted, true));
 
         /** Payload */
         $data = array(
@@ -197,7 +198,8 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
                 ]
             ];
 
-            if ($buyerInterest == '1') {
+            if ($buyerInterest == '1' && $posted['quantity'] > $this->config->get('rakuten_parcelas_sem_juros')) {
+                if ($posted['quantity'])
                 $payment['installments'] = [
                     'quantity' => (int) $posted['quantity'],
                     'interest_percent' => (float) $posted['percent'],
