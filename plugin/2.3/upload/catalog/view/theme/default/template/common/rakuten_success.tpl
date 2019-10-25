@@ -20,7 +20,8 @@
                 <?php echo $text_rakuten_message ?>
                 <div class="buttons">
                     <!-- Visualizar boleto -->
-                    <button class="modal-btn btn btn-primary col-md-2 col-sm-6 col-xs-12 margin" id="botao" ><i class="fa fa-barcode"></i> Visualizar Boleto</button>
+                    <a class="modal-btn btn btn-primary col-md-2 col-sm-6 col-xs-12 margin" href="<?php echo $billet_url ?>" target="_blank"><i class="fa fa-barcode"></i> Visualizar Boleto</a>
+                    <!--<button class="modal-btn btn btn-primary col-md-2 col-sm-6 col-xs-12 margin" id="botao" ><i class="fa fa-barcode"></i> Visualizar Boleto</button>-->
 
                     <!-- Modal -->
                     <div id="myModal" class="modal hide">
@@ -44,7 +45,6 @@
         <?php echo $column_right ?></div>
 </div>
 <?php echo $footer ?>
-
 
 <script>
     function copyTextToClipboard(text) {
