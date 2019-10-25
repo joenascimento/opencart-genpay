@@ -903,6 +903,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     private function updateStatus($normalized, $order_id)
     {
+        $additional_information = null;
         try {
             /** Load Model order */
             $this->load->model('checkout/order');
@@ -937,8 +938,6 @@ class ModelExtensionPaymentRakuten extends Controller {
                         break;
                 }
 
-                $this->db->query("INSERT INTO `rakutenpay_orders` (`order_id`, `charge_uuid`, `status`, `environment`, `created_at`, `updated_at`) VALUES ('$order_id', '{$normalized['charge_uuid']}', '{$normalized['result_status']}', '$environment', CURRENT_TIME, CURRENT_TIME)");
-
                 if (isset($this->session->data['order_id'])) {
                     $this->cart->clear();
                     unset($this->session->data['shipping_method']);
@@ -950,12 +949,37 @@ class ModelExtensionPaymentRakuten extends Controller {
                 }
 
                 if ($this->isBillet($normalized)) {
+                    $billetArray = [
+                        'payment_method' => $normalized['payment_method'],
+                        'billet_url' => $normalized['payment']['billet']['url'],
+                        'billet_download' => $normalized['payment']['billet']['download_url'],
+                    ];
+
+                    $additional_information = serialize($billetArray);
                     $billet_url = '<a href="'.$normalized['payment']['billet']['url'].'" target="_blank">Visualizar Boleto</a>';
+
                     $this->model_checkout_order->addOrderHistory($order_id, $status, $billet_url, '1');
                     $this->setLog('Adicionando Order History: ' . $order_id . ' ' . $normalized['charge_uuid'] . ' ' . $normalized['result_status'] . ' ' . $environment);
+                } else {
+                    $creditCard = $normalized['payment']['credit_card']['number'];
+                    $paymentMessage = $normalized['payment']['credit_card']['authorization_message'];
+                    $paymentCode = $normalized['payment']['credit_card']['authorization_code'];
+                    $comment = "Cartão de crédito: " . $creditCard . "\n Código: " . $paymentCode . "\n Mensagem: " . $paymentMessage;
+                    $commentArray = [
+                        'payment_method' => $normalized['payment_method'],
+                        'credit_card_number' => $creditCard,
+                        'payment_message' => $paymentMessage,
+                        'payment_code' => $paymentCode,
+                        'comment' => $comment,
+                    ];
+                    $additional_information = serialize($commentArray);
 
-                    return $normalized['payment']['billet']['url'];
+                    $this->model_checkout_order->addOrderHistory($order_id, $status, $comment, '1');
+                    $this->setLog('Adicionando Order History: ' . $order_id . ' ' . $normalized['charge_uuid'] . ' ' . $normalized['result_status'] . ' ' . $environment);
                 }
+
+                $this->db->query("INSERT INTO `rakutenpay_orders` (`order_id`, `charge_uuid`, `status`, `additional_information`, `environment`, `created_at`, `updated_at`) VALUES ('$order_id', '{$normalized['charge_uuid']}', '{$normalized['result_status']}', '$additional_information' , '$environment', CURRENT_TIME, CURRENT_TIME)");
+                return true;
             } else {
                 $status = $this->config->get('rakuten_falha');
                 $this->setLog($status . ' - ' . print_r($normalized['result_messages'], true));
@@ -966,15 +990,6 @@ class ModelExtensionPaymentRakuten extends Controller {
         } catch (Exception $e) {
             $this->setException($e->getMessage());
         }
-
-        $creditCard = $normalized['payment']['credit_card']['number'];
-        $paymentMessage = $normalized['payment']['credit_card']['authorization_message'];
-        $paymentCode = $normalized['payment']['credit_card']['authorization_code'];
-        $comment = "Cartão de crédito: " . $creditCard . "\n Código: " . $paymentCode . "\n Mensagem: " . $paymentMessage;
-        $this->model_checkout_order->addOrderHistory($order_id, $status, $comment, '1');
-        $this->setLog('Adicionando Order History: ' . $order_id . ' ' . $normalized['charge_uuid'] . ' ' . $normalized['result_status'] . ' ' . $environment);
-
-        return $comment;
     }
 
     /**
@@ -987,6 +1002,38 @@ class ModelExtensionPaymentRakuten extends Controller {
     private function isBillet(array $data)
     {
         return $data['payment_method'] == 'billet' ? true : false;
+    }
+
+    /**
+     * getAdditionInformation
+     *
+     * @param mixed $key
+     * @access public
+     * @return void
+     */
+    public function getAdditionInformation($key)
+    {
+        try {
+            if (empty($key)) {
+                return null;
+            }
+
+            $order_id = $this->session->data['success_order_id'];
+            $sql = $this->db->query("SELECT `additional_information` FROM rakutenpay_orders WHERE `order_id` = {$order_id}");
+            $additional_information = array_shift($sql->row);
+            $data = unserialize($additional_information);
+
+            if (empty($additional_information)) {
+                return null;
+            }
+
+            $this->setLog(print_r($data, true));
+            return isset($data[$key]) ? $data[$key] : null;
+
+        } catch (\Exception $e) {
+            $this->setException($e->getMessage());
+            return false;
+        }
     }
 
     /**

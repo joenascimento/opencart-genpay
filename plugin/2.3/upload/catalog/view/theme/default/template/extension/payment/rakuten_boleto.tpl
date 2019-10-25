@@ -81,15 +81,6 @@
                 },
                 success: function (billet_url) {
                     console.log('success transition...');
-                    console.log(billet_url);
-                    $.ajax({
-                        url: 'index.php?route=checkout/rakuten_success'
-                        type: 'get'
-                        data: { billet_url },
-                        success: function() {
-                            console.log('confirmanado')
-                        }
-                    })
                 },
                 complete: function(){
                     $('#button-confirm').button('reset');
