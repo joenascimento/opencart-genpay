@@ -77,14 +77,15 @@ class ModelExtensionPaymentRakuten extends Model {
         $this->db->query("INSERT INTO `" . DB_PREFIX . "extension` (`type`, `code`) VALUES ('payment', 'rakuten_boleto') ");
         $this->db->query("INSERT INTO `" . DB_PREFIX . "extension` (`type`, `code`) VALUES ('payment', 'rakuten_cartao') ");
         $this->db->query("
-          CREATE TABLE IF NOT EXISTS `rakutenpay_orders` ( 
-              `id` INT(20) NOT NULL AUTO_INCREMENT , 
-              `order_id` INT(20) NOT NULL , 
-              `charge_uuid` VARCHAR(80) NOT NULL , 
-              `status` VARCHAR(20) NOT NULL , 
-              `environment` VARCHAR(15) NOT NULL , 
-              `created_at` TIMESTAMP NOT NULL , 
-              `updated_at` TIMESTAMP NOT NULL , 
+          CREATE TABLE IF NOT EXISTS `rakutenpay_orders` (
+              `id` INT(20) NOT NULL AUTO_INCREMENT ,
+              `order_id` INT(20) NOT NULL ,
+              `charge_uuid` VARCHAR(80) NOT NULL ,
+              `status` VARCHAR(20) NOT NULL ,
+              `additional_information` TEXT NULL ,
+              `environment` VARCHAR(15) NOT NULL ,
+              `created_at` TIMESTAMP NOT NULL ,
+              `updated_at` TIMESTAMP NOT NULL ,
             PRIMARY KEY (`id`)
           ) ENGINE = InnoDB COLLATE=utf8_general_ci;");
     }
