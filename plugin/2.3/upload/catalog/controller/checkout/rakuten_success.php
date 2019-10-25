@@ -4,6 +4,8 @@ class ControllerCheckoutRakutenSuccess extends Controller {
 
         $this->load->language('checkout/success');
         $this->load->language('extension/payment/rakuten');
+        $this->load->model('extension/payment/rakuten');
+        $rakuten = $this->model_extension_payment_rakuten;
 
         if (isset($this->session->data['order_id'])) {
             $this->session->data['success_order_id'] = $this->session->data['order_id'];
@@ -63,6 +65,9 @@ class ControllerCheckoutRakutenSuccess extends Controller {
         $data['content_bottom'] = $this->load->controller('common/content_bottom');
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header');
+        $data['payment_method'] = $rakuten->getAdditionInformation('payment_method');
+        $data['billet_url'] = $rakuten->getAdditionInformation('billet_url');
+        $data['credit_card'] = $rakuten->getAdditionInformation('comment');
 
         $this->response->setOutput($this->load->view('common/rakuten_success', $data));
     }
