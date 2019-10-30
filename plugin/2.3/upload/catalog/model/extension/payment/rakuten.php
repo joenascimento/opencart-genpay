@@ -280,16 +280,34 @@ class ModelExtensionPaymentRakuten extends Controller {
     {
         $this->setLog((float) $this->cart->getTotal());
         return (float) $this->cart->getTotal();
-
     }
 
+    /**
+     * getSubTotalAmount
+     *
+     * @access public
+     * @return void
+     */
     public function getSubTotalAmount()
     {
-        $subtotalAmount = $this->cart->getSubTotal();
+        $subtotalAmount = round($this->cart->getSubTotal(), 2);
         $this->setLog((float) $subtotalAmount);
         return (float) $subtotalAmount;
     }
 
+    public function getDiscount($order)
+    {
+        $total = $this->getTotalAmount() + $this->getShippingAmount();
+        $amount = round($order['total'], 2);
+        if ($amount == $total) {
+            $this->setLog((float)0.0);
+            return (float) 0.0;
+        }
+
+        $discount = round($total - $amount, 2);
+        $this->setLog($discount);
+        return $discount;
+    }
 
     /**
      * Get BirthDate Custom Field
@@ -749,7 +767,7 @@ class ModelExtensionPaymentRakuten extends Controller {
                     $data['itemDescription' . $count] = $product['name'] . ' | ' . $product['model'];
                     $data['itemAmount' . $count] = number_format($this->currency->format($product['price'], $order['currency_code'], $order['currency_value'], false), 2, '.', '');
                     $data['itemQuantity' . $count] = $product['quantity'];
-                    $data['itemTotalAmount' . $count] = $data['itemAmount' . $count] * $data['itemQuantity' . $count] ;
+                    $data['itemTotalAmount' . $count] = round($data['itemAmount' . $count] * $data['itemQuantity' . $count], 2);
                 }
 
                 $items[] = [
@@ -821,9 +839,8 @@ class ModelExtensionPaymentRakuten extends Controller {
      *
      * @param $data
      */
-    public function chargeTransaction($data)
+    public function chargeTransaction($data, $quantity = null, $interest = null, $brand = null)
     {
-
         $order_id = $data['reference'];
         $endpoint = 'charges';
         $url = $this->getApiUrl() . $endpoint;
@@ -857,7 +874,7 @@ class ModelExtensionPaymentRakuten extends Controller {
             echo "cURL Error #:" . $err;
         } else {
             $normalized = $this->normalizeReponse($response);
-            $status = $this->updateStatus($normalized, $order_id);
+            $status = $this->updateStatus($normalized, $order_id, $quantity, $interest, $brand);
             $this->setLog(print_r($status, true));
             return $status;
         }
@@ -878,19 +895,24 @@ class ModelExtensionPaymentRakuten extends Controller {
         $result = json_decode($response, true);
         $payments = array_shift($result['payments']);
         $paymentMethod = $payments['method'];
+        $paymentAmount = $payments['amount'];
         $status = $result['result'];
         $resultMessages = implode(",\n", $result['result_messages']);
         $resultStatus = $payments['result'];
         $chargeUuid = $result['charge_uuid'];
 
-        return [
+
+        $normalized = [
             'status' => $status,
             'result_status' => $resultStatus,
             'result_messages' => $resultMessages,
             'charge_uuid' => $chargeUuid,
             'payment_method' => $paymentMethod,
+            'payment_amount' => $paymentAmount,
             'payment' => $payments,
         ];
+        $this->setLog(print_r($normalized, true));
+        return $normalized;
     }
 
     /**
@@ -901,7 +923,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      * @access private
      * @return void
      */
-    private function updateStatus($normalized, $order_id)
+    private function updateStatus($normalized, $order_id, $quantity = null, $interest = null, $brand = null)
     {
         $additional_information = null;
         try {
@@ -957,10 +979,11 @@ class ModelExtensionPaymentRakuten extends Controller {
 
                     $additional_information = serialize($billetArray);
                     $billet_url = '<a href="'.$normalized['payment']['billet']['url'].'" target="_blank">Visualizar Boleto</a>';
-
+                    $paymentMethod = 'Rakuten Boleto';
                     $this->model_checkout_order->addOrderHistory($order_id, $status, $billet_url, '1');
                     $this->setLog('Adicionando Order History: ' . $order_id . ' ' . $normalized['charge_uuid'] . ' ' . $normalized['result_status'] . ' ' . $environment);
                 } else {
+                    $paymentMethod = 'Rakuten Cartão '.$quantity.'x '.strtoupper($brand);
                     $creditCard = $normalized['payment']['credit_card']['number'];
                     $paymentMessage = $normalized['payment']['credit_card']['authorization_message'];
                     $paymentCode = $normalized['payment']['credit_card']['authorization_code'];
@@ -979,6 +1002,15 @@ class ModelExtensionPaymentRakuten extends Controller {
                 }
 
                 $this->db->query("INSERT INTO `rakutenpay_orders` (`order_id`, `charge_uuid`, `status`, `additional_information`, `environment`, `created_at`, `updated_at`) VALUES ('$order_id', '{$normalized['charge_uuid']}', '{$normalized['result_status']}', '$additional_information' , '$environment', CURRENT_TIME, CURRENT_TIME)");
+                $this->setLog('Aditional Information: ' . $additional_information);
+                $this->db->query("INSERT INTO `" . DB_PREFIX . "order_total` (`order_id`, `code`, `title`, `value`, `sort_order`) VALUES ('$order_id', 'juros', 'Juros', '$interest' , 6)");
+                $this->setLog('INSERT interest INTO order_total: ' . $interest);
+                $this->db->query("UPDATE `". DB_PREFIX . "order_total` SET `value` = '".$normalized['payment_amount']."' WHERE `order_id` = " .$order_id. " AND `code` = 'total'");
+                $this->setLog('UPDATE order_total: ' . $normalized['payment_amount']);
+                $this->db->query("UPDATE `". DB_PREFIX . "order` SET `payment_method` = '" . $paymentMethod . "' WHERE `order_id` = " . $order_id);
+                $this->setLog('UPDATE order: ' . $paymentMethod);
+                $this->db->query("UPDATE `". DB_PREFIX . "order` SET `total` = '".$normalized['payment_amount']."' WHERE `order_id` = " . $order_id);
+                $this->setLog("UPDATE order: " . $normalized['payment_amount']);
                 return true;
             } else {
                 $status = $this->config->get('rakuten_falha');

@@ -16,7 +16,7 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
 
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $rakuten = $this->model_extension_payment_rakuten;
-        $total = $rakuten->getTotalAmount($order_info) + $rakuten->getShippingAmount();
+        $total = $rakuten->getTotalAmount($order_info) + $rakuten->getShippingAmount() + $rakuten->getTaxAmount() - $rakuten->getDiscount($order_info);
         $installments = $rakuten->getInstallments($total);
         $yearValues = $rakuten->setYearValues();
 
@@ -77,8 +77,7 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
         $payment_method = $rakuten->getPaymentMethod(); //Payment Method of Rakuten (billet/credit_card)
         $posted = $_POST; // _POST received from the checkout form
         $buyerInterest = $rakuten->getBuyerInterest();
-        $total = $rakuten->getTotalAmount() + $rakuten->getShippingAmount() + $posted['amount'] ; //Sum of cart total amount, shipping amount and rakuten interest amount.
-        $total_amount = number_format($total, 2, '.', '');
+        $total_amount = (float) $posted['total'];
         $rakuten->setLog('posted: '.print_r($posted, true));
 
         /** Payload */
@@ -124,7 +123,7 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
                 'items_amount'    => $rakuten->getSubTotalAmount(),
                 'shipping_amount' => (float) $rakuten->getShippingAmount(),
                 'taxes_amount'    => (float) $rakuten->getTaxAmount() + $posted['amount'],
-                'discount_amount' => (float) $rakuten->discount($rakuten->getTotalAmount()),
+                'discount_amount' => (float) $rakuten->getDiscount($order_info),
                 'items' => $rakuten->getItems($order_info),
             ),
         );
@@ -219,7 +218,7 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
         $data['payments'][] = $payment;
 
         try {
-            $result = $rakuten->chargeTransaction( $data );
+            $result = $rakuten->chargeTransaction( $data, $posted['quantity'], $posted['amount'], $posted['brand']);
         } catch (Exception $e) {
             $rakuten->setException($e->getMessage());
         }
