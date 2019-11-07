@@ -765,7 +765,7 @@ class ModelExtensionPaymentRakuten extends Controller {
 
                     $data['itemId' . $count] = $product['product_id'];
                     $data['itemDescription' . $count] = $product['name'] . ' | ' . $product['model'];
-                    $data['itemAmount' . $count] = number_format($this->currency->format($product['price'], $order['currency_code'], $order['currency_value'], false), 2, '.', '');
+                    $data['itemAmount' . $count] = round($product['price'], 2);
                     $data['itemQuantity' . $count] = $product['quantity'];
                     $data['itemTotalAmount' . $count] = round($data['itemAmount' . $count] * $data['itemQuantity' . $count], 2);
                 }
