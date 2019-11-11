@@ -4,7 +4,7 @@
 
   <div class="form-horizontal col-sm-offset-3">
   <div class="form-group">
-    <label class="col-sm-2 control-label">CPF</label>
+    <label class="col-sm-2 control-label">CPF/CNPJ</label>
     <div class="col-sm-3">
         <form action="<?php echo $continue; ?>" data-rkp="form" id="rakuten-billet">
             <fieldset>
@@ -46,6 +46,23 @@
     var button = document.querySelector('#button-confirm');
 
     button.addEventListener("click", function(e) {
+        console.log('button clicked')
+
+        validateBilletFields();
+        console.log('executed validateBilletFields');
+
+        let blankfields = document.querySelector('.border-error');
+
+        if (blankfields !== null) {
+
+          Swal.fire({
+            title: 'Erro! Preencha todos os campos necessários',
+            text: '',
+            type: 'error',
+            confirmButtonText: 'Fechar'
+          });
+          return false;
+        }
 
         var rpay = new RPay();
         var headers = {
@@ -75,7 +92,14 @@
                 url: 'index.php?route=extension/payment/rakuten_boleto/transition',
                 type: 'POST',
                 headers: headers,
-                data: { fingerprint: $('#rakuten-billet > input').val() },
+                data: {
+                    fingerprint: $('#rakuten-billet > input').val(),
+                    billet_document: function () {
+                        cpf_cnpj = document.getElementById('cpf').value;
+
+                        return cpf_cnpj;
+                    }
+                },
                 beforeSend: function() {
                     $('#button-confirm').button('loading');
                 },

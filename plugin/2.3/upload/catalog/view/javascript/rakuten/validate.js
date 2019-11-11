@@ -132,6 +132,27 @@ function validateCardMonthYear() {
     })
 }
 
+function validateBilletFields() {
+    console.log('start validateBilletFields...')
+    let cpf_cnpj = document.querySelector('#cpf');
+    let error_cpf = document.querySelector('#error-cpf')
+
+    if (valida_cpf_cnpj(cpf_cnpj.value) == false) {
+        cpf_cnpj.classList.add('border-error');
+        error_cpf.classList.remove('hide');
+        error_cpf.classList.add('show');
+        console.log('error document');
+        return false;
+    } else {
+        error_cpf.classList.remove('show');
+        error_cpf.classList.add('hide');
+        cpf_cnpj.classList.remove('border-error');
+        cpf_cnpj.style.border = "initial";
+        cpf_cnpj.style.border = "thin solid #6ae8a6";
+        console.log('valid document');
+    }
+}
+
 function validateBlankFields() {
 
     var cardNumberField = document.querySelector("[data-rkp='card-number']");
