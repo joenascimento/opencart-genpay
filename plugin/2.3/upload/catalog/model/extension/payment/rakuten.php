@@ -9,22 +9,22 @@ class ModelExtensionPaymentRakuten extends Controller {
     /**
      * PRODUCTION API URL.
      */
-    const PRODUCTION_API_URL = 'https://api.rakuten.com.br/rpay/v1/';
+    const PRODUCTION_API_URL = 'https://api.gencomm.com.br/rpay/v1/';
 
     /**
      * SANDBOX API URL.
      */
-    const SANDBOX_API_URL = 'https://oneapi-sandbox.rakutenpay.com.br/rpay/v1/';
+    const SANDBOX_API_URL = 'https://oneapi-sandbox.genpay.com.br/rpay/v1/';
 
     /**
      * PRODUCTION_JS_URL
      */
-    const PRODUCTION_JS_URL = 'https://static.rakutenpay.com.br/rpayjs/rpay-latest.min.js';
+    const PRODUCTION_JS_URL = 'https://static.genpay.com.br/rpayjs/rpay-latest.min.js';
 
     /**
      * SANDBOX_JS_URL
      */
-    const SANDBOX_JS_URL = 'https://static.rakutenpay.com.br/rpayjs/rpay-latest.dev.min.js';
+    const SANDBOX_JS_URL = 'https://static.genpay.com.br/rpayjs/rpay-latest.dev.min.js';
 
     /**
      * Get API URL.
@@ -178,7 +178,7 @@ class ModelExtensionPaymentRakuten extends Controller {
     /**
      * Helper Only Numbers
      */
-    private function getOnlyNumbers($value)
+    public function getOnlyNumbers($value)
     {
         $this->setLog(preg_replace('/\D/', '', $value));
         return preg_replace('/\D/', '', $value);

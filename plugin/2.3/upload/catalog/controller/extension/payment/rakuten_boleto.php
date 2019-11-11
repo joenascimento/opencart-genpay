@@ -62,7 +62,7 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
             'fingerprint' => $posted['fingerprint'],
             'payments'    => array(),
             'customer'    => [
-                'document'      => $posted['billet_document'],
+                'document'      => $rakuten->getOnlyNumbers($posted['billet_document']),
                 'name'          => $rakuten->getName($order_info),
                 'business_name' => $rakuten->getName($order_info),
                 'email'         => $rakuten->getEmail($order_info),
