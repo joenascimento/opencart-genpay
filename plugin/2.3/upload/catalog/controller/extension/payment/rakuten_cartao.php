@@ -20,8 +20,10 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
         $installments = $rakuten->getInstallments($total);
         $yearValues = $rakuten->setYearValues();
 
+        echo "<pre>";
+        die(print_r($rakuten->getDiscount($order_info), true));
         /** Total */
-		$data['total'] = $rakuten->getTotalAmount();
+		$data['total'] = $rakuten->getTotalAmount($order_info);
 
         /** Nome do Cliente */
         $data['cliente'] = $order_info['firstname'] . ' ' . $order_info['lastname'];

@@ -276,29 +276,40 @@ class ModelExtensionPaymentRakuten extends Controller {
      *
      * @return mixed
      */
-    public function getTotalAmount()
+    public function getTotalAmount($order)
     {
-        $this->setLog((float) $this->cart->getTotal());
-        return (float) $this->cart->getTotal();
+//        $this->setLog((float) $this->cart->getTotal());
+//        return (float) $this->cart->getTotal();
+        $total = $this->getSubTotalAmount($order) + $this->getShippingAmount() + $this->getTaxAmount();
+        $this->setLog($total);
+        return round($total, 2);
     }
 
     /**
      * getSubTotalAmount
      *
      * @access public
-     * @return void
+     * @return float
      */
-    public function getSubTotalAmount()
+    public function getSubTotalAmount($order)
     {
-        $subtotalAmount = round($this->cart->getSubTotal(), 2);
-        $this->setLog((float) $subtotalAmount);
-        return (float) $subtotalAmount;
+        $items = $this->getItems($order);
+        $total = 0;
+        foreach($items as $item) {
+            $total += (float) $item['total_amount'];
+        }
+        return (float) $total;
     }
 
+    /**
+     * @param $order
+     * @return float
+     */
     public function getDiscount($order)
     {
-        $total = $this->getTotalAmount() + $this->getShippingAmount();
+        $total = $this->getTotalAmount($order);
         $amount = round($order['total'], 2);
+        $this->setLog('total: ' . $total .  ' - amount: ' . $amount);
         if ($amount == $total) {
             $this->setLog((float)0.0);
             return (float) 0.0;
