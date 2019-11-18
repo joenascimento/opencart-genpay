@@ -49,7 +49,7 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
         $custom_shipping_fields = $order_info['shipping_custom_field']; //District, complement and address number
         $shipping_method = $rakuten->getShippingMethod();
         $posted = $_POST;
-        $total_amount = round($rakuten->getTotalAmount($order_info) + $rakuten->getShippingAmount() - $rakuten->getDiscount($order_info), 2);
+        $total_amount = $rakuten->getTotalAmount($order_info) - $rakuten->getDiscount($order_info);
 
         $rakuten->setLog(print_r($posted, true));
 
@@ -93,7 +93,7 @@ class ControllerExtensionPaymentRakutenBoleto extends Controller {
             'order' => array(
                 'reference'       => $rakuten->getOrderId($order_info),
                 'payer_ip'        => $rakuten->getIp($order_info),
-                'items_amount'    => $rakuten->getSubTotalAmount(),
+                'items_amount'    => $rakuten->getSubTotalAmount($order_info),
                 'shipping_amount' => (float) $rakuten->getShippingAmount(),
                 'taxes_amount'    => (float) $rakuten->getTaxAmount(),
                 'discount_amount' => (float) $rakuten->getDiscount($order_info),
