@@ -16,12 +16,10 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
 
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $rakuten = $this->model_extension_payment_rakuten;
-        $total = $rakuten->getTotalAmount($order_info) + $rakuten->getShippingAmount() + $rakuten->getTaxAmount() - $rakuten->getDiscount($order_info);
+        $total = $rakuten->getTotalAmount($order_info) - $rakuten->getDiscount($order_info);
         $installments = $rakuten->getInstallments($total);
         $yearValues = $rakuten->setYearValues();
 
-        echo "<pre>";
-        die(print_r($rakuten->getDiscount($order_info), true));
         /** Total */
 		$data['total'] = $rakuten->getTotalAmount($order_info);
 
@@ -122,7 +120,7 @@ class ControllerExtensionPaymentRakutenCartao extends Controller {
             'order' => array(
                 'reference'       => $rakuten->getOrderId($order_info),
                 'payer_ip'        => $rakuten->getIp($order_info),
-                'items_amount'    => $rakuten->getSubTotalAmount(),
+                'items_amount'    => $rakuten->getSubTotalAmount($order_info),
                 'shipping_amount' => (float) $rakuten->getShippingAmount(),
                 'taxes_amount'    => (float) $rakuten->getTaxAmount() + $posted['amount'],
                 'discount_amount' => (float) $rakuten->getDiscount($order_info),
