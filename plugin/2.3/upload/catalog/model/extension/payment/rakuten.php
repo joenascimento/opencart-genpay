@@ -298,7 +298,7 @@ class ModelExtensionPaymentRakuten extends Controller {
         foreach($items as $item) {
             $total += (float) $item['total_amount'];
         }
-        return (float) $total;
+        return (float) round($total, 2);
     }
 
     /**
@@ -315,7 +315,7 @@ class ModelExtensionPaymentRakuten extends Controller {
             return (float) 0.0;
         }
 
-        $discount = round($total - $amount, 2);
+        $discount = $total - $amount;
         $this->setLog($discount);
         return $discount;
     }
