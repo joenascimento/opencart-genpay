@@ -351,7 +351,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      */
     public function getAddressNumber($custom_field)
     {
-        $key = $this->config->get('rakuten_number');
+        $key = $this->config->get('envio5_numero_custom');
         if (array_key_exists($key, $custom_field)) {
             $this->setLog($custom_field[$key]);
             return $custom_field[$key];
@@ -368,7 +368,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      * @return int
      */
     public function getAddressComplement($custom_field) {
-        $key = $this->config->get('rakuten_complement');
+        $key = $this->config->get('mp5_complemento');
         if (array_key_exists($key , $custom_field)) {
             $this->setLog($custom_field[$key]);
             return $custom_field[$key];
@@ -384,15 +384,18 @@ class ModelExtensionPaymentRakuten extends Controller {
      * @param $custom_field
      * @return string
      */
-    public function getAddressDistrict($custom_field) {
-        $key = $this->config->get('rakuten_district');
-        if (array_key_exists($key , $custom_field)) {
-            $this->setLog($custom_field[$key]);
-            return $custom_field[$key];
-        } else {
-            $this->setLog('_');
-            return '_';
-        }
+    public function getAddressDistrict($order) {
+        /* $key = $this->config->get('rakuten_district'); */
+        /* if (array_key_exists($key , $custom_field)) { */
+        /*     $this->setLog($custom_field[$key]); */
+        /*     return $custom_field[$key]; */
+        /* } else { */
+        /*     $this->setLog('_'); */
+        /*     return '_'; */
+        /* } */
+
+        $this->setLog($order['payment_address_2']);
+        return $order['payment_address_2'];
     }
 
     /**
@@ -633,16 +636,19 @@ class ModelExtensionPaymentRakuten extends Controller {
      * @param $custom_field
      * @return string
      */
-    public function getShippingAddressDistrict($custom_field) {
-        $key = $this->config->get('rakuten_district');
+    public function getShippingAddressDistrict($order) {
+        /* $key = $this->config->get('rakuten_district'); */
 
-        if (array_key_exists($key , $custom_field)) {
-            $this->setLog($custom_field[$key]);
-            return $custom_field[$key];
-        } else {
-            $this->setLog('_');
-            return '_';
-        }
+        /* if (array_key_exists($key , $custom_field)) { */
+        /*     $this->setLog($custom_field[$key]); */
+        /*     return $custom_field[$key]; */
+        /* } else { */
+        /*     $this->setLog('_'); */
+        /*     return '_'; */
+        /* } */
+
+        $this->setLog($order['shipping_address_2']);
+        return $order['shipping_address_2'];
     }
 
     /**
