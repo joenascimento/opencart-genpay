@@ -309,13 +309,18 @@ class ModelExtensionPaymentRakuten extends Controller {
     {
         $total = $this->getTotalAmount($order);
         $amount = round($order['total'], 2);
+        $discount = $total - $amount;
+
         $this->setLog('total: ' . $total .  ' - amount: ' . $amount);
         if ($amount == $total) {
             $this->setLog((float)0.0);
             return (float) 0.0;
         }
 
-        $discount = $total - $amount;
+        if ($discount < 0) {
+            $this->setLog($discount . ' menor que zero retorna 0');
+            return (float) 0.0;
+        }
         $this->setLog($discount);
         return $discount;
     }
