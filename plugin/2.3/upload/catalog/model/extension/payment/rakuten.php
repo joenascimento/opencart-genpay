@@ -394,12 +394,13 @@ class ModelExtensionPaymentRakuten extends Controller {
         /*     return '_'; */
         /* } */
 
-        if (empty($order['payment_address_2'])) {
-            $this->setLog('_');
-            return '_';
+        if (!empty($order['payment_address_2'])) {
+            $this->setLog($order['payment_address_2']);
+            return $order['payment_address_2'];
         }
-        $this->setLog($order['payment_address_2']);
-        return $order['payment_address_2'];
+
+        $this->setLog('_');
+        return '_';
     }
 
     /**
@@ -607,7 +608,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      * @return int
      */
     public function getShippingAddressNumber($custom_field) {
-        $key = $this->config->get('rakuten_number');
+        $key = $this->config->get('envio5_numero_custom');
         if (array_key_exists($key , $custom_field)) {
             $this->setLog($custom_field[$key]);
             return $custom_field[$key];
@@ -651,12 +652,13 @@ class ModelExtensionPaymentRakuten extends Controller {
         /*     return '_'; */
         /* } */
 
-        if (empty($order['shipping_address_2'])) {
-            $this->setLog('_');
-            return '_';
+        if (!empty($order['shipping_address_2'])) {
+            $this->setLog($order['shipping_address_2']);
+            return $order['shipping_address_2'];
         }
-        $this->setLog($order['shipping_address_2']);
-        return $order['shipping_address_2'];
+
+        $this->setLog('_');
+        return '_';
     }
 
     /**
