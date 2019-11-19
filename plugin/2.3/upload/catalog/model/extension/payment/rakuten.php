@@ -394,6 +394,10 @@ class ModelExtensionPaymentRakuten extends Controller {
         /*     return '_'; */
         /* } */
 
+        if (empty($order['payment_address_2'])) {
+            $this->setLog('_');
+            return '_';
+        }
         $this->setLog($order['payment_address_2']);
         return $order['payment_address_2'];
     }
@@ -620,7 +624,7 @@ class ModelExtensionPaymentRakuten extends Controller {
      * @return int
      */
     public function getShippingAddressComplement($custom_field) {
-        $key = $this->config->get('rakuten_complement');
+        $key = $this->config->get('mp5_complemento');
         if (array_key_exists($key , $custom_field)) {
             $this->setLog($custom_field[$key]);
             return $custom_field[$key];
@@ -647,6 +651,10 @@ class ModelExtensionPaymentRakuten extends Controller {
         /*     return '_'; */
         /* } */
 
+        if (empty($order['shipping_address_2'])) {
+            $this->setLog('_');
+            return '_';
+        }
         $this->setLog($order['shipping_address_2']);
         return $order['shipping_address_2'];
     }
