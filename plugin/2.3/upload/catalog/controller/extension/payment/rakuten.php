@@ -23,7 +23,6 @@ class ControllerExtensionPaymentRakuten extends Controller {
 		$signatureBase64 = base64_encode($signature);
 
         $rakuten->setLog('Começando webhook');
-        $rakuten->setLog(print_r($response, true));
 
 		if (!function_exists('apache_request_headers')) {
 
@@ -44,11 +43,6 @@ class ControllerExtensionPaymentRakuten extends Controller {
 			$signatureHeader = $entityHeaders['Signature'];
 		}
 
-		if ( empty( $rawResponse ) ) {
-			print_r($rawResponse);
-			return $rawResponse;
-		}
-
 		if ( empty($signatureHeader) || $signatureHeader !== $signatureBase64 ) {
             $rakuten->setLog('As chaves não batem: ' . print_r($signatureHeader, true) . ' x ' . $signatureBase64);
             header('HTTP/1.0 403 Forbidden');
@@ -62,71 +56,53 @@ class ControllerExtensionPaymentRakuten extends Controller {
 			case 'pending':
 				$status = $this->config->get('rakuten_aguardando_pagamento');
 				$paymentStatus = 'pending';
-				$this->log->write('Status: ' . $status);
-                $rakuten->setLog($paymentStatus);
+				$rakuten->setLog('Status: ' . $status);
 				break;
 			case 'approved':
 				$status = $this->config->get('rakuten_paga');
 				$paymentStatus = 'approved';
-				$this->log->write('Status: ' . $status);
-                $rakuten->setLog($paymentStatus);
+				$rakuten->setLog('Status: ' . $status);
 				break;
 			case 'declined':
 				$status = $this->config->get('rakuten_negada');
 				$paymentStatus = 'declined';
-				$this->log->write('Status: ' . $status);
-                $rakuten->setLog($paymentStatus);
+				$rakuten->setLog('Status: ' . $status);
 				break;
 			case 'failure':
 				$status = $this->config->get('rakuten_falha');
 				$paymentStatus = 'failure';
-				$this->log->write('Status: ' . $status);
-                $rakuten->setLog($paymentStatus);
+				$rakuten->setLog('Status: ' . $status);
 				break;
 			case 'refunded':
 				$status = $this->config->get('rakuten_devolvida');
 				$paymentStatus = 'refunded';
-				$this->log->write('Status: ' . $status);
-                $rakuten->setLog($paymentStatus);
+				$rakuten->setLog('Status: ' . $status);
                 break;
             case 'partial_refunded':
 				$status = $this->config->get('rakuten_devolvida_parcial');
 				$paymentStatus = 'partial_refunded';
-				$this->log->write('Status: ' . $status);
-                $rakuten->setLog($paymentStatus);
+				$rakuten->setLog('Status: ' . $status);
 				break;
 			case 'cancelled':
 				$status = $this->config->get('rakuten_cancelada');
 				$paymentStatus = 'cancelled';
-				$this->log->write('Status: ' . $status);
-                $rakuten->setLog($paymentStatus);
+				$rakuten->setLog('Status: ' . $status);
 				break;
 			default:
 				$status = $this->config->get('rakuten_aguardando_pagamento');
 				$paymentStatus = 'pending';
-				$this->log->write('Status: ' . $status);
-                $rakuten->setLog($paymentStatus);
+				$rakuten->setLog('Status: ' . $status);
 				break;
 		}
 
-        $rakuten->setLog($paymentStatus);
-		if ($payment_method == 'billet') {
+		//$this->model_checkout_order->addOrderHistory($orderId, $status, '', '1');
 
-			$this->model_checkout_order->addOrderHistory($orderId, $status, '', '1');
-			$this->db->query("UPDATE `rakutenpay_orders` SET `status` = '$paymentStatus', `created_at` = '$createdAt', `updated_at` = CURRENT_TIME WHERE `order_id` = '$orderId'");
-
-		} else {
-
-			$creditCard = $payments['credit_card']['number'];
-			$paymentMessage = $payments['credit_card']['authorization_message'];
-			$paymentCode = $payments['credit_card']['authorization_code'];
-			$comment = "Cartão de crédito: " . $creditCard . "\n Código: " . $paymentCode . "\n Mensagem: " . $paymentMessage;
-
-			$this->model_checkout_order->addOrderHistory($orderId, $status, $comment, '1');
-			$this->db->query("UPDATE `rakutenpay_orders` SET `status` = '$paymentStatus', `created_at` = '$createdAt', `updated_at` = CURRENT_TIME WHERE `order_id` = '$orderId'");
-
-		}
-
+        $rakuten->setLog($orderId);
+        $rakuten->setLog($payment_method);
+		$this->db->query("UPDATE `". DB_PREFIX . "order` SET `order_status_id` = '" . $status . "' WHERE `order_id` = " . $orderId);
+		$this->db->query("UPDATE `rakutenpay_orders` SET `status` = '$paymentStatus', `created_at` = '$createdAt', `updated_at` = CURRENT_TIME WHERE `order_id` = '$orderId'");
+        $rakuten->setLog(date("Y-m-d H:i:s"));
+		$rakuten->setLog($paymentStatus);
 	}
 
 }
