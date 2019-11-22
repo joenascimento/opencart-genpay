@@ -96,13 +96,7 @@ class ControllerExtensionPaymentRakuten extends Controller {
 		}
 
 		//$this->model_checkout_order->addOrderHistory($orderId, $status, '', '1');
-
-        $rakuten->setLog($orderId);
-        $rakuten->setLog($payment_method);
-		$this->db->query("UPDATE `". DB_PREFIX . "order` SET `order_status_id` = '" . $status . "' WHERE `order_id` = " . $orderId);
-		$this->db->query("UPDATE `rakutenpay_orders` SET `status` = '$paymentStatus', `created_at` = '$createdAt', `updated_at` = CURRENT_TIME WHERE `order_id` = '$orderId'");
-        $rakuten->setLog(date("Y-m-d H:i:s"));
-		$rakuten->setLog($paymentStatus);
+        $rakuten->updateStatusWebhook($orderId, $payment_method, $status, $paymentStatus, $createdAt);
 	}
 
 }
