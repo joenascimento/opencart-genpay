@@ -932,7 +932,7 @@ class ModelExtensionPaymentRakuten extends Controller {
     }
 
     /**
-     * updatStatus
+     * updatStatus after charge transaction
      *
      * @param mixed $normalized
      * @param mixed $order_id
@@ -1040,6 +1040,42 @@ class ModelExtensionPaymentRakuten extends Controller {
         }
     }
 
+    /**
+     * updateStatusWebhook after the GenPay Webhook
+     * 
+     * @param mixed $orderId 
+     * @param mixed $paymentMethod 
+     * @param mixed $status 
+     * @param mixed $paymentStatus 
+     * @param mixed $createdAt 
+     * @access public
+     * @return void
+     */
+    public function updateStatusWebhook($orderId, $paymentMethod, $status, $paymentStatus, $createdAt)
+    {
+        $updated = $this->db->query("SELECT `order_status_id` FROM `". DB_PREFIX ."order` WHERE `order_id` = " . $orderId);
+
+        if (array_shift($updated->row) == $status) {
+            $this->setLog('status já atualizado.');
+            return false;
+        }
+
+        try {
+		    $this->db->query("UPDATE `". DB_PREFIX . "order` SET `order_status_id` = '" . $status . "' WHERE `order_id` = " . $orderId);
+            $this->db->query("INSERT INTO `". DB_PREFIX ."order_history` (`order_id`, `order_status_id`, `notify`, `comment`, `date_added`, `external`) VALUES ('$orderId', '$status', 1, '', CURRENT_TIME, 0)");
+		    $this->db->query("UPDATE `rakutenpay_orders` SET `status` = '$paymentStatus', `created_at` = '$createdAt', `updated_at` = CURRENT_TIME WHERE `order_id` = '$orderId'");
+
+            $this->setLog($orderId);
+            $this->setLog($paymentMethod);
+            $this->setLog(date("Y-m-d H:i:s"));
+		    $this->setLog($paymentStatus);
+            return true;
+        } catch (Exception $e) {
+            $this->setException($e->getMessage());
+
+            return false;
+        }
+    }
     /**
      * isBillet
      *
